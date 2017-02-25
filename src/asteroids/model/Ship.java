@@ -19,15 +19,17 @@ public class Ship {
 	private static final double MIN_RADIUS = 10;
 
 	private double orientation;
-	private double getOrientation() {return this.orientation;}
-	private void setOrientation(double angle) {this.orientation = angle;}
+	public double getOrientation() {return this.orientation;}
+	public void setOrientation(double angle) {this.orientation = angle;}
 	
 	private double radius;
-	private double getRadius() {return this.radius;}
-	private void setRadius(double radius) {this.radius = radius;}
+	public double getRadius() {return this.radius;}
+	public void setRadius(double radius) {this.radius = radius;}
 	
 	private Point2D.Double position;
+	public Point2D.Double getPosition() {return this.position;}
 	private Point2D.Double velocity;
+	public Point2D.Double getVelocity() {return this.velocity;}
 	
 	public boolean isValidDuration (double duration) {
 		return duration >= 0;
@@ -64,8 +66,7 @@ public class Ship {
 	
 	public void turn(double angle) {
 		// Implement nominally
-		double radians = Math.toRadians(angle);
-		setOrientation(this.orientation+radians % 2*Math.PI);
+		setOrientation(this.orientation+angle % 2*Math.PI);
 	}
 	public void thrust(double amount) {
 		// Implement totally
