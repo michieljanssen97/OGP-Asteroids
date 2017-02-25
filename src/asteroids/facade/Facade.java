@@ -1,7 +1,7 @@
 package asteroids.facade;
 
 import asteroids.part1.facade.IFacade;
-import asteroids.part1.facade.Ship;
+import asteroids.model.Ship;
 import asteroids.util.ModelException;
 
 public class Facade implements IFacade {
