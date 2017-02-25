@@ -1,5 +1,7 @@
 package asteroids.facade;
 
+import java.awt.geom.Point2D;
+
 import asteroids.model.Ship;
 
 import asteroids.part1.facade.IFacade;
@@ -43,7 +45,11 @@ public class Facade implements IFacade {
 
 	@Override
 	public void move(Ship ship, double dt) throws ModelException {
-		ship.move(dt);
+		try {
+			ship.move(dt);
+		} catch (Exception e) {
+			throw new ModelException("temporary");
+		}
 	}
 
 	@Override
@@ -58,22 +64,40 @@ public class Facade implements IFacade {
 
 	@Override
 	public double getDistanceBetween(Ship ship1, Ship ship2) throws ModelException {
-		return ship1.getDistanceBetween(ship2);
+		try {
+			return ship1.getDistanceBetween(ship2);
+		} catch (Exception e) {
+			throw new ModelException("temporary");
+		}
 	}
 
 	@Override
 	public boolean overlap(Ship ship1, Ship ship2) throws ModelException {
-		return ship1.overlap(ship2);
+		try {
+			return ship1.overlap(ship2);
+		} catch (Exception e) {
+			throw new ModelException("temporary");
+		}
 	}
 
 	@Override
 	public double getTimeToCollision(Ship ship1, Ship ship2) throws ModelException {
-		return ship1.getTimeToCollision(ship2);
+		try {
+			return ship1.getTimeToCollision(ship2);
+		} catch (Exception e) {
+			throw new ModelException("temporary");
+		}
 	}
 
 	@Override
 	public double[] getCollisionPosition(Ship ship1, Ship ship2) throws ModelException {
-		ship1.getCollisionPosition(ship2);
+		try {
+			Point2D.Double collPos = ship1.getCollisionPosition(ship2);
+			double[] Pos =  {collPos.x, collPos.y};
+			return Pos;
+		} catch (Exception e) {
+			throw new ModelException("temporary");
+		}
 	}
 
 }
