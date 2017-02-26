@@ -77,11 +77,25 @@ public class Ship {
 		double newVelocityY = velocity.getY() + amount*Math.sin(getOrientation());
 		double newMagnitude = Math.sqrt(Math.pow(newVelocityX, 2)+Math.pow(newVelocityY, 2));
 		
+		velocity.setLocation(newVelocityX, newVelocityY);
+		
 		if (newMagnitude > MAX_SPEED) {
 			// reduce Vx and Vy without changing direction until magnitude < c
+			// The tangens of the enclosed angle should remain constant
+			// tan(alfa) = Vy/Vx = V'y/V'x = constant 
+			// sqrt(V'x^2 + V'y^2) = c followed by a substitution of V'y = V'x*tan(alfa) 
+			// gets you V'x = sqrt(c^2/1+tan(alfa)^2)
+			
+			
+			double constantAngle = Math.atan(newVelocityY/newVelocityX);
+			double new2VelocityX = Math.sqrt((Math.pow(MAX_SPEED,2))/(1+Math.pow(Math.tan(constantAngle), 2)));
+			double new2VelocityY = new2VelocityX * Math.tan(constantAngle) ; 
+			
+			
+			velocity.setLocation(new2VelocityX, new2VelocityY);
 		}
 				
-		velocity.setLocation(newVelocityX, newVelocityY);
+		
 		
 	}
 	
@@ -95,14 +109,18 @@ public class Ship {
 	}
 
 	public boolean overlap(Ship other) throws Exception {
-		// see if the distance between the centers of the two circles exceeds r1+r2. Then they cannot overlap in the plane. 
-		// r1+r2 < sqrt( (x2-x1)**2 + (y2-y1)**2 ) 	
+		// see if the distance between the centers of the two circles is less then r1+r2. Then they will overlap in the plane. 
+		// r1+r2 > sqrt( (x2-x1)**2 + (y2-y1)**2 ) 	
 		double radiusSum = this.getRadius() + other.getRadius();
-		double distance = Math.sqrt(Math.pow((other.position.getX()-this.position.getX()), 2)+Math.pow((other.position.getY()-this.position.getY()), 2));
-		return radiusSum < distance;
+		double distance = getDistanceBetween(other);
+		return radiusSum > distance;
 
 	}
-	public double getTimeToCollision(Ship other) throws Exception {return null;}
+	public double getTimeToCollision(Ship other) throws Exception {
+		
+		return 0;
+
+	}
 	public Point2D.Double getCollisionPosition(Ship other) throws Exception {return null;}
 	
 	
