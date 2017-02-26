@@ -77,8 +77,6 @@ public class Ship {
 		double newVelocityY = velocity.getY() + amount*Math.sin(getOrientation());
 		double newMagnitude = Math.sqrt(Math.pow(newVelocityX, 2)+Math.pow(newVelocityY, 2));
 		
-		velocity.setLocation(newVelocityX, newVelocityY);
-		
 		if (newMagnitude > MAX_SPEED) {
 			// reduce Vx and Vy without changing direction until magnitude < c
 			// The tangens of the enclosed angle should remain constant
@@ -88,15 +86,12 @@ public class Ship {
 			
 			
 			double constantAngle = Math.atan(newVelocityY/newVelocityX);
-			double new2VelocityX = Math.sqrt((Math.pow(MAX_SPEED,2))/(1+Math.pow(Math.tan(constantAngle), 2)));
-			double new2VelocityY = new2VelocityX * Math.tan(constantAngle) ; 
-			
-			
-			velocity.setLocation(new2VelocityX, new2VelocityY);
+			newVelocityX = Math.sqrt((Math.pow(MAX_SPEED,2))/(1+Math.pow(Math.tan(constantAngle), 2)));
+			newVelocityY = newVelocityX * Math.tan(constantAngle) ; 
 		}
+		
+		velocity.setLocation(newVelocityX, newVelocityY);
 				
-		
-		
 	}
 	
 	public double getDistanceBetween(Ship other) throws Exception {
