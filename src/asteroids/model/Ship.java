@@ -112,30 +112,35 @@ public class Ship {
 		return radiusSum >= distance;
 
 	}
-	public double getTimeToCollision(Ship other) throws Exception {
+	
+public double getTimeToCollision(Ship other) throws Exception {
 		
 		// if two ships already overla, the time to collision is set to zero
 		// if deltaV * deltaR >= 0, time to collision is set to infinity
 		// else if d <= 0, time to collision is set to infinity
 		// else deltaT = - ((deltaV*deltaR+sqrt(d))/(deltaV+deltaV))
 		
+		Point2D deltaR = new Point2D.Double(this.position.getX()-other.position.getX(),this.position.getY()-other.position.getY());
 		Point2D deltaV = new Point2D.Double(this.velocity.getX()-other.velocity.getX(),this.velocity.getY()-other.velocity.getY());
 		
-		double deltaVx = this.velocity.getX()-other.velocity.getX();
-		double deltaVy = this.velocity.getY()-other.velocity.getY();
-		double deltaRx = this.position.getX()-other.position.getX(); 
-		double deltaRy = this.position.getY()-other.position.getY();
+		double deltaRR = Math.pow(deltaR.getX(), 2) + Math.pow(deltaR.getY(), 2);
+		double deltaVV = Math.pow(deltaV.getX(), 2) + Math.pow(deltaV.getY(), 2);
+		double deltaVR = (deltaV.getX()*deltaR.getX())  + (deltaV.getY()*deltaR.getY());
+		double d = Math.pow(deltaVR, 2) - ((deltaVV)*(deltaRR - Math.pow(this.getDistanceBetween(other), 2)));
 		
-		double d = ();
-		
-		(Math.pow(deltaVx, 2)+Math.pow(deltaRy, 2))
-	
 		if (this.overlap(other)) {
 			return new Double(0);
-		} else {
-			if ((deltaVx*deltaRx)+(deltaVy*deltaRy >= 0)){
+		} 
+		else {
+			if (deltaVR >= 0){
 				return Double.POSITIVE_INFINITY;
-			} else if 
+			} else if (d <=0){
+				return Double.POSITIVE_INFINITY;
+			} else {
+				
+				return - ((deltaVR + Math.sqrt(d))/(deltaVV));
+				
+			}
 		}
 
 	}
