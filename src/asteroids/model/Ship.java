@@ -82,7 +82,7 @@ public class Ship {
 		if (newMagnitude > MAX_SPEED) {
 			// reduce Vx and Vy without changing direction until magnitude < c
 			// The tangens of the enclosed angle should remain constant
-			// tan(alfa) = Vy/Vx = V'y/V'x = constant 
+			// tan(alfa) = Vy/Vx = V'y/V'x = constant
 			// sqrt(V'x^2 + V'y^2) = c followed by a substitution of V'y = V'x*tan(alfa) 
 			// gets you V'x = sqrt(c^2/1+tan(alfa)^2)
 			
@@ -90,7 +90,6 @@ public class Ship {
 			double constantAngle = Math.atan(newVelocityY/newVelocityX);
 			double new2VelocityX = Math.sqrt((Math.pow(MAX_SPEED,2))/(1+Math.pow(Math.tan(constantAngle), 2)));
 			double new2VelocityY = new2VelocityX * Math.tan(constantAngle) ; 
-			
 			
 			velocity.setLocation(new2VelocityX, new2VelocityY);
 		}
@@ -113,12 +112,34 @@ public class Ship {
 		// r1+r2 > sqrt( (x2-x1)**2 + (y2-y1)**2 ) 	
 		double radiusSum = this.getRadius() + other.getRadius();
 		double distance = getDistanceBetween(other);
-		return radiusSum > distance;
+		return radiusSum >= distance;
 
 	}
 	public double getTimeToCollision(Ship other) throws Exception {
 		
-		return 0;
+		// if two ships already overla, the time to collision is set to zero
+		// if deltaV * deltaR >= 0, time to collision is set to infinity
+		// else if d <= 0, time to collision is set to infinity
+		// else deltaT = - ((deltaV*deltaR+sqrt(d))/(deltaV+deltaV))
+		
+		Point2D deltaV = new Point2D.Double(this.velocity.getX()-other.velocity.getX(),this.velocity.getY()-other.velocity.getY());
+		
+		double deltaVx = this.velocity.getX()-other.velocity.getX();
+		double deltaVy = this.velocity.getY()-other.velocity.getY();
+		double deltaRx = this.position.getX()-other.position.getX(); 
+		double deltaRy = this.position.getY()-other.position.getY();
+		
+		double d = ();
+		
+		(Math.pow(deltaVx, 2)+Math.pow(deltaRy, 2))
+	
+		if (this.overlap(other)) {
+			return new Double(0);
+		} else {
+			if ((deltaVx*deltaRx)+(deltaVy*deltaRy >= 0)){
+				return Double.POSITIVE_INFINITY;
+			} else if 
+		}
 
 	}
 	public Point2D.Double getCollisionPosition(Ship other) throws Exception {return null;}
