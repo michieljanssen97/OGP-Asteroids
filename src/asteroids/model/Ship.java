@@ -137,7 +137,6 @@ public double getTimeToCollision(Ship other) throws Exception {
 			} else if (d <=0){
 				return Double.POSITIVE_INFINITY;
 			} else {
-				
 				return - ((deltaVR + Math.sqrt(d))/(deltaVV));
 				
 			}
