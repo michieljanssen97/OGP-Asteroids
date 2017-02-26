@@ -2,6 +2,8 @@ package asteroids.model;
 
 import java.awt.geom.Point2D;
 
+import javax.swing.text.Position;
+
 public class Ship {
 	
 	/* General comments:
@@ -84,9 +86,7 @@ public class Ship {
 			// sqrt(V'x^2 + V'y^2) = c followed by a substitution of V'y = V'x*tan(alfa) 
 			// gets you V'x = sqrt(c^2/1+tan(alfa)^2)
 			
-			
 			double constantAngle = Math.atan(newVelocityY/newVelocityX);
-
 			newVelocityX = Math.sqrt((Math.pow(MAX_SPEED,2))/(1+Math.pow(Math.tan(constantAngle), 2)));
 			newVelocityY = newVelocityX * Math.tan(constantAngle) ; 
 		}
@@ -115,7 +115,7 @@ public class Ship {
 	
 public double getTimeToCollision(Ship other) throws Exception {
 		
-		// if two ships already overla, the time to collision is set to zero
+		// if two ships already overlap, the time to collision is set to zero
 		// if deltaV * deltaR >= 0, time to collision is set to infinity
 		// else if d <= 0, time to collision is set to infinity
 		// else deltaT = - ((deltaV*deltaR+sqrt(d))/(deltaV+deltaV))
@@ -127,6 +127,7 @@ public double getTimeToCollision(Ship other) throws Exception {
 		double deltaVV = Math.pow(deltaV.getX(), 2) + Math.pow(deltaV.getY(), 2);
 		double deltaVR = (deltaV.getX()*deltaR.getX())  + (deltaV.getY()*deltaR.getY());
 		double d = Math.pow(deltaVR, 2) - ((deltaVV)*(deltaRR - Math.pow(this.getDistanceBetween(other), 2)));
+		
 		
 		if (this.overlap(other)) {
 			return new Double(0);
@@ -143,7 +144,26 @@ public double getTimeToCollision(Ship other) throws Exception {
 		}
 
 	}
-	public Point2D.Double getCollisionPosition(Ship other) throws Exception {return null;}
+	public Point2D.Double getCollisionPosition(Ship other) throws Exception {
+		
+		// The Collision position is the current position plus the time to collision multiplied by its velocity, with is no acceleration
+		// In math: x(t) = x0 + Vx * getTimeToCollision
+		//          y(t) = y0 + VY * getTimeToCollision          
+		
+		
+		// implementatie is nog niet af!! Ik wil getTimeToCollision oproemen en dan vergelijken dat de tijd niet gelijk is aan infinity.
+		// maar ! (not operator) werkt niet met een double... Dus anders oplossen.
+		
+		if (this.overlap(other)) {
+			return null;
+		} 
+		else {
+			
+			Point2D newCoordinates = new Point2D.Double(this.position.getX()+this.velocity.getX()*this.getTimeToCollision(other),this.position.getY()+this.velocity.getY()*this.getTimeToCollision(other));			
+		}
+		
+		
+	}
 	
 	
 	
