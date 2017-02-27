@@ -2,7 +2,7 @@ package asteroids.model;
 
 import java.awt.geom.Point2D;
 
-import javax.swing.text.Position;
+import asteroids.util.ModelException;
 
 public class Ship {
 	
@@ -22,26 +22,84 @@ public class Ship {
 
 	private double orientation;
 	public double getOrientation() {return this.orientation;}
+	
+	/**
+	 * Implement nominally (design by contract)
+	 * @pre orientation must be between 0 and 2pi
+	 * 		| 0 <= orientation <= 2pi
+	 * @param orientation
+	 */
 	public void setOrientation(double angle) {this.orientation = angle;}
 	
 	private double radius;
 	public double getRadius() {return this.radius;}
-	public void setRadius(double radius) {this.radius = radius;}
 	
-	private Point2D.Double position;
+	// implement defensively
+	public void setRadius(double radius) throws ModelException {
+		if (radius <= 10) {
+			throw new ModelException("Radius must be larger than 10 Km.");
+		} else {
+			this.radius = radius;
+		}
+	}
+	
+	private double x;
+	private double y;
+	
+	// Each spaceship is located at a certain position (x,y) in an unbounded two-dimensional space.
+	// Implement defensively
+	private boolean isValidPosition(double x, double y) throws ModelException {
+		if (x == Double.NaN || y == Double.NaN) {
+			throw new ModelException("Position must not be null.");
+		}
+		return true;
+	}
+	
 	public Point2D.Double getPosition() {return this.position;}
+	
+	public void setPosition(double x, double y) throws ModelException{
+		if (isValidPosition(x, y)) {
+			this.x = x;
+			this.y = y;
+		} else {
+			throw new ModelException("Faulty location.");
+		}
+	}
+	
 	private Point2D.Double velocity;
+	
+	//The speed of a ship shall never exceed the speed of light c, 300000km/s
+	// Implement totally
+	private boolean isValidVelocity(double x, double y) {
+		double speed = Math.sqrt(Math.pow(this.velocity.getX(), 2)+Math.pow(this.velocity.getY(), 2));
+		return 0 <= speed && speed <= MAX_SPEED;
+	}
+	
 	public Point2D.Double getVelocity() {return this.velocity;}
+	
+	// Implement totally
+	public void setVelocity(double x, double y) {
+		if (isValidVelocity(x, y)) {
+			this.velocity.setLocation(x, y);
+		} else {
+			// Reduce x and y until new speed below max speed
+			// set velocity to those values
+		}
+	}
 	
 	public boolean isValidDuration (double duration) {
 		return duration >= 0;
 	}
 	
-	public Ship(double x, double y, double xVelocity, double yVelocity, double radius, double orientation) {
+	public Ship(double x, double y, double xVelocity, double yVelocity, double radius, double orientation) throws ModelException {
 		
-		position.setLocation(x, y);
-		velocity.setLocation(xVelocity, yVelocity);
-		setRadius(radius); // larger than 10 km
+		setPosition(x, y);
+		setVelocity(xVelocity, yVelocity);
+		try {
+			setRadius(radius); // larger than 10 km
+		} catch (ModelException e) {
+			throw e;
+		} 
 		setOrientation(orientation); //between 0 and 2pi
 		
 	};

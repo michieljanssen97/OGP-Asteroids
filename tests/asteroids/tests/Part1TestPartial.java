@@ -23,6 +23,11 @@ public class Part1TestPartial {
 	}
 
 	@Test
+	public void testCreateShip1() throws ModelException {
+		facade.createShip(2, 200, 11, 10, 20, Math.PI);
+	}
+	
+	@Test
 	public void testCreateShip() throws ModelException {
 		Ship ship = facade.createShip(100, 200, 10, -10, 20, Math.PI);
 		assertNotNull(ship);
