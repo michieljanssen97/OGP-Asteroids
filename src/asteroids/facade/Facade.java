@@ -1,11 +1,8 @@
 package asteroids.facade;
 
-import java.awt.geom.Point2D;
-
 import asteroids.model.Ship;
 
 import asteroids.part1.facade.IFacade;
-import asteroids.model.Ship;
 import asteroids.util.ModelException;
 
 public class Facade implements IFacade {
@@ -31,13 +28,13 @@ public class Facade implements IFacade {
 
 	@Override
 	public double[] getShipPosition(Ship ship) throws ModelException {
-		double[] position = {ship.getPosition().x, ship.getPosition().y};
+		double[] position = {ship.getPositionX(), ship.getPositionY()};
 		return position;
 	}
 
 	@Override
 	public double[] getShipVelocity(Ship ship) throws ModelException {
-		double[] velocity = {ship.getVelocity().x, ship.getVelocity().y};
+		double[] velocity = {ship.getVelocityX(), ship.getVelocityY()};
 		return velocity;
 	}
 
@@ -100,9 +97,7 @@ public class Facade implements IFacade {
 	@Override
 	public double[] getCollisionPosition(Ship ship1, Ship ship2) throws ModelException {
 		try {
-			Point2D.Double collPos = ship1.getCollisionPosition(ship2);
-			double[] Pos =  {collPos.x, collPos.y};
-			return Pos;
+			return ship1.getCollisionPosition(ship2);
 		} catch (Exception e) {
 			throw new ModelException("temporary");
 		}

@@ -48,39 +48,44 @@ public class Ship {
 	
 	// Each spaceship is located at a certain position (x,y) in an unbounded two-dimensional space.
 	// Implement defensively
-	private boolean isValidPosition(double x, double y) throws ModelException {
-		if (x == Double.NaN || y == Double.NaN) {
-			throw new ModelException("Position must not be null.");
+	private boolean isValidPosition(double x, double y) {
+		if (Double.isNaN(x) || Double.isNaN(y)) {
+			return false;
+		} else {
+			return true;
 		}
-		return true;
 	}
 	
-	public Point2D.Double getPosition() {return this.position;}
+	public double getPositionX() {return this.x;}
+	public double getPositionY() {return this.y;}
 	
 	public void setPosition(double x, double y) throws ModelException{
 		if (isValidPosition(x, y)) {
 			this.x = x;
 			this.y = y;
 		} else {
-			throw new ModelException("Faulty location.");
+			throw new ModelException("Position must not be null.");
 		}
 	}
 	
-	private Point2D.Double velocity;
+	private double velocityX;
+	private double velocityY;
 	
 	//The speed of a ship shall never exceed the speed of light c, 300000km/s
 	// Implement totally
 	private boolean isValidVelocity(double x, double y) {
-		double speed = Math.sqrt(Math.pow(this.velocity.getX(), 2)+Math.pow(this.velocity.getY(), 2));
+		double speed = Math.sqrt(Math.pow(this.getVelocityX(), 2)+Math.pow(this.getVelocityY(), 2));
 		return 0 <= speed && speed <= MAX_SPEED;
 	}
 	
-	public Point2D.Double getVelocity() {return this.velocity;}
+	public double getVelocityX() {return this.velocityX;}
+	public double getVelocityY() {return this.velocityY;}
 	
 	// Implement totally
 	public void setVelocity(double x, double y) {
 		if (isValidVelocity(x, y)) {
-			this.velocity.setLocation(x, y);
+			this.velocityX = x;
+			this.velocityY = y;
 		} else {
 			// Reduce x and y until new speed below max speed
 			// set velocity to those values
@@ -111,9 +116,9 @@ public class Ship {
 	public void move(double duration) throws Exception {
 		// Implement defensively
 		if (isValidDuration(duration)) {
-			double deltaX = velocity.getX()*duration;
-			double deltaY = velocity.getY()*duration;
-			position.setLocation(position.getX()+deltaX, position.getY()+deltaY);
+			double deltaX = getVelocityX()*duration;
+			double deltaY = getVelocityY()*duration;
+			setPosition(getPositionX()+deltaX, getPositionY()+deltaY);
 		} else {
 			throw new Exception();
 		}
@@ -133,8 +138,8 @@ public class Ship {
 		if (amount < 0) {
 			amount = 0;
 		}
-		double newVelocityX = velocity.getX() + amount*Math.cos(getOrientation());
-		double newVelocityY = velocity.getY() + amount*Math.sin(getOrientation());
+		double newVelocityX = getVelocityX() + amount*Math.cos(getOrientation());
+		double newVelocityY = getVelocityY() + amount*Math.sin(getOrientation());
 		double newMagnitude = Math.sqrt(Math.pow(newVelocityX, 2)+Math.pow(newVelocityY, 2));
 		
 		if (newMagnitude > MAX_SPEED) {
@@ -149,7 +154,7 @@ public class Ship {
 			newVelocityY = newVelocityX * Math.tan(constantAngle) ; 
 		}
 		
-		velocity.setLocation(newVelocityX, newVelocityY);
+		setVelocity(newVelocityX, newVelocityY);
 				
 	}
 	
@@ -157,7 +162,7 @@ public class Ship {
 		if (other == this) {
 			return new Double(0);
 		} else {
-			double distance = Math.sqrt(Math.pow((other.position.getX()-this.position.getX()), 2)+Math.pow((other.position.getY()-this.position.getY()), 2));
+			double distance = Math.sqrt(Math.pow((other.getPositionX()-this.getPositionX()), 2)+Math.pow((other.getPositionY()-this.getPositionY()), 2));
 			return distance;
 		}
 	}
@@ -178,8 +183,8 @@ public double getTimeToCollision(Ship other) throws Exception {
 		// else if d <= 0, time to collision is set to infinity
 		// else deltaT = - ((deltaV*deltaR+sqrt(d))/(deltaV+deltaV))
 		
-		Point2D deltaR = new Point2D.Double(this.position.getX()-other.position.getX(),this.position.getY()-other.position.getY());
-		Point2D deltaV = new Point2D.Double(this.velocity.getX()-other.velocity.getX(),this.velocity.getY()-other.velocity.getY());
+		Point2D deltaR = new Point2D.Double(this.getPositionX()-other.getPositionX(),this.getPositionY()-other.getPositionY());
+		Point2D deltaV = new Point2D.Double(this.getVelocityX()-other.getVelocityX(),this.getVelocityY()-other.getVelocityY());
 		
 		double deltaRR = Math.pow(deltaR.getX(), 2) + Math.pow(deltaR.getY(), 2);
 		double deltaVV = Math.pow(deltaV.getX(), 2) + Math.pow(deltaV.getY(), 2);
@@ -202,7 +207,7 @@ public double getTimeToCollision(Ship other) throws Exception {
 		}
 
 	}
-	public Point2D.Double getCollisionPosition(Ship other) throws Exception {
+	public double[] getCollisionPosition(Ship other) throws Exception {
 		
 		// The Collision position is the current position plus the time to collision multiplied by its velocity, with is no acceleration
 		// In math: x(t) = x0 + Vx * getTimeToCollision
@@ -216,8 +221,8 @@ public double getTimeToCollision(Ship other) throws Exception {
 			return null;
 		} 
 		else {
-			
-			Point2D newCoordinates = new Point2D.Double(this.position.getX()+this.velocity.getX()*this.getTimeToCollision(other),this.position.getY()+this.velocity.getY()*this.getTimeToCollision(other));			
+			double[] pos =  {this.getPositionX()+this.getVelocityX()*this.getTimeToCollision(other), this.getPositionY()+this.getVelocityY()*this.getTimeToCollision(other)};
+			return pos;	
 		}
 		
 		

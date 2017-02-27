@@ -21,11 +21,6 @@ public class Part1TestPartial {
 	public void setUp() {
 		facade = new Facade();
 	}
-
-	@Test
-	public void testCreateShip1() throws ModelException {
-		facade.createShip(2, 200, 11, 10, 20, Math.PI);
-	}
 	
 	@Test
 	public void testCreateShip() throws ModelException {
