@@ -35,11 +35,15 @@ public class Ship {
 	public double getRadius() {return this.radius;}
 	
 	// implement defensively
+	
+	public boolean isValidRadius(double radius) {
+		return radius >= MIN_RADIUS;
+	}
 	public void setRadius(double radius) throws ModelException {
-		if (radius <= 10) {
-			throw new ModelException("Radius must be larger than 10 Km.");
-		} else {
+		if (isValidRadius(radius)) {
 			this.radius = radius;
+		} else {
+			throw new ModelException("Radius must be larger than 10 Km.");
 		}
 	}
 	
