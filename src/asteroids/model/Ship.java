@@ -39,11 +39,11 @@ public class Ship {
 	public boolean isValidRadius(double radius) {
 		return radius >= MIN_RADIUS;
 	}
-	public void setRadius(double radius) throws ModelException {
+	public void setRadius(double radius) throws IllegalArgumentException {
 		if (isValidRadius(radius)) {
 			this.radius = radius;
 		} else {
-			throw new ModelException("Radius must be larger than 10 Km.");
+			throw new IllegalArgumentException("Radius must be larger than 10 Km.");
 		}
 	}
 	
@@ -63,12 +63,12 @@ public class Ship {
 	public double getPositionX() {return this.x;}
 	public double getPositionY() {return this.y;}
 	
-	public void setPosition(double x, double y) throws ModelException{
+	public void setPosition(double x, double y) throws IllegalArgumentException{
 		if (isValidPosition(x, y)) {
 			this.x = x;
 			this.y = y;
 		} else {
-			throw new ModelException("Position must not be null.");
+			throw new IllegalArgumentException("Position must not be null.");
 		}
 	}
 	
@@ -100,13 +100,13 @@ public class Ship {
 		return duration >= 0;
 	}
 	
-	public Ship(double x, double y, double xVelocity, double yVelocity, double radius, double orientation) throws ModelException {
+	public Ship(double x, double y, double xVelocity, double yVelocity, double radius, double orientation) throws IllegalArgumentException {
 		
 		setPosition(x, y);
 		setVelocity(xVelocity, yVelocity);
 		try {
 			setRadius(radius); // larger than 10 km
-		} catch (ModelException e) {
+		} catch (IllegalArgumentException e) {
 			throw e;
 		} 
 		setOrientation(orientation); //between 0 and 2pi
@@ -117,14 +117,14 @@ public class Ship {
 	 * 
 	 * @param duration
 	 */
-	public void move(double duration) throws Exception {
+	public void move(double duration) throws IllegalArgumentException {
 		// Implement defensively
 		if (isValidDuration(duration)) {
 			double deltaX = getVelocityX()*duration;
 			double deltaY = getVelocityY()*duration;
 			setPosition(getPositionX()+deltaX, getPositionY()+deltaY);
 		} else {
-			throw new Exception();
+			throw new IllegalArgumentException();
 		}
 		
 	}
@@ -135,7 +135,8 @@ public class Ship {
 	
 	public void turn(double angle) {
 		// Implement nominally
-		setOrientation(this.orientation+angle % 2*Math.PI);
+		
+		setOrientation(this.orientation+ angle % (2*Math.PI));
 	}
 	public void thrust(double amount) {
 		// Implement totally
