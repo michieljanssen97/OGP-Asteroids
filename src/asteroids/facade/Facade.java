@@ -2,8 +2,11 @@ package asteroids.facade;
 
 import asteroids.model.Ship;
 
+
 import asteroids.part1.facade.IFacade;
 import asteroids.util.ModelException;
+import be.kuleuven.cs.som.annotate.Value;
+
 
 public class Facade implements IFacade {
 
@@ -53,7 +56,7 @@ public class Facade implements IFacade {
 		try {
 			ship.move(dt);
 		} catch (Exception e) {
-			throw new ModelException("temporary");
+			throw new ModelException("Wrong duration.");
 		}
 	}
 
@@ -72,7 +75,7 @@ public class Facade implements IFacade {
 		try {
 			return ship1.getDistanceBetween(ship2);
 		} catch (Exception e) {
-			throw new ModelException("temporary");
+			throw new ModelException("A ship must not be null.");
 		}
 	}
 
@@ -81,7 +84,7 @@ public class Facade implements IFacade {
 		try {
 			return ship1.overlap(ship2);
 		} catch (Exception e) {
-			throw new ModelException("temporary");
+			throw new ModelException("A ship must not be null.");
 		}
 	}
 
@@ -90,7 +93,7 @@ public class Facade implements IFacade {
 		try {
 			return ship1.getTimeToCollision(ship2);
 		} catch (Exception e) {
-			throw new ModelException("temporary");
+			throw new ModelException("The time can not be calculated.");
 		}
 	}
 
@@ -99,7 +102,7 @@ public class Facade implements IFacade {
 		try {
 			return ship1.getCollisionPosition(ship2);
 		} catch (Exception e) {
-			throw new ModelException("temporary");
+			throw new ModelException("A ship must not be null.");
 		}
 	}
 
