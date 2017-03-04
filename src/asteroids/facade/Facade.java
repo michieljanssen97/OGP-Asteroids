@@ -14,7 +14,7 @@ public class Facade implements IFacade {
 		try {
 			return new Ship(0, 0, 0, 0, 11, 0);
 		} catch (Exception error) {
-			throw error;
+			throw new ModelException("Some error");
 		}
 	};
 	
@@ -24,7 +24,7 @@ public class Facade implements IFacade {
 		try {
 			return new Ship(x, y, xVelocity, yVelocity, radius, orientation);
 		} catch (Exception error) {
-			throw error;
+			throw new ModelException("Some error");
 		}
 	}
 

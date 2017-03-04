@@ -1,32 +1,37 @@
 package asteroids.model;
 
+/**
+ * A class that defines a spaceship for the Asteroids game
+ * @author Michiel Janssen & Jelle Pelgrims
+ *
+ */
 public class Ship {
 	
-	/* General comments:
-	 * position: kilometres
-	 * velocity: km/s
-	 * 
-	 * 		- All aspects related to the position of the ship shall be worked out defensively
-	 * 		- All aspects related to velocity must be worked out in a total manner.
-	 * 		- All aspects related to the orientation of the ship must be worked out nominally
-	 * 		- All aspects related to the radius must be worked out defensively.
-	 * 
-	 */
-	public Ship(double x, double y, double xVelocity, double yVelocity, double radius, double orientation) throws IllegalArgumentException {
-		
-		setPosition(x, y);
-		setVelocity(xVelocity, yVelocity);
-		try {
-			setRadius(radius);
-		} catch (IllegalArgumentException e) {
-			throw e;
-		} 
-		setOrientation(orientation);
-		
-	};
 	private static final double MAX_SPEED = 300000;
 	private static final double MIN_RADIUS = 10;
-
+	
+	/**
+	 * 
+	 * @param x
+	 * @param y
+	 * @param xVelocity
+	 * @param yVelocity
+	 * @param radius
+	 * @param orientation
+	 * @throws IllegalArgumentException
+	 */
+	public Ship(double x, double y, double xVelocity, double yVelocity, double radius, double orientation) throws IllegalArgumentException {
+		try {
+			setPosition(x, y);
+			setVelocity(xVelocity, yVelocity);
+			setRadius(radius);
+			setOrientation(orientation);
+		} catch (Exception e) {
+			throw e;
+		}
+		
+	};
+	
 	private double orientation;
 	public double getOrientation() {return this.orientation;}
 	
@@ -60,7 +65,7 @@ public class Ship {
 	 * @param radius
 	 * 
 	 * @post  ...
-	 *        |new.getRadius() = radius
+	 *        | new.getRadius() = radius
 	 *        
 	 * @throws IllegalArgumentException
 	 *         | ! isValidRadius(radius)
@@ -100,18 +105,17 @@ public class Ship {
 	 * @param x
 	 * @param y
 	 * @post  ...
-	 *        |new.getPosition() = position
+	 *        | new.getPosition() = position
 	 *        
-	 * @throws IllegalArgumentException
+	 * @throws NullPointerException
 	 *         | isValidPostion(x,y)
 	 */
-	
-	public void setPosition(double x, double y) throws IllegalArgumentException{
+	public void setPosition(double x, double y) throws NullPointerException{
 		if (isValidPosition(x, y)) {
 			this.x = x;
 			this.y = y;
 		} else {
-			throw new IllegalArgumentException("Position must not be null.");
+			throw new NullPointerException("Position must not be null.");
 		}
 	}
 	
