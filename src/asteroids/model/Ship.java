@@ -1,7 +1,17 @@
 package asteroids.model;
 
+
 /**
- * A class that defines a spaceship for the Asteroids game
+ * A class that defines a spaceship for the Asteroids game.
+ * 
+ * General conditions that must be satisfied: 
+ * 		- Each position (both x and y) is expressed in kilometres. [km]
+ * 		- Each velocity (both x and y) is expressed in kilometres per second. [km/s]
+ * 		- All aspects related to the position of the ship shall be worked out defensively.
+ *		- All aspects related to velocity must be worked out in a total manner.
+ * 		- All aspects related to the orientation of the ship must be worked out nominally.
+ * 		- All aspects related to the radius must be worked out defensively.
+ * 
  * @author Michiel Janssen & Jelle Pelgrims
  *
  */
@@ -11,14 +21,32 @@ public class Ship {
 	private static final double MIN_RADIUS = 10;
 	
 	/**
+	 * Initialize this new ship with a given position, velocity, radius and orientation.
 	 * 
 	 * @param x
+	 *        The x-coordinate for this new ship.
 	 * @param y
+	 * 		  The y-coordinate for this new ship.
 	 * @param xVelocity
+	 *        The velocity in the x direction for this new ship.
 	 * @param yVelocity
+	 *        The velocity in the y direction for this new ship.
 	 * @param radius
+	 * 		  The given radius for this new ship.
 	 * @param orientation
+	 *        The given orientation for this new ship.
+	 * @post  The position of this new ship is equal to the given x- and y-coordinate.
+	 * 		  | new.getPositionX() == x
+	 * 	      | new.getPositionY() == y
+	 * @post  The velocity of this new ship is equal to the given x- and y-velocity.
+	 *        | new.getVelocityX() == xVelocity
+	 *        | new.getVelocityY() == yVelocity
+	 * @post  The radius of this new ship is equal to the given radius.
+	 *        | new.getRadius() == radius
+	 * @post  The orientation of this new ship is equal to the given orientation.
+	 *        | new.getOrientation() == orientation  
 	 * @throws IllegalArgumentException
+	 *        | (! isValidPosition(x,y)) or (! isValidRadius(radius)) or (!isValidVelocity(xVelocity,yVelocity))
 	 */
 	public Ship(double x, double y, double xVelocity, double yVelocity, double radius, double orientation) throws IllegalArgumentException {
 		try {
@@ -33,20 +61,26 @@ public class Ship {
 	};
 	
 	private double orientation;
+	/**
+	 * Return the orientation of this ship.
+	 */
 	public double getOrientation() {return this.orientation;}
 	
 	/**
-	 * Implement nominally
+	 * Implement nominally.
 	 * 
 	 * @pre The angle must be between 0 and 2*pi.
 	 * 		| 0 <= angle < 2*pi
-	 * @post ...
-	 *       | new.getOrientation() = angle
+	 * @post The orientation of the ship is equal to the given angle.
+	 *       | new.getOrientation() == angle
 	 * @param angle
 	 */
 	public void setOrientation(double angle) {this.orientation = angle;}
 	
 	private double radius;
+	/**
+	 * Return the radius of this ship.
+	 */
 	public double getRadius() {return this.radius;}
 	
 	/**
@@ -60,15 +94,17 @@ public class Ship {
 	}
 		
 	/**
-	 * Implement defensively
-	 * Set the radius to a given valid radius, throws an error if invalid radius
+	 * Set the radius to a given valid radius, throws an error if the radius is not valid.
+	 * 
+	 * Implement defensively.
 	 * 
 	 * @param radius
 	 * 
-	 * @post  ...
-	 *        | new.getRadius() = radius
+	 * @post  The radius of the ship is equal to the given radius.
+	 *        | new.getRadius() == radius
 	 *        
 	 * @throws IllegalArgumentException
+	 * 		   The given radius is not a valid radius.
 	 *         | ! isValidRadius(radius)
 	 */
 	public void setRadius(double radius) throws IllegalArgumentException {
@@ -83,7 +119,7 @@ public class Ship {
 	private double y;
 	
 	/**
-	 * Check whether a position is valid by returning a boolean indicating validness
+	 * Check whether a given position is valid position by returning a boolean indicating validness.
 	 * 
 	 * @param x
 	 * @param y
@@ -93,7 +129,14 @@ public class Ship {
 		return !(Double.isNaN(x) || Double.isNaN(y));
 	}
 	
+	/**
+	 * Return the x-coordinate of this ship.
+	 */
 	public double getPositionX() {return this.x;}
+	
+	/**
+	 * Return the x-coordinate of this ship.
+	 */
 	public double getPositionY() {return this.y;}
 	
 	/**
@@ -102,9 +145,9 @@ public class Ship {
 	 * Set the ship to a valid position.
 	 * @param x
 	 * @param y
-	 * @post  ...
-	 *        | new.getPositionx() = x
-	 *        | new.getPositionY() = y
+	 * @post  The position of the ship is equal to the given x- and y-coordinate.
+	 *        | new.getPositionX() == x
+	 *        | new.getPositionY() == y
 	 *        
 	 * @throws IllegalArgumentException
 	 *         | ! isValidPosition(x,y)
@@ -122,10 +165,12 @@ public class Ship {
 	private double velocityY;
 	
 	/**
-	 * Check whether the given velocity is valid.
+	 * Check whether a given velocity is a valid velocity by returning a boolean indicating validness.
 	 * 
 	 * @param x
+	 *        The x-coordinate of this ship.
 	 * @param y
+	 *        The y-coordinate of this ship.
 	 * @return boolean
 	 */
 	private boolean isValidVelocity(double x, double y) {
@@ -136,34 +181,40 @@ public class Ship {
 			return 0 <= speed && speed <= MAX_SPEED;
 		}
 	}
-	
+	/**
+	 * Return the xVelocity of this ship.
+	 */
 	public double getVelocityX() {return this.velocityX;}
+	/**
+	 * Return the yVelocity of this ship.
+	 */
 	public double getVelocityY() {return this.velocityY;}
 	
 	/**
 	 * Set the velocity to a given valid velocity. If the given velocity is larger than the allowed maximum speed 
 	 * it will be reduced until it is valid. If the given velocity is NaN the velocity will be set to zero.
 	 * 
+	 * The tangent of the enclosed angle should remain constant when reducing xVelocity and yVelocity!
+	 * | tan(alfa) = this.getVelocityY/this.getVelocityX = new.getVelocityY/new.getVelocityX = constant
+	 * | new.getVelocityX = sqrt((MAX_SPEED^2)/(1+tan(alfa)^2))
+	 * | new.getVelocityY = sqrt(new.getVelocityX*tan(alfa))
+	 * 
 	 * Implemented totally.
 	 * 
 	 * @param x
+	 * 	      The x-coordinate of this ship.
 	 * @param y
+	 *        The y-coordinate of this ship.
 	 * @post  ...
-	 *        | new.getVelocityX = x
+	 *        | new.getVelocityX() == x
 	 * @post  ...
-	 *        | new.getVelocityY = y
+	 *        | new.getVelocityY() == y
 	 */
 	public void setVelocity(double x, double y) {
 		if (isValidVelocity(x, y)) {
 			this.velocityX = x;
 			this.velocityY = y;
 		} else {
-			// reduce Vx and Vy without changing direction until magnitude < c
-			// The tangens of the enclosed angle should remain constant
-			// tan(alfa) = Vy/Vx = V'y/V'x = constant
-			// sqrt(V'x^2 + V'y^2) = c followed by a substitution of V'y = V'x*tan(alfa) 
-			// gets you V'x = sqrt(c^2/1+tan(alfa)^2)
-			
 			if (! (Double.isNaN(x) || Double.isNaN(y))) {
 				double constantAngle = Math.atan(x/y);
 			    this.velocityX = Math.sqrt((Math.pow(MAX_SPEED,2))/(1+Math.pow(Math.tan(constantAngle), 2)));
@@ -179,7 +230,8 @@ public class Ship {
 	 * Check whether the given duration is valid.
 	 * 
 	 * @param duration
-	 * @return boolean
+	 * 		  The duration of this ship.
+	 * @return duration >= 0
 	 */
 	public boolean isValidDuration (double duration) {
 		return duration >= 0;
@@ -190,9 +242,9 @@ public class Ship {
 	 * 
 	 * Implemented defensively.
 	 * 
-	 * @post ...
+	 * @post The new xPosition of this ship is the current xPosition plus the current xVelocity equaled by its duration.
 	 *       | new.getPositionX() = getPositionX() + getVelocityX()*duration
-	 * @post ...
+	 * @post The new yPosition of this ship is the current yPosition plus the current yVelocity equaled by its duration.
 	 *       | new.getPositionY() = getPositionY() + getVelocityY()*duration
 	 *       
 	 * @param duration
@@ -212,12 +264,14 @@ public class Ship {
 	}
 	
 	/**
-	 * A function to turn the ship by a given angle
+	 * This method turns the ship by a given angle.
 	 * 
 	 * Implemented nominally.
 	 * 
-	 * @pre
-	 * @post 
+	 * @pre The angle must be between 0 and 2*pi.
+	 * 		| 0 <= angle < 2*pi 
+	 * @post The new orientation of this is ship is the current orientation plus the given angle module 2*PI.
+	 *      | new.getOrientation() == (this.orientation + angle) % (2*PI)
 	 * @param angle
 	 */
 	public void turn(double angle) {
@@ -225,7 +279,7 @@ public class Ship {
 	}
 	
 	/**
-	 * A function to accelerate the ship by a given amount
+	 * This method accelerates the ship by a given amount.
 	 * 
 	 * Implemented totally.
 	 * 
