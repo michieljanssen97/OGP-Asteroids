@@ -51,16 +51,17 @@ public class Ship {
 	
 	/**
 	 * Check whether a radius is valid. The radius must be greater then 10.
+	 * 
 	 * @param radius
-	 * @return radius > 10
+	 * @return (radius > MIN_RADIUS) && (! Double.isNaN(radius))
 	 */
-	public boolean isValidRadius(double radius){
-		return radius > MIN_RADIUS;
-		}
+	public boolean isValidRadius(double radius) {
+		return (radius > MIN_RADIUS) && (! Double.isNaN(radius));
+	}
 		
 	/**
 	 * Implement defensively
-	 * Set the radius to a given valid radius.
+	 * Set the radius to a given valid radius, throws an error if invalid radius
 	 * 
 	 * @param radius
 	 * 
@@ -82,17 +83,14 @@ public class Ship {
 	private double y;
 	
 	/**
-	 * Check whether a position is valid.
+	 * Check whether a position is valid by returning a boolean indicating validness
+	 * 
 	 * @param x
 	 * @param y
-	 * @return boolean 
+	 * @return !(Double.isNaN(x) || Double.isNaN(y))
 	 */
 	private boolean isValidPosition(double x, double y) {
-		if (Double.isNaN(x) || Double.isNaN(y)) {
-			return false;
-		} else {
-			return true;
-		}
+		return !(Double.isNaN(x) || Double.isNaN(y));
 	}
 	
 	public double getPositionX() {return this.x;}
@@ -105,17 +103,18 @@ public class Ship {
 	 * @param x
 	 * @param y
 	 * @post  ...
-	 *        | new.getPosition() = position
+	 *        | new.getPositionx() = x
+	 *        | new.getPositionY() = y
 	 *        
-	 * @throws NullPointerException
-	 *         | isValidPostion(x,y)
+	 * @throws IllegalArgumentException
+	 *         | ! isValidPosition(x,y)
 	 */
-	public void setPosition(double x, double y) throws NullPointerException{
+	public void setPosition(double x, double y) throws IllegalArgumentException{
 		if (isValidPosition(x, y)) {
 			this.x = x;
 			this.y = y;
 		} else {
-			throw new NullPointerException("Position must not be null.");
+			throw new IllegalArgumentException("Position must not be NaN.");
 		}
 	}
 	
@@ -123,9 +122,8 @@ public class Ship {
 	private double velocityY;
 	
 	/**
-	 * Implement totally
-	 * 
 	 * Check whether the given velocity is valid.
+	 * 
 	 * @param x
 	 * @param y
 	 * @return boolean
@@ -143,11 +141,13 @@ public class Ship {
 	public double getVelocityY() {return this.velocityY;}
 	
 	/**
-	 * Implement totally
+	 * Set the velocity to a given valid velocity. If the given velocity is larger than the allowed maximum speed 
+	 * it will be reduced until it is valid. If the given velocity is NaN the velocity will be set to zero.
+	 * 
+	 * Implemented totally.
+	 * 
 	 * @param x
 	 * @param y
-	 * @pre   ...
-	 *        | isValidVelocity(x,y)
 	 * @post  ...
 	 *        | new.getVelocityX = x
 	 * @post  ...
@@ -163,14 +163,21 @@ public class Ship {
 			// tan(alfa) = Vy/Vx = V'y/V'x = constant
 			// sqrt(V'x^2 + V'y^2) = c followed by a substitution of V'y = V'x*tan(alfa) 
 			// gets you V'x = sqrt(c^2/1+tan(alfa)^2)
-						
-			double constantAngle = Math.atan(x/y);
-		    this.velocityX = Math.sqrt((Math.pow(MAX_SPEED,2))/(1+Math.pow(Math.tan(constantAngle), 2)));
-			this.velocityY = this.velocityX * Math.tan(constantAngle) ; 
+			
+			if (! (Double.isNaN(x) || Double.isNaN(y))) {
+				double constantAngle = Math.atan(x/y);
+			    this.velocityX = Math.sqrt((Math.pow(MAX_SPEED,2))/(1+Math.pow(Math.tan(constantAngle), 2)));
+				this.velocityY = this.velocityX * Math.tan(constantAngle) ; 
+			} else {
+				this.velocityX = 0;
+				this.velocityY = 0;
+			}
 		}
 	}
+	
 	/**
 	 * Check whether the given duration is valid.
+	 * 
 	 * @param duration
 	 * @return boolean
 	 */
@@ -179,13 +186,10 @@ public class Ship {
 	}
 	
 	/**
-	 * Implement defensively
-	 * 
 	 * This method moves the ship with a given valid duration.
 	 * 
-	 * @pre  ...
-	 *       | isValidDuration(duration)
-	 *       
+	 * Implemented defensively.
+	 * 
 	 * @post ...
 	 *       | new.getPositionX() = getPositionX() + getVelocityX()*duration
 	 * @post ...
@@ -207,17 +211,27 @@ public class Ship {
 		
 	}
 	
-	public boolean isValidAngle(double angle) {
-		return true;
-	}
-	
+	/**
+	 * A function to turn the ship by a given angle
+	 * 
+	 * Implemented nominally.
+	 * 
+	 * @pre
+	 * @post 
+	 * @param angle
+	 */
 	public void turn(double angle) {
-		// Implement nominally
-		
 		setOrientation(this.orientation+ angle % (2*Math.PI));
 	}
+	
+	/**
+	 * A function to accelerate the ship by a given amount
+	 * 
+	 * Implemented totally.
+	 * 
+	 * @param amount
+	 */
 	public void thrust(double amount) {
-		// Implement totally
 		if (amount < 0) {
 			amount = 0;
 		}
