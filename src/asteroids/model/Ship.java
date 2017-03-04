@@ -1,10 +1,5 @@
 package asteroids.model;
 
-import java.awt.geom.Point2D;
-
-import asteroids.util.ModelException;
-import be.kuleuven.cs.som.annotate.*;
-
 public class Ship {
 	
 	/* General comments:
@@ -265,12 +260,16 @@ public double getTimeToCollision(Ship other) throws IllegalArgumentException {
 		} else if (other == this){
 			return new Double(0);
 		} else {
-			Point2D deltaR = new Point2D.Double(this.getPositionX()-other.getPositionX(),this.getPositionY()-other.getPositionY());
-			Point2D deltaV = new Point2D.Double(this.getVelocityX()-other.getVelocityX(),this.getVelocityY()-other.getVelocityY());
 			
-			double deltaRR = Math.pow(deltaR.getX(), 2) + Math.pow(deltaR.getY(), 2);
-			double deltaVV = Math.pow(deltaV.getX(), 2) + Math.pow(deltaV.getY(), 2);
-			double deltaVR = (deltaV.getX()*deltaR.getX())  + (deltaV.getY()*deltaR.getY());
+			double deltaPositionX = this.getPositionX()-other.getPositionX();
+			double deltaPositionY = this.getPositionY()-other.getPositionY();
+
+			double deltaVelocityX = this.getVelocityX()-other.getVelocityX();
+			double deltaVelocityY = this.getVelocityY()-other.getVelocityY();
+			
+			double deltaRR = Math.pow(deltaPositionX, 2) + Math.pow(deltaPositionY, 2);
+			double deltaVV = Math.pow(deltaVelocityX, 2) + Math.pow(deltaVelocityY, 2);
+			double deltaVR = (deltaVelocityX*deltaPositionX)  + (deltaVelocityY*deltaPositionY);
 			double d = Math.pow(deltaVR, 2) - ((deltaVV)*(deltaRR - Math.pow(this.getDistanceBetween(other), 2)));
 			
 			

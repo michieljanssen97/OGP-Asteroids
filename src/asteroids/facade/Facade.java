@@ -5,7 +5,6 @@ import asteroids.model.Ship;
 
 import asteroids.part1.facade.IFacade;
 import asteroids.util.ModelException;
-import be.kuleuven.cs.som.annotate.Value;
 
 
 public class Facade implements IFacade {
