@@ -46,7 +46,6 @@ public class Ship {
 	 * @post  The orientation of this new ship is equal to the given orientation.
 	 *        | new.getOrientation() == orientation  
 	 * @throws IllegalArgumentException
-	 *        | (! isValidPosition(x,y)) or (! isValidRadius(radius)) or (!isValidVelocity(xVelocity,yVelocity))
 	 */
 	public Ship(double x, double y, double xVelocity, double yVelocity, double radius, double orientation) throws IllegalArgumentException {
 		try {
@@ -64,7 +63,9 @@ public class Ship {
 	/**
 	 * Return the orientation of this ship.
 	 */
-	public double getOrientation() {return this.orientation;}
+	public double getOrientation() {
+		return this.orientation;
+	}
 	
 	/**
 	 * Implement nominally.
@@ -75,13 +76,17 @@ public class Ship {
 	 *       | new.getOrientation() == angle
 	 * @param angle
 	 */
-	public void setOrientation(double angle) {this.orientation = angle;}
+	public void setOrientation(double angle) {
+		this.orientation = angle;
+	}
 	
 	private double radius;
 	/**
 	 * Return the radius of this ship.
 	 */
-	public double getRadius() {return this.radius;}
+	public double getRadius() {
+		return this.radius;
+	}
 	
 	/**
 	 * Check whether a radius is valid. The radius must be greater then 10.
@@ -144,7 +149,9 @@ public class Ship {
 	 * 
 	 * Set the ship to a valid position.
 	 * @param x
+	 *        The x-coordinate for this new ship.
 	 * @param y
+	 *        The y-coordinate for this new ship.
 	 * @post  The position of the ship is equal to the given x- and y-coordinate.
 	 *        | new.getPositionX() == x
 	 *        | new.getPositionY() == y
@@ -167,7 +174,7 @@ public class Ship {
 	/**
 	 * Check whether a given velocity is a valid velocity by returning a boolean indicating validness.
 	 * 
-	 * @param x
+	 * @param x   
 	 *        The x-coordinate of this ship.
 	 * @param y
 	 *        The y-coordinate of this ship.
@@ -184,20 +191,19 @@ public class Ship {
 	/**
 	 * Return the xVelocity of this ship.
 	 */
-	public double getVelocityX() {return this.velocityX;}
+	public double getVelocityX() {
+		return this.velocityX;
+	}
 	/**
 	 * Return the yVelocity of this ship.
 	 */
-	public double getVelocityY() {return this.velocityY;}
+	public double getVelocityY() {
+		return this.velocityY;
+	}
 	
 	/**
-	 * Set the velocity to a given valid velocity. If the given velocity is larger than the allowed maximum speed 
-	 * it will be reduced until it is valid. If the given velocity is NaN the velocity will be set to zero.
-	 * 
-	 * The tangent of the enclosed angle should remain constant when reducing xVelocity and yVelocity!
-	 * | tan(alfa) = this.getVelocityY/this.getVelocityX = new.getVelocityY/new.getVelocityX = constant
-	 * | new.getVelocityX = sqrt((MAX_SPEED^2)/(1+tan(alfa)^2))
-	 * | new.getVelocityY = sqrt(new.getVelocityX*tan(alfa))
+	 * Set the velocity to a given valid velocity. If the magnitude of the velocity is larger than the allowed maximum speed (=300000) 
+	 * it will be reduced until it is valid (=MAX_SPEED). If the given velocity is NaN the velocity will be set to zero.
 	 * 
 	 * Implemented totally.
 	 * 
@@ -205,10 +211,17 @@ public class Ship {
 	 * 	      The x-coordinate of this ship.
 	 * @param y
 	 *        The y-coordinate of this ship.
-	 * @post  ...
+	 * @post  If the magnitude of the velocity is less then MAX_SPEED 
+	 *        then we set the velocity to the given velocity.
 	 *        | new.getVelocityX() == x
-	 * @post  ...
 	 *        | new.getVelocityY() == y
+	 *        If the magnitude of the velocity is greater then MAX_SPEED
+	 *        then we reduce the magnitude until it becomes the MAX_SPEED.
+	 *        The tangent of the enclosed angle should remain constant 
+	 *        when reducing xVelocity and yVelocity.
+	 *        | tan(alfa) = this.getVelocityY/this.getVelocityX = new.getVelocityY/new.getVelocityX = MAX_SPEED
+	 *        | new.getVelocityX = sqrt((MAX_SPEED^2)/(1+tan(alfa)^2))
+	 *        | new.getVelocityY = sqrt(new.getVelocityX*tan(alfa))
 	 */
 	public void setVelocity(double x, double y) {
 		if (isValidVelocity(x, y)) {
@@ -216,7 +229,7 @@ public class Ship {
 			this.velocityY = y;
 		} else {
 			if (! (Double.isNaN(x) || Double.isNaN(y))) {
-				double constantAngle = Math.atan(x/y);
+				double constantAngle = Math.atan(y/x);
 			    this.velocityX = Math.sqrt((Math.pow(MAX_SPEED,2))/(1+Math.pow(Math.tan(constantAngle), 2)));
 				this.velocityY = this.velocityX * Math.tan(constantAngle) ; 
 			} else {
@@ -242,10 +255,10 @@ public class Ship {
 	 * 
 	 * Implemented defensively.
 	 * 
-	 * @post The new xPosition of this ship is the current xPosition plus the current xVelocity equaled by its duration.
-	 *       | new.getPositionX() = getPositionX() + getVelocityX()*duration
-	 * @post The new yPosition of this ship is the current yPosition plus the current yVelocity equaled by its duration.
-	 *       | new.getPositionY() = getPositionY() + getVelocityY()*duration
+	 * @post The new xPosition of this ship is the current xPosition plus the current xVelocity*duration.
+	 *       | new.getPositionX() == this.getPositionX() + this.getVelocityX()*duration
+	 * @post The new yPosition of this ship is the current yPosition plus the current yVelocity*duration.
+	 *       | new.getPositionY() == this.getPositionY() + this.getVelocityY()*duration
 	 *       
 	 * @param duration
 	 * @throws IllegalArgumentException
@@ -284,6 +297,20 @@ public class Ship {
 	 * Implemented totally.
 	 * 
 	 * @param amount
+	 *        The amount of thrust for this new ship.
+	 * @post  If the given amount is less then zero (=negative amount) 
+	 *        then the amount is set to zero.
+	 *        If the given amount is positive the ship's velocity is 
+	 *        set to a new velocity.
+	 *        | if (amount <0) 
+	 *        |    then amount == 0
+	 *        | else 
+	 *        |     new.getVelocityX() = this.getVelocityX() + amount*Math.cos(this.getOrientation())
+	 *        |     new.getVelocityY() = this.getVelocityY() + amount*Math.cos(this.getOrientation())    
+	 *        
+	 *        
+	 * @effect The velocity is set to to new velocity.
+	 *         | setVelocicty(new.getVelocityX(),new.getVelocityY())
 	 */
 	public void thrust(double amount) {
 		if (amount < 0) {
