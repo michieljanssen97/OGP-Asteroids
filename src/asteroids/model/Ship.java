@@ -172,13 +172,17 @@ public class Ship {
 	private double velocityY;
 	
 	/**
-	 * Check whether a given velocity is a valid velocity by returning a boolean indicating validness.
+	 * Check whether a given velocity is a valid velocity by 
+	 * returning a boolean indicating validness.
 	 * 
 	 * @param x   
 	 *        The x-coordinate of this ship.
 	 * @param y
 	 *        The y-coordinate of this ship.
-	 * @return boolean
+	 * @return True if and only if the speed is greater then zero 
+	 *         and the speed is less or equal to MAX_SPEED.
+	 *         | result == 
+	 *         |       (0 <= speed && speed <= MAX_SPEED)
 	 */
 	private boolean isValidVelocity(double x, double y) {
 		if (Double.isNaN(x) || Double.isNaN(y)) {
@@ -242,8 +246,8 @@ public class Ship {
 	/**
 	 * Check whether the given duration is valid.
 	 * 
-	 * @param duration
-	 * 		  The duration of this ship.
+	 * @param  duration
+	 * 		   The duration of this ship.
 	 * @return duration >= 0
 	 */
 	public boolean isValidDuration (double duration) {
@@ -256,11 +260,11 @@ public class Ship {
 	 * Implemented defensively.
 	 * 
 	 * @post The new xPosition of this ship is the current xPosition plus the current xVelocity*duration.
-	 *       | new.getPositionX() == this.getPositionX() + this.getVelocityX()*duration
+	 *       | new.getPositionX() == getPositionX() + getVelocityX()*duration
 	 * @post The new yPosition of this ship is the current yPosition plus the current yVelocity*duration.
-	 *       | new.getPositionY() == this.getPositionY() + this.getVelocityY()*duration
+	 *       | new.getPositionY() == getPositionY() + getVelocityY()*duration
 	 *       
-	 * @param duration
+	 * @param  duration
 	 * @throws IllegalArgumentException
 	 *         | ! isValidDuration(duration)
 	 */
@@ -284,7 +288,7 @@ public class Ship {
 	 * @pre The angle must be between 0 and 2*pi.
 	 * 		| 0 <= angle < 2*pi 
 	 * @post The new orientation of this is ship is the current orientation plus the given angle module 2*PI.
-	 *      | new.getOrientation() == (this.orientation + angle) % (2*PI)
+	 *      | new.getOrientation() == (getOrientation + angle) % (2*PI)
 	 * @param angle
 	 */
 	public void turn(double angle) {
@@ -296,19 +300,17 @@ public class Ship {
 	 * 
 	 * Implemented totally.
 	 * 
-	 * @param amount
-	 *        The amount of thrust for this new ship.
-	 * @post  If the given amount is less then zero (=negative amount) 
-	 *        then the amount is set to zero.
-	 *        If the given amount is positive the ship's velocity is 
-	 *        set to a new velocity.
-	 *        | if (amount <0) 
-	 *        |    then amount == 0
-	 *        | else 
-	 *        |     new.getVelocityX() = this.getVelocityX() + amount*Math.cos(this.getOrientation())
-	 *        |     new.getVelocityY() = this.getVelocityY() + amount*Math.cos(this.getOrientation())    
-	 *        
-	 *        
+	 * @param  amount
+	 *         The amount of thrust for this new ship.
+	 * @post   If the given amount is less then zero (=negative amount) 
+	 *         then the amount is set to zero.
+	 *         If the given amount is positive the ship's velocity is 
+	 *         set to a new velocity.
+	 *         | if (amount <0) 
+	 *         |    then amount == 0
+	 *         | else 
+	 *         |     new.getVelocityX() = getVelocityX() + amount*Math.cos(getOrientation())
+	 *         |     new.getVelocityY() = getVelocityY() + amount*Math.cos(getOrientation())    
 	 * @effect The velocity is set to to new velocity.
 	 *         | setVelocicty(new.getVelocityX(),new.getVelocityY())
 	 */
@@ -322,6 +324,20 @@ public class Ship {
 				
 	}
 	
+	/**
+	 * This method measures the distance between two given ships.
+	 * 
+	 * Implement defensively. 
+	 * 
+	 * @param  other
+	 * 		   The second (other) ship. We use this ship to measure the distance.
+	 * @return Return a distance if and only if the other ship is not null or
+	 *         this ship is the same as the other ship ((other != ship) && (other != null)).
+	 * @throws NullPointerException
+	 *         The other ship is not effective.
+	 *         | other == null
+	 */
+	
 	public double getDistanceBetween(Ship other) throws NullPointerException {
 		if (other == this) {
 			return new Double(0);
@@ -333,11 +349,30 @@ public class Ship {
 			return distance;
 		}
 	}
-
+	
+	/**
+	 * This method determines whether there is overlap between two ships.
+	 * 
+	 * Implement defensively.
+	 *  
+	 * @param  other
+	 *         The second (other) ship. We use this ship to determine the possibility of overlap.
+	 * @return Return true if and only if two ships overlap.
+	 *         This means that the other ship musn't be null.
+	 *         Two ships will overlap (return true) if the sum of their radii is 
+	 *         greater then the distance between these ships.
+	 *          -> r1+r2 >= sqrt( (x2-x1)**2 + (y2-y1)**2 )    
+	 *         | result =
+	 *         |       (getRadius()+ other.getRadius) >=
+	 *         |       (getDistanceBetween(other))
+	 *         
+	 * @throws NullPointerException
+	 *         The other ship is not effective.
+	 *         | other == null
+	 */
+	
 	public boolean overlap(Ship other) throws NullPointerException {
-		// see if the distance between the centers of the two circles is less then r1+r2. Then they will overlap in the plane. 
-		// r1+r2 > sqrt( (x2-x1)**2 + (y2-y1)**2 ) 	
-		
+			
 		if (other == null) {
 			throw new NullPointerException();
 		} else {
@@ -347,7 +382,18 @@ public class Ship {
 		}
 	}
 	
-public double getTimeToCollision(Ship other) throws IllegalArgumentException {
+	/**
+	 * This method calculates the time prior to collision. 
+	 * 
+	 * @param other
+	 *        The second (other) ship. We use this ship to determine the time to collision.
+	 * @return
+	 * @throws IllegalArgumentException
+	 *         The other ship is not effective.
+	 *         | other == null
+	 */
+	
+	public double getTimeToCollision(Ship other) throws NullPointerException {
 		
 		// if two ships already overlap, the time to collision is set to zero
 		// if deltaV * deltaR >= 0, time to collision is set to infinity
@@ -355,7 +401,7 @@ public double getTimeToCollision(Ship other) throws IllegalArgumentException {
 		// else deltaT = - ((deltaV*deltaR+sqrt(d))/(deltaV+deltaV))
 	
 		if (other == null){
-			throw new IllegalArgumentException();
+			throw new NullPointerException();
 		} else if (other == this){
 			return new Double(0);
 		} else {
@@ -386,6 +432,18 @@ public double getTimeToCollision(Ship other) throws IllegalArgumentException {
 			}
 		}
 	}
+	
+	/**
+	 * This method calculates the position of collision if two ships will collide.
+	 * 
+	 * @param other
+	 *        The second (other) ship. We use this ship to determine the position of collision.
+	 * @return
+	 * @throws NullPointerException
+	 *         The other ship is not effective.
+	 *         | other == null
+	 */
+	
 	public double[] getCollisionPosition(Ship other) throws NullPointerException {
 		
 		// The Collision position is the current position plus the time to collision multiplied by its velocity, with is no acceleration
