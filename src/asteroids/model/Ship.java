@@ -60,8 +60,10 @@ public class Ship {
 	};
 	
 	private double orientation;
+	
 	/**
 	 * Return the orientation of this ship.
+	 * @return this.orientation
 	 */
 	public double getOrientation() {
 		return this.orientation;
@@ -81,8 +83,10 @@ public class Ship {
 	}
 	
 	private double radius;
+	
 	/**
 	 * Return the radius of this ship.
+	 * @return this.radius
 	 */
 	public double getRadius() {
 		return this.radius;
@@ -269,7 +273,6 @@ public class Ship {
 	 *         | ! isValidDuration(duration)
 	 */
 	public void move(double duration) throws IllegalArgumentException {
-		// Implement defensively
 		if (isValidDuration(duration)) {
 			double deltaX = getVelocityX()*duration;
 			double deltaY = getVelocityY()*duration;
@@ -367,10 +370,9 @@ public class Ship {
 	 *         |       (getDistanceBetween(other))
 	 *         
 	 * @throws NullPointerException
-	 *         The other ship is not effective.
+	 *         The other ship doesn't exist.
 	 *         | other == null
 	 */
-	
 	public boolean overlap(Ship other) throws NullPointerException {
 			
 		if (other == null) {
@@ -392,7 +394,6 @@ public class Ship {
 	 *         The other ship is not effective.
 	 *         | other == null
 	 */
-	
 	public double getTimeToCollision(Ship other) throws NullPointerException {
 		
 		// if two ships already overlap, the time to collision is set to zero
@@ -440,10 +441,9 @@ public class Ship {
 	 *        The second (other) ship. We use this ship to determine the position of collision.
 	 * @return
 	 * @throws NullPointerException
-	 *         The other ship is not effective.
+	 *         The other ship does not exist.
 	 *         | other == null
 	 */
-	
 	public double[] getCollisionPosition(Ship other) throws NullPointerException {
 		
 		// The Collision position is the current position plus the time to collision multiplied by its velocity, with is no acceleration
