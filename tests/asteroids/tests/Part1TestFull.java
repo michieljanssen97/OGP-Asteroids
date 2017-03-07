@@ -13,6 +13,10 @@ import asteroids.util.ModelException;
 
 public class Part1TestFull {
 	
+	/**
+	 * Write a test suite for the class Ship that tests each _public_ function
+	 */
+	
 	private static final double EPSILON = 0.0001;
 
 	IFacade facade;
@@ -102,20 +106,20 @@ public class Part1TestFull {
 	
 	@Test
 	public void testGetTimetoCollision() throws ModelException {
-		Ship ship1 = facade.createShip(0, 0, 1, 0, 20, 0);
+		Ship ship1 = facade.createShip(0, 0, 2, 0, 20, 0);
 		Ship ship2 = facade.createShip(100, 0, 0, 0, 20, 0);
 		double timeToCollision = facade.getTimeToCollision(ship1, ship2);
 		assertNotNull(timeToCollision);
-		assertEquals(80, timeToCollision, EPSILON);
+		assertEquals(30, timeToCollision, EPSILON);
 	}
 	
 	@Test
 	public void testGetCollisionPosition() throws ModelException {
-		Ship ship1 = facade.createShip(0, 0, 1, 0, 20, 0);
+		Ship ship1 = facade.createShip(0, 0, 2, 0, 20, 0);
 		Ship ship2 = facade.createShip(100, 0, 0, 0, 20, 0);
 		double[] collisionPosition = facade.getCollisionPosition(ship1, ship2);
 		assertNotNull(collisionPosition);
-		assertEquals(80, collisionPosition[0], EPSILON);
+		assertEquals(60, collisionPosition[0], EPSILON);
 		assertEquals(0, collisionPosition[1], EPSILON);
 	}
 }

@@ -407,16 +407,16 @@ public class Ship {
 			return new Double(0);
 		} else {
 			
-			double deltaPositionX = this.getPositionX()-other.getPositionX();
-			double deltaPositionY = this.getPositionY()-other.getPositionY();
+			double deltaPosX = other.getPositionX()-this.getPositionX();
+			double deltaPosY = other.getPositionY()-this.getPositionY();
 
-			double deltaVelocityX = this.getVelocityX()-other.getVelocityX();
-			double deltaVelocityY = this.getVelocityY()-other.getVelocityY();
+			double deltaVelX = other.getVelocityX()-this.getVelocityX();
+			double deltaVelY = other.getVelocityY()-this.getVelocityY();
 			
-			double deltaRR = Math.pow(deltaPositionX, 2) + Math.pow(deltaPositionY, 2);
-			double deltaVV = Math.pow(deltaVelocityX, 2) + Math.pow(deltaVelocityY, 2);
-			double deltaVR = (deltaVelocityX*deltaPositionX)  + (deltaVelocityY*deltaPositionY);
-			double d = Math.pow(deltaVR, 2) - ((deltaVV)*(deltaRR - Math.pow(this.getDistanceBetween(other), 2)));
+			double deltaRR = Math.pow(deltaPosX, 2) + Math.pow(deltaPosY, 2);
+			double deltaVV = Math.pow(deltaVelX, 2) + Math.pow(deltaVelY, 2);
+			double deltaVR = (deltaVelX*deltaPosX)  + (deltaVelY*deltaPosY);
+			double d = Math.pow(deltaVR, 2) - deltaVV*(deltaRR - Math.pow(this.getRadius()+other.getRadius(), 2));
 			
 			
 			if (this.overlap(other)) {
@@ -458,7 +458,9 @@ public class Ship {
 		else {
 			
 			if (getTimeToCollision(other) != Double.POSITIVE_INFINITY ){
-				double[] pos =  {this.getPositionX()+this.getVelocityX()*this.getTimeToCollision(other), this.getPositionY()+this.getVelocityY()*this.getTimeToCollision(other)};
+				double posX = this.getPositionX() + this.getTimeToCollision(other)*this.getVelocityX();
+				double posY = this.getPositionY() + this.getTimeToCollision(other)*this.getVelocityY();
+				double[] pos =  {posX, posY};
 				return pos;	
 			} else {
 				return null;
