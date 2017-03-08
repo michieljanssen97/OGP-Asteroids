@@ -334,10 +334,10 @@ public class Ship {
 	 * 
 	 * @param  other
 	 * 		   The second (other) ship. We use this ship to measure the distance.
-	 * @return Return a distance if and only if the other ship is not null or
-	 *         this ship is the same as the other ship ((other != ship) && (other != null)).
+	 * @return A distance if and only if the other ship is not null and
+	 *         this ship is not the same as the other ship ((other != ship) && (other != null)).
 	 * @throws NullPointerException
-	 *         The other ship is not effective.
+	 *         The other ship does not exist.
 	 *         | other == null
 	 */
 	
@@ -360,7 +360,7 @@ public class Ship {
 	 *  
 	 * @param  other
 	 *         The second (other) ship. We use this ship to determine the possibility of overlap.
-	 * @return Return true if and only if two ships overlap.
+	 * @return True if and only if two ships overlap.
 	 *         This means that the other ship musn't be null.
 	 *         Two ships will overlap (return true) if the sum of their radii is 
 	 *         greater then the distance between these ships.
@@ -370,7 +370,7 @@ public class Ship {
 	 *         |       (getDistanceBetween(other))
 	 *         
 	 * @throws NullPointerException
-	 *         The other ship doesn't exist.
+	 *         The other ship does not exist.
 	 *         | other == null
 	 */
 	public boolean overlap(Ship other) throws NullPointerException {
@@ -385,13 +385,15 @@ public class Ship {
 	}
 	
 	/**
-	 * This method calculates the time prior to collision. 
+	 * This method calculates when, if ever, two ships will collide. 
+	 * 
+	 * Implement defensively.
 	 * 
 	 * @param other
 	 *        The second (other) ship. We use this ship to determine the time to collision.
 	 * @return
-	 * @throws IllegalArgumentException
-	 *         The other ship is not effective.
+	 * @throws NullPointerException
+	 *         The other ship does not exist.
 	 *         | other == null
 	 */
 	public double getTimeToCollision(Ship other) throws NullPointerException {
@@ -416,7 +418,7 @@ public class Ship {
 			double deltaRR = Math.pow(deltaPosX, 2) + Math.pow(deltaPosY, 2);
 			double deltaVV = Math.pow(deltaVelX, 2) + Math.pow(deltaVelY, 2);
 			double deltaVR = (deltaVelX*deltaPosX)  + (deltaVelY*deltaPosY);
-			double d = Math.pow(deltaVR, 2) - deltaVV*(deltaRR - Math.pow(this.getRadius()+other.getRadius(), 2));
+			double d = Math.pow(deltaVR, 2) - ((deltaVV)*(deltaRR - Math.pow(this.getRadius()+other.getRadius(), 2)));
 			
 			
 			if (this.overlap(other)) {
@@ -435,11 +437,15 @@ public class Ship {
 	}
 	
 	/**
-	 * This method calculates the position of collision if two ships will collide.
+	 * This method calculates where, if ever, two ships will collide.
+	 * 
+	 * Implement defensively.
 	 * 
 	 * @param other
 	 *        The second (other) ship. We use this ship to determine the position of collision.
-	 * @return
+	 * @return A position if and only if the other ship is not null, the time 
+	 *         to collision is not equal to infinity and the two ships 
+	 *         are not overlapping.
 	 * @throws NullPointerException
 	 *         The other ship does not exist.
 	 *         | other == null
