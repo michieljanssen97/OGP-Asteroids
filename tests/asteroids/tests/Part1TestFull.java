@@ -123,5 +123,12 @@ public class Part1TestFull {
 		assertEquals(0, collisionPosition[1], EPSILON);
 	}
 	
-	
+	@Test
+	public void testMaxSpeed() throws ModelException {
+		Ship ship = facade.createShip(0, 0, 300000, 100000, 20, 0);
+		double magnitude = Math.sqrt(Math.pow(ship.getVelocityX(), 2)+Math.pow(ship.getVelocityY(), 2));
+		assertEquals(300000, magnitude, EPSILON);
+		assertEquals(284604.9894, ship.getVelocityX(), EPSILON);
+		assertEquals(94868.3298, ship.getVelocityY(), EPSILON);
+	}
 }

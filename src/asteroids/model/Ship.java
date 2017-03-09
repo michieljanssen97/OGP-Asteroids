@@ -1,7 +1,5 @@
 package asteroids.model;
 
-import be.kuleuven.cs.som.annotate.*;
-
 /**
  * A class that defines a spaceship for the Asteroids game.
  * 
@@ -54,7 +52,7 @@ public class Ship {
 			setVelocity(xVelocity, yVelocity);
 			setRadius(radius);
 			setOrientation(orientation);
-		} catch (Exception e) {
+		} catch (IllegalArgumentException e) {
 			throw e;
 		}
 		
@@ -132,7 +130,9 @@ public class Ship {
 	 * Check whether a given position is valid position by returning a boolean indicating validness.
 	 * 
 	 * @param x
+	 *        The x-coordinate for this new ship.
 	 * @param y
+	 * 		  The y-coordinate for this new ship.
 	 * @return !(Double.isNaN(x) || Double.isNaN(y))
 	 */
 	private boolean isValidPosition(double x, double y) {
@@ -141,11 +141,15 @@ public class Ship {
 	
 	/**
 	 * Return the x-coordinate of this ship.
+	 * 
+	 * @return this.x
 	 */
 	public double getPositionX() {return this.x;}
 	
 	/**
-	 * Return the x-coordinate of this ship.
+	 * Return the y-coordinate of this ship.
+	 * 
+	 * @return this.y
 	 */
 	public double getPositionY() {return this.y;}
 	
@@ -181,9 +185,9 @@ public class Ship {
 	 * returning a boolean indicating validness.
 	 * 
 	 * @param x   
-	 *        The x-coordinate of this ship.
+	 *        The x-velocity of this ship.
 	 * @param y
-	 *        The y-coordinate of this ship.
+	 *        The y-velocity of this ship.
 	 * @return True if and only if the speed is greater then zero 
 	 *         and the speed is less or equal to MAX_SPEED.
 	 *         | result == 
@@ -193,18 +197,22 @@ public class Ship {
 		if (Double.isNaN(x) || Double.isNaN(y)) {
 			return false;
 		} else {
-			double speed = Math.sqrt(Math.pow(this.getVelocityX(), 2)+Math.pow(this.getVelocityY(), 2));
+			double speed = Math.sqrt(Math.pow(x, 2)+Math.pow(y, 2));
 			return 0 <= speed && speed <= MAX_SPEED;
 		}
 	}
 	/**
 	 * Return the xVelocity of this ship.
+	 * 
+	 * @return this.velocityX
 	 */
 	public double getVelocityX() {
 		return this.velocityX;
 	}
 	/**
 	 * Return the yVelocity of this ship.
+	 * 
+	 * @return this.velocityY
 	 */
 	public double getVelocityY() {
 		return this.velocityY;
@@ -224,7 +232,7 @@ public class Ship {
 	 *        then we set the velocity to the given velocity.
 	 *        | new.getVelocityX() == x
 	 *        | new.getVelocityY() == y
-	 *        If the magnitude of the velocity is greater then MAX_SPEED
+	 * @post  If the magnitude of the velocity is greater then MAX_SPEED
 	 *        then we reduce the magnitude until it becomes the MAX_SPEED.
 	 *        The tangent of the enclosed angle should remain constant 
 	 *        when reducing xVelocity and yVelocity.
@@ -265,9 +273,9 @@ public class Ship {
 	 * Implemented defensively.
 	 * 
 	 * @post The new xPosition of this ship is the current xPosition plus the current xVelocity*duration.
-	 *       | new.getPositionX() == getPositionX() + getVelocityX()*duration
+	 *       | new.getPositionX() == this.getPositionX() + this.getVelocityX()*duration
 	 * @post The new yPosition of this ship is the current yPosition plus the current yVelocity*duration.
-	 *       | new.getPositionY() == getPositionY() + getVelocityY()*duration
+	 *       | new.getPositionY() == this.getPositionY() + this.getVelocityY()*duration
 	 *       
 	 * @param  duration
 	 * @throws IllegalArgumentException
@@ -294,6 +302,7 @@ public class Ship {
 	 * @post The new orientation of this is ship is the current orientation plus the given angle module 2*PI.
 	 *      | new.getOrientation() == (getOrientation + angle) % (2*PI)
 	 * @param angle
+	 * 		| The given angle that will be added to the ship's current orientation
 	 */
 	public void turn(double angle) {
 		setOrientation(this.orientation+ angle % (2*Math.PI));
@@ -306,17 +315,15 @@ public class Ship {
 	 * 
 	 * @param  amount
 	 *         The amount of thrust for this new ship.
-	 * @post   If the given amount is less then zero (=negative amount) 
-	 *         then the amount is set to zero.
-	 *         If the given amount is positive the ship's velocity is 
-	 *         set to a new velocity.
-	 *         | if (amount <0) 
+	 * @post   If the given amount is less then zero (=negative amount) then the amount is set to zero.
+	 * 	       | if (amount < 0) 
 	 *         |    then amount == 0
-	 *         | else 
-	 *         |     new.getVelocityX() = getVelocityX() + amount*Math.cos(getOrientation())
-	 *         |     new.getVelocityY() = getVelocityY() + amount*Math.cos(getOrientation())    
+	 * @post   If the given amount is positive the ship's velocity is set to a new velocity.
+	 *         | if (amount > 0)
+	 *         |     new.getVelocityX() = this.getVelocityX() + amount*Math.cos(this.getOrientation())
+	 *         |     new.getVelocityY() = this.getVelocityY() + amount*Math.cos(this.getOrientation())    
 	 * @effect The velocity is set to to new velocity.
-	 *         | setVelocicty(new.getVelocityX(),new.getVelocityY())
+	 *         | setVelocity(new.getVelocityX(),new.getVelocityY())
 	 */
 	public void thrust(double amount) {
 		if (amount < 0) {
@@ -402,10 +409,10 @@ public class Ship {
 	 * 		If the ships are not one and the same and they are not currently colliding then we have to check if
 	 * 		the two ships are on a collision course by using the formula given in the project specification.
 	 * 
-	 *  	further specification of the formula: - deltaVR >= 0
-	 *  										  - d <= 0
-	 *  										  - otherwise
-	 *
+	 * 		If deltaVR (The dot product of the vector containing the difference in velocity between the ships 
+	 * 		and the vector containing the difference in position between the ships) is not bigger or equal to 
+	 * 		zero and the "d value" (given in the specification of the project) is not smaller or equal to zero 
+	 * 		then the function will return a positive real collision time. 
 	 * 
 	 * @param other
 	 *        The second (other) ship. We use this ship to determine the time to collision.
@@ -414,12 +421,6 @@ public class Ship {
 	 *         | other == null
 	 */
 	public double getTimeToCollision(Ship other) throws NullPointerException {
-		
-		// if two ships already overlap, the time to collision is set to zero
-		// if deltaV * deltaR >= 0, time to collision is set to infinity
-		// else if d <= 0, time to collision is set to infinity
-		// else deltaT = - ((deltaV*deltaR+sqrt(d))/(deltaV+deltaV))
-	
 		if (other == null){
 			throw new NullPointerException();
 		} else if (other == this){
@@ -456,6 +457,12 @@ public class Ship {
 	/**
 	 * This method calculates where, if ever, two ships will collide.
 	 * 
+	 * The Collision position is the current position plus the time to collision multiplied by its velocity.
+	 * In math: x(t) = this.getPostionX() + this.getVelocityX() * this.getTimeToCollision(other)
+	 *          y(t) = this.getPostionY() + this.getVelocityY() * this.getTimeToCollision(other)
+	 * In case the ship gets an acceleration, we measure the new velocity after the thrust has stopped.
+	 * We use this new velocity to measure the new time to collision and the new collision position. 
+	 * 
 	 * Implement defensively.
 	 * 
 	 * @param other
@@ -463,16 +470,13 @@ public class Ship {
 	 * @return A position if and only if the other ship is not null, the time 
 	 *         to collision is not equal to infinity and the two ships 
 	 *         are not overlapping.
+	 * @return null
+	 * 		   | this.overlap(other)
 	 * @throws NullPointerException
 	 *         The other ship does not exist.
 	 *         | other == null
 	 */
-	public double[] getCollisionPosition(Ship other) throws NullPointerException {
-		
-		// The Collision position is the current position plus the time to collision multiplied by its velocity, with is no acceleration
-		// In math: x(t) = x0 + Vx * getTimeToCollision
-		//          y(t) = y0 + VY * getTimeToCollision          
-		
+	public double[] getCollisionPosition(Ship other) throws NullPointerException {      
 		if (other == null){
 			throw new NullPointerException();
 		} else if (this.overlap(other)) {
