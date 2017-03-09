@@ -1,5 +1,6 @@
 package asteroids.model;
 
+import be.kuleuven.cs.som.annotate.*;
 
 /**
  * A class that defines a spaceship for the Asteroids game.

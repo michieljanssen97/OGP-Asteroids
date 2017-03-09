@@ -122,4 +122,6 @@ public class Part1TestFull {
 		assertEquals(60, collisionPosition[0], EPSILON);
 		assertEquals(0, collisionPosition[1], EPSILON);
 	}
+	
+	
 }
