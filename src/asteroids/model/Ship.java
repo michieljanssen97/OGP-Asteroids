@@ -98,7 +98,7 @@ public class Ship {
 	 * @param radius
 	 * @return (radius > MIN_RADIUS) && (! Double.isNaN(radius))
 	 */
-	public boolean isValidRadius(double radius) {
+	private boolean isValidRadius(double radius) {
 		return (radius > MIN_RADIUS) && (! Double.isNaN(radius));
 	}
 		
@@ -254,7 +254,7 @@ public class Ship {
 	 * 		   The duration of this ship.
 	 * @return duration >= 0
 	 */
-	public boolean isValidDuration (double duration) {
+	private boolean isValidDuration (double duration) {
 		return duration >= 0;
 	}
 	
@@ -389,9 +389,25 @@ public class Ship {
 	 * 
 	 * Implement defensively.
 	 * 
+	 * Declarative specification for the case where the method returns a finite value:
+	 * 
+	 *		In order to get the time to a possible collision we will first have to check if the two ships are not
+	 *		one and the same. In that case the time to collision is null and an error is thrown.
+	 *
+	 * 		After we have verified that the two ships are different entities we need to perform another check to
+	 * 		see if the two ships are not currently colliding. In that case the collision time is zero, since the
+	 * 		ship already collided. 
+	 * 
+	 * 		If the ships are not one and the same and they are not currently colliding then we have to check if
+	 * 		the two ships are on a collision course by using the formula given in the project specification.
+	 * 
+	 *  	further specification of the formula: - deltaVR >= 0
+	 *  										  - d <= 0
+	 *  										  - otherwise
+	 *
+	 * 
 	 * @param other
 	 *        The second (other) ship. We use this ship to determine the time to collision.
-	 * @return
 	 * @throws NullPointerException
 	 *         The other ship does not exist.
 	 *         | other == null
