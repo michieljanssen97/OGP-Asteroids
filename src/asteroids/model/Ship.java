@@ -66,7 +66,7 @@ public class Ship {
 	 * Return the orientation of this ship.
 	 * @return this.orientation
 	 */
-	@Basic
+	@Basic @Immutable
 	public double getOrientation() {
 		return this.orientation;
 	}
@@ -90,7 +90,7 @@ public class Ship {
 	 * Return the radius of this ship.
 	 * @return this.radius
 	 */
-	@Basic
+	@Basic @Immutable
 	public double getRadius() {
 		return this.radius;
 	}
@@ -148,7 +148,7 @@ public class Ship {
 	 * 
 	 * @return this.x
 	 */
-	@Basic
+	@Basic @Immutable
 	public double getPositionX() {return this.x;}
 	
 	/**
@@ -156,7 +156,7 @@ public class Ship {
 	 * 
 	 * @return this.y
 	 */
-	@Basic
+	@Basic @Immutable
 	public double getPositionY() {return this.y;}
 	
 	/**
@@ -212,7 +212,7 @@ public class Ship {
 	 * 
 	 * @return this.velocityX
 	 */
-	@Basic
+	@Basic @Immutable
 	public double getVelocityX() {
 		return this.velocityX;
 	}
@@ -221,7 +221,7 @@ public class Ship {
 	 * 
 	 * @return this.velocityY
 	 */
-	@Basic
+	@Basic @Immutable
 	public double getVelocityY() {
 		return this.velocityY;
 	}
