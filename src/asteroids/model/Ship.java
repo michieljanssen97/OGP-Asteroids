@@ -1,5 +1,7 @@
 package asteroids.model;
 
+import be.kuleuven.cs.som.annotate.*;
+
 /**
  * A class that defines a spaceship for the Asteroids game.
  * 
@@ -64,6 +66,7 @@ public class Ship {
 	 * Return the orientation of this ship.
 	 * @return this.orientation
 	 */
+	@Basic
 	public double getOrientation() {
 		return this.orientation;
 	}
@@ -87,6 +90,7 @@ public class Ship {
 	 * Return the radius of this ship.
 	 * @return this.radius
 	 */
+	@Basic
 	public double getRadius() {
 		return this.radius;
 	}
@@ -144,6 +148,7 @@ public class Ship {
 	 * 
 	 * @return this.x
 	 */
+	@Basic
 	public double getPositionX() {return this.x;}
 	
 	/**
@@ -151,6 +156,7 @@ public class Ship {
 	 * 
 	 * @return this.y
 	 */
+	@Basic
 	public double getPositionY() {return this.y;}
 	
 	/**
@@ -206,6 +212,7 @@ public class Ship {
 	 * 
 	 * @return this.velocityX
 	 */
+	@Basic
 	public double getVelocityX() {
 		return this.velocityX;
 	}
@@ -214,6 +221,7 @@ public class Ship {
 	 * 
 	 * @return this.velocityY
 	 */
+	@Basic
 	public double getVelocityY() {
 		return this.velocityY;
 	}
