@@ -121,7 +121,6 @@ public class Ship {
 	 * 		   The given radius is not a valid radius.
 	 *         | ! isValidRadius(radius)
 	 */
-	@Raw
 	public void setRadius(double radius) throws IllegalArgumentException {
 		if (isValidRadius(radius)) {
 			this.radius = radius;
@@ -140,6 +139,8 @@ public class Ship {
 	 *        The x-coordinate for this new ship.
 	 * @param y
 	 * 		  The y-coordinate for this new ship.
+	 * @invar x and y are real numbers
+	 * 		  | 
 	 * @return !(Double.isNaN(x) || Double.isNaN(y))
 	 */
 	private boolean isValidPosition(double x, double y) {
@@ -171,7 +172,6 @@ public class Ship {
 	 *        The x-coordinate for this new ship.
 	 * @param y
 	 *        The y-coordinate for this new ship.
-	 * @invar x and y are real numbers. 
 	 * @post  The position of the ship is equal to the given x- and y-coordinate.
 	 *        | new.getPositionX() == x
 	 *        | new.getPositionY() == y
@@ -179,7 +179,6 @@ public class Ship {
 	 * @throws IllegalArgumentException
 	 *         | ! isValidPosition(x,y)
 	 */
-	@Raw
 	public void setPosition(double x, double y) throws IllegalArgumentException{
 		if (isValidPosition(x, y)) {
 			this.x = x;
