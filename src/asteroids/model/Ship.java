@@ -72,6 +72,8 @@ public class Ship {
 	}
 	
 	/**
+	 * Sets the orientation to the given angle;
+	 * 
 	 * Implement nominally.
 	 * 
 	 * @pre The angle must be between 0 and 2*pi.
@@ -111,10 +113,10 @@ public class Ship {
 	 * Implement defensively.
 	 * 
 	 * @param radius
-	 * 
+	 * @invar radius must be larger than 10
+	 * 		  | 10 < radius
 	 * @post  The radius of the ship is equal to the given radius.
 	 *        | new.getRadius() == radius
-	 *        
 	 * @throws IllegalArgumentException
 	 * 		   The given radius is not a valid radius.
 	 *         | ! isValidRadius(radius)
@@ -137,6 +139,8 @@ public class Ship {
 	 *        The x-coordinate for this new ship.
 	 * @param y
 	 * 		  The y-coordinate for this new ship.
+	 * @invar x and y are real numbers
+	 * 		  | 
 	 * @return !(Double.isNaN(x) || Double.isNaN(y))
 	 */
 	private boolean isValidPosition(double x, double y) {
@@ -160,9 +164,10 @@ public class Ship {
 	public double getPositionY() {return this.y;}
 	
 	/**
+	 * Set the ship to a valid position.
+	 * 
 	 * Implement defensively
 	 * 
-	 * Set the ship to a valid position.
 	 * @param x
 	 *        The x-coordinate for this new ship.
 	 * @param y
@@ -207,18 +212,18 @@ public class Ship {
 			return 0 <= speed && speed <= MAX_SPEED;
 		}
 	}
+
 	/**
-	 * Return the xVelocity of this ship.
-	 * 
+	 * Return the horizontal velocity of this ship.
 	 * @return this.velocityX
 	 */
 	@Basic @Immutable
 	public double getVelocityX() {
 		return this.velocityX;
 	}
+
 	/**
-	 * Return the yVelocity of this ship.
-	 * 
+	 * Return the vertical velocity of this ship.
 	 * @return this.velocityY
 	 */
 	@Basic @Immutable
@@ -390,7 +395,6 @@ public class Ship {
 	 *         | other == null
 	 */
 	public boolean overlap(Ship other) throws NullPointerException {
-			
 		if (other == null) {
 			throw new NullPointerException();
 		} else {

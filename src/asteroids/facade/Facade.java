@@ -13,8 +13,8 @@ public class Facade implements IFacade {
 	public Ship createShip() throws ModelException {
 		try {
 			return new Ship(0, 0, 0, 0, 11, 0);
-		} catch (Exception error) {
-			throw new ModelException("Some error");
+		} catch (IllegalArgumentException error) {
+			throw new ModelException("Invalid argument(s)");
 		}
 	};
 	
@@ -23,8 +23,8 @@ public class Facade implements IFacade {
 			throws ModelException {
 		try {
 			return new Ship(x, y, xVelocity, yVelocity, radius, orientation);
-		} catch (Exception error) {
-			throw new ModelException("Some error");
+		} catch (IllegalArgumentException error) {
+			throw new ModelException("Invalid argument(s)");
 		}
 	}
 
@@ -54,7 +54,7 @@ public class Facade implements IFacade {
 	public void move(Ship ship, double dt) throws ModelException {
 		try {
 			ship.move(dt);
-		} catch (Exception e) {
+		} catch (IllegalArgumentException e) {
 			throw new ModelException("Wrong duration.");
 		}
 	}
@@ -73,8 +73,8 @@ public class Facade implements IFacade {
 	public double getDistanceBetween(Ship ship1, Ship ship2) throws ModelException {
 		try {
 			return ship1.getDistanceBetween(ship2);
-		} catch (Exception e) {
-			throw new ModelException("A ship must not be null.");
+		} catch (NullPointerException e) {
+			throw new ModelException("Both ships must not be null.");
 		}
 	}
 
@@ -82,8 +82,8 @@ public class Facade implements IFacade {
 	public boolean overlap(Ship ship1, Ship ship2) throws ModelException {
 		try {
 			return ship1.overlap(ship2);
-		} catch (Exception e) {
-			throw new ModelException("A ship must not be null.");
+		} catch (NullPointerException e) {
+			throw new ModelException("Both ships must not be null.");
 		}
 	}
 
@@ -91,8 +91,8 @@ public class Facade implements IFacade {
 	public double getTimeToCollision(Ship ship1, Ship ship2) throws ModelException {
 		try {
 			return ship1.getTimeToCollision(ship2);
-		} catch (Exception e) {
-			throw new ModelException("The time can not be calculated.");
+		} catch (NullPointerException e) {
+			throw new ModelException("Both ships must not be null.");
 		}
 	}
 
@@ -100,8 +100,8 @@ public class Facade implements IFacade {
 	public double[] getCollisionPosition(Ship ship1, Ship ship2) throws ModelException {
 		try {
 			return ship1.getCollisionPosition(ship2);
-		} catch (Exception e) {
-			throw new ModelException("A ship must not be null.");
+		} catch (NullPointerException e) {
+			throw new ModelException("Both ships must not be null.");
 		}
 	}
 
