@@ -57,7 +57,6 @@ public class Part1TestFull {
 		facade.createShip(100, 200, 10, -10, -20, -Math.PI);
 	}
 
-
 	@Test
 	public void testMove() throws ModelException {
 		Ship ship = facade.createShip(100, 100, 30, -15, 20, 0);
