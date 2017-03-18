@@ -3,9 +3,6 @@ package asteroids.model;
 import java.util.HashSet;
 import java.util.Set;
 
-import asteroids.model.entity.Entity;
-import asteroids.model.entity.IEntity;
-
 public class World {
 	
 	private static final double MAX_WIDTH = Double.MAX_VALUE;

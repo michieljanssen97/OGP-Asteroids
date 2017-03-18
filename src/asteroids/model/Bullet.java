@@ -1,7 +1,5 @@
 package asteroids.model;
 
-import asteroids.model.entity.Entity;
-
 public class Bullet extends Entity {
 
 	private double mass; 

@@ -1,6 +1,5 @@
-package asteroids.model.entity;
+package asteroids.model;
 
-import asteroids.model.World;
 import asteroids.util.ModelException;
 
 public interface IEntity {

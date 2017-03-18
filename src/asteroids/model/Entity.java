@@ -1,6 +1,5 @@
-package asteroids.model.entity;
+package asteroids.model;
 
-import asteroids.model.World;
 import be.kuleuven.cs.som.annotate.Basic;
 import be.kuleuven.cs.som.annotate.Immutable;
 import be.kuleuven.cs.som.annotate.Raw;
@@ -20,12 +19,12 @@ public class Entity implements IEntity {
 	protected double orientation;
 	
 	/**
-	 * Check whether a given position is valid position by returning a boolean indicating validness.
+	 * Check whether a given position is valid by returning a boolean indicating validness.
 	 * 
 	 * @param x
-	 *        The x-coordinate for this new ship.
+	 *        The x-coordinate for this new entity.
 	 * @param y
-	 * 		  The y-coordinate for this new ship.
+	 * 		  The y-coordinate for this new entity.
 	 * @return !(Double.isNaN(x) || Double.isNaN(y))
 	 */
 	protected boolean isValidPosition(double x, double y) {
@@ -33,7 +32,7 @@ public class Entity implements IEntity {
 	}
 	
 	/**
-	 * Return the x-coordinate of this ship.
+	 * Return the x-coordinate of this entity.
 	 * 
 	 * @return this.x
 	 */
@@ -41,7 +40,7 @@ public class Entity implements IEntity {
 	public double getPositionX() {return this.x;}
 	
 	/**
-	 * Return the y-coordinate of this ship.
+	 * Return the y-coordinate of this entity.
 	 * 
 	 * @return this.y
 	 */
@@ -49,16 +48,16 @@ public class Entity implements IEntity {
 	public double getPositionY() {return this.y;}
 	
 	/**
-	 * Set the ship to a valid position.
+	 * Set the entity to a valid position.
 	 * 
 	 * Implement defensively
 	 * 
 	 * @param x
-	 *        The x-coordinate for this new ship.
+	 *        The x-coordinate for this new entity.
 	 * @param y
-	 *        The y-coordinate for this new ship.
+	 *        The y-coordinate for this new entity.
 	 * @invar x and y are real numbers. 
-	 * @post  The position of the ship is equal to the given x- and y-coordinate.
+	 * @post  The position of the entity is equal to the given x- and y-coordinate.
 	 *        | new.getPositionX() == x
 	 *        | new.getPositionY() == y
 	 *        
@@ -80,9 +79,9 @@ public class Entity implements IEntity {
 	 * returning a boolean indicating validness.
 	 * 
 	 * @param x   
-	 *        The x-velocity of this ship.
+	 *        The x-velocity of this entity.
 	 * @param y
-	 *        The y-velocity of this ship.
+	 *        The y-velocity of this entity.
 	 * @return True if and only if the speed is greater then zero 
 	 *         and the speed is less or equal to MAX_SPEED.
 	 *         | result == 
@@ -98,7 +97,7 @@ public class Entity implements IEntity {
 	}
 
 	/**
-	 * Return the horizontal velocity of this ship.
+	 * Return the horizontal velocity of this entity.
 	 * @return this.velocityX
 	 */
 	@Basic @Immutable
@@ -107,7 +106,7 @@ public class Entity implements IEntity {
 	}
 
 	/**
-	 * Return the vertical velocity of this ship.
+	 * Return the vertical velocity of this entity.
 	 * @return this.velocityY
 	 */
 	@Basic @Immutable
@@ -122,9 +121,9 @@ public class Entity implements IEntity {
 	 * Implemented totally.
 	 * 
 	 * @param x
-	 * 	      The x-coordinate of this ship.
+	 * 	      The x-coordinate of this entity.
 	 * @param y
-	 *        The y-coordinate of this ship.
+	 *        The y-coordinate of this entity.
 	 * @post  If the magnitude of the velocity is less then MAX_SPEED 
 	 *        then we set the velocity to the given velocity.
 	 *        | new.getVelocityX() == x
@@ -154,10 +153,10 @@ public class Entity implements IEntity {
 	}
 
 	/**
-	 * Return the radius of this ship.
+	 * Return the radius of this entity.
 	 * @return this.radius
 	 */
-	@Basic @Immutable @Override
+	@Basic @Immutable
 	public double getRadius() {
 		return this.radius;
 	}
@@ -180,7 +179,7 @@ public class Entity implements IEntity {
 	 * @param radius
 	 * @invar radius must be larger than 10
 	 * 		  | 10 < radius
-	 * @post  The radius of the ship is equal to the given radius.
+	 * @post  The radius of the entity is equal to the given radius.
 	 *        | new.getRadius() == radius
 	 * @throws IllegalArgumentException
 	 * 		   The given radius is not a valid radius.
@@ -233,16 +232,16 @@ public class Entity implements IEntity {
 	}
 
 	/**
-	 * This method measures the distance between two given ships.
+	 * This method measures the distance between two given entities.
 	 * 
 	 * Implement defensively. 
 	 * 
 	 * @param  other
-	 * 		   The second (other) ship. We use this ship to measure the distance.
-	 * @return A distance if and only if the other ship is not null and
-	 *         this ship is not the same as the other ship ((other != ship) && (other != null)).
+	 * 		   The second (other) entity. We use this entity to measure the distance.
+	 * @return A distance if and only if the other entity is not null and
+	 *         this entity is not the same as the other entity ((other != entity) && (other != null)).
 	 * @throws NullPointerException
-	 *         The other ship does not exist.
+	 *         The other entity does not exist.
 	 *         | other == null
 	 */
 	
@@ -259,23 +258,23 @@ public class Entity implements IEntity {
 	}
 	
 	/**
-	 * This method determines whether there is overlap between two ships.
+	 * This method determines whether there is overlap between two entities.
 	 * 
 	 * Implement defensively.
 	 *  
 	 * @param  other
-	 *         The second (other) ship. We use this ship to determine the possibility of overlap.
-	 * @return True if and only if two ships overlap.
-	 *         This means that the other ship musn't be null.
-	 *         Two ships will overlap (return true) if the sum of their radii is 
-	 *         greater then the distance between these ships.
+	 *         The second (other) entity. We use this entity to determine the possibility of overlap.
+	 * @return True if and only if two entities overlap.
+	 *         This means that the other entity musn't be null.
+	 *         Two entities will overlap (return true) if the sum of their radii is 
+	 *         greater then the distance between these entities.
 	 *          -> r1+r2 >= sqrt( (x2-x1)**2 + (y2-y1)**2 )    
 	 *         | result =
 	 *         |       (getRadius()+ other.getRadius) >=
 	 *         |       (getDistanceBetween(other))
 	 *         
 	 * @throws NullPointerException
-	 *         The other ship does not exist.
+	 *         The other entity does not exist.
 	 *         | other == null
 	 */
 	public boolean overlap(Entity other) throws NullPointerException {
@@ -289,31 +288,31 @@ public class Entity implements IEntity {
 	}
 	
 	/**
-	 * This method calculates when, if ever, two ships will collide. 
+	 * This method calculates when, if ever, two entities will collide. 
 	 * 
 	 * Implement defensively.
 	 * 
 	 * Declarative specification for the case where the method returns a finite value:
 	 * 
-	 *		In order to get the time to a possible collision we will first have to check if the two ships are not
+	 *		In order to get the time to a possible collision we will first have to check if the two entities are not
 	 *		one and the same. In that case the time to collision is null and an error is thrown.
 	 *
-	 * 		After we have verified that the two ships are different entities we need to perform another check to
-	 * 		see if the two ships are not currently colliding. In that case the collision time is zero, since the
-	 * 		ship already collided. 
+	 * 		After we have verified that the two entities are different entities we need to perform another check to
+	 * 		see if the two entities are not currently colliding. In that case the collision time is zero, since the
+	 * 		entity already collided. 
 	 * 
-	 * 		If the ships are not one and the same and they are not currently colliding then we have to check if
-	 * 		the two ships are on a collision course by using the formula given in the project specification.
+	 * 		If the entities are not one and the same and they are not currently colliding then we have to check if
+	 * 		the two entities are on a collision course by using the formula given in the project specification.
 	 * 
-	 * 		If deltaVR (The dot product of the vector containing the difference in velocity between the ships 
-	 * 		and the vector containing the difference in position between the ships) is not bigger or equal to 
+	 * 		If deltaVR (The dot product of the vector containing the difference in velocity between the entities 
+	 * 		and the vector containing the difference in position between the entities) is not bigger or equal to 
 	 * 		zero and the "d value" (given in the specification of the project) is not smaller or equal to zero 
 	 * 		then the function will return a positive real collision time. 
 	 * 
 	 * @param other
-	 *        The second (other) ship. We use this ship to determine the time to collision.
+	 *        The second (other) entity. We use this entity to determine the time to collision.
 	 * @throws NullPointerException
-	 *         The other ship does not exist.
+	 *         The other entity does not exist.
 	 *         | other == null
 	 */
 	public double getTimeToCollision(Entity other) throws NullPointerException {
@@ -351,25 +350,25 @@ public class Entity implements IEntity {
 	}
 	
 	/**
-	 * This method calculates where, if ever, two ships will collide.
+	 * This method calculates where, if ever, two entities will collide.
 	 * 
 	 * The Collision position is the current position plus the time to collision multiplied by its velocity.
 	 * In math: x(t) = this.getPostionX() + this.getVelocityX() * this.getTimeToCollision(other)
 	 *          y(t) = this.getPostionY() + this.getVelocityY() * this.getTimeToCollision(other)
-	 * In case the ship gets an acceleration, we measure the new velocity after the thrust has stopped.
+	 * In case the entity gets an acceleration, we measure the new velocity after the thrust has stopped.
 	 * We use this new velocity to measure the new time to collision and the new collision position. 
 	 * 
 	 * Implement defensively.
 	 * 
 	 * @param other
-	 *        The second (other) ship. We use this ship to determine the position of collision.
-	 * @return A position if and only if the other ship is not null, the time 
-	 *         to collision is not equal to infinity and the two ships 
+	 *        The second (other) entity. We use this entity to determine the position of collision.
+	 * @return A position if and only if the other entity is not null, the time 
+	 *         to collision is not equal to infinity and the two entities 
 	 *         are not overlapping.
 	 * @return null
 	 * 		   | this.overlap(other)
 	 * @throws NullPointerException
-	 *         The other ship does not exist.
+	 *         The other entity does not exist.
 	 *         | other == null
 	 */
 	public double[] getCollisionPosition(Entity other) throws NullPointerException {      
