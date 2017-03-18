@@ -1,5 +1,8 @@
 package asteroids.model;
 
+import java.util.Collection;
+import java.util.Set;
+
 import be.kuleuven.cs.som.annotate.*;
 
 /**
@@ -48,12 +51,13 @@ public class Ship extends Entity {
 	 *        | new.getOrientation() == orientation  
 	 * @throws IllegalArgumentException
 	 */
-	public Ship(double x, double y, double xVelocity, double yVelocity, double radius, double orientation) throws IllegalArgumentException {
+	public Ship(double x, double y, double xVelocity, double yVelocity, double radius, double orientation, double mass) throws IllegalArgumentException {
 		try {
 			setPosition(x, y);
 			setVelocity(xVelocity, yVelocity);
 			setRadius(radius);
 			setOrientation(orientation);
+			setMass(mass);
 		} catch (IllegalArgumentException e) {
 			throw e;
 		}
@@ -154,5 +158,39 @@ public class Ship extends Entity {
 	
 	public void thrustOn() {}
 	public void thrustOff() {}
+
+
+	public boolean IsThrusterActive() {
+		return false;
+	}
+
+
+	public double getAcceleration() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
+	public Set<? extends Bullet> getBullets() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public void loadBullets(Collection<Bullet> bullets) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	public void removeBullet(Bullet bullet) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	public void fireBullet() {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }

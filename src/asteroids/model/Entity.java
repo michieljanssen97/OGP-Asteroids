@@ -17,6 +17,18 @@ public class Entity implements IEntity {
 	
 	protected double radius;
 	protected double orientation;
+	protected double mass;
+	
+	protected boolean isTerminated = false;
+	
+	public boolean isTerminated() {
+		return this.isTerminated;
+	}
+	
+	public void terminate() {
+		// To be completed.
+		this.isTerminated = true;
+	}
 	
 	/**
 	 * Check whether a given position is valid by returning a boolean indicating validness.
@@ -217,6 +229,22 @@ public class Entity implements IEntity {
 	 */
 	public void setOrientation(double angle) {
 		this.orientation = angle;
+	}
+	
+	public double getMass() {
+		return 0;
+	}
+	
+	protected boolean isValidMass(double mass) {
+		return true;
+	}
+	
+	protected void setMass(double mass) {
+		if (isValidMass(mass)) {
+			this.mass = mass;
+		} else {
+			this.mass = 0;
+		}
 	}
 	
 	@Override

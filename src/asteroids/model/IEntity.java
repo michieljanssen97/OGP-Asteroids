@@ -4,12 +4,15 @@ import asteroids.util.ModelException;
 
 public interface IEntity {
 
+	public boolean isTerminated();
+	
 	public double getPositionX() throws ModelException;
 	public double getPositionY() throws ModelException;
 	public double getVelocityX() throws ModelException;
 	public double getVelocityY() throws ModelException;
 	public double getRadius() throws ModelException;
 	public double getOrientation() throws ModelException;
+	public double getMass();
 	
 	public boolean isPartOfWorld();
 	public World getWorld();
