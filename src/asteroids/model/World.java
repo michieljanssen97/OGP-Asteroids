@@ -3,10 +3,16 @@ package asteroids.model;
 import java.util.HashSet;
 import java.util.Set;
 
+import asteroids.model.entity.Entity;
+import asteroids.model.entity.IEntity;
+
 public class World {
 	
 	private static final double MAX_WIDTH = Double.MAX_VALUE;
 	private static final double MAX_HEIGHT = Double.MAX_VALUE;
+	
+	private Set<Ship> ships = new HashSet<Ship>();
+	private Set<Bullet> bullets = new HashSet<Bullet>();
 	
 	public World(double width, double height) {
 		setSize(width,height);
@@ -55,50 +61,57 @@ public class World {
 		}
 	}
 	
-	private Set<Ship> ships = new HashSet<Ship>();
+	
 	public Set<Ship> getShips(){
 		return this.ships;
 	}
 	
-	private Set<Bullet> bullets = new HashSet<Bullet>();
 	public Set<Bullet> getBullets(){
 		return this.bullets;
 	}
 	
 	// implement defensively.
 	
-	public void addShip(World world, Ship ship) throws NullPointerException {
-		if (world == null){
+	public void addEntity(Entity entity) throws NullPointerException {
+		if (entity == null){
 			throw new NullPointerException();
+		} else if (entity.isPartOfWorld() || this.significantOverlap(entity)){
+			throw new IllegalArgumentException();
 		} else {
-			getShips().add(ship);
+			if (entity instanceof Ship) {
+			ships.add((Ship) entity);
+			} else if (entity instanceof Bullet) {
+			bullets.add((Bullet) entity);
+			}
 		}
 		
 	}
-	public void removeShip(World world, Ship ship) throws NullPointerException {
-		if (world == null){
+	public void removeEntity(Entity entity) throws NullPointerException {
+		if (entity == null){
 			throw new NullPointerException();
 		} else {
-			getShips().remove(ship);
-		}
-	}
-	
-	public void addBullet(World world, Bullet bullet) throws NullPointerException {
-		if (world == null){
-			throw new NullPointerException();
-		} else {
-			getBullets().add(bullet);
-		}
-	}
-	public void removeBullet(World world, Bullet bullet) throws NullPointerException {
-		if (world == null){
-			throw new NullPointerException();
-		} else {
-			getBullets().remove(bullet);
+			if (entity instanceof Ship) {
+			ships.remove(entity);
+			} else if (entity instanceof Bullet) {
+			bullets.remove(entity);
+			}
 		}
 	}
 	
 	public void evolve(double duration){}
+	
+	public IEntity getEntityAtPosition(double x, double y) {
+		Entity temp = null;
+		return temp;
+	}
+	
+	private boolean significantOverlap(Entity entity) {
+		return false;
+	}
+	
+	private boolean withinOverlap(Entity object, Entity container) {
+		return false;
+	}
 
 
 }
