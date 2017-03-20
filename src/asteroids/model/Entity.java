@@ -362,7 +362,7 @@ public class Entity implements IEntity {
 			double d = Math.pow(deltaVR, 2) - ((deltaVV)*(deltaRR - Math.pow(this.getRadius()+other.getRadius(), 2)));
 			
 			
-			if (this.overlap(other)) {
+			if (this.apparentlyCollide(other)) {
 				return new Double(0);
 			} 
 			else {
@@ -375,6 +375,16 @@ public class Entity implements IEntity {
 				}
 			}
 		}
+	}
+	
+	public boolean apparentlyCollide(Entity other) {
+		double radiiSum = this.getRadius() + other.getRadius();
+		
+		if (((radiiSum * 0.99) < this.getDistanceBetween(other))
+			&& (this.getDistanceBetween(other) < (radiiSum * 1.01))) {
+			return true;
+		}
+		return false;
 	}
 	
 	/**
@@ -443,16 +453,7 @@ public class Entity implements IEntity {
 		// Check if this entity within borders of world (upper, lower, left, right)
 		return true;
 	}
-	
-	public boolean apparentlyCollide(Entity other) {
-		double radiiSum = this.getRadius() + other.getRadius();
-		
-		if (((radiiSum * 0.99) < this.getDistanceBetween(other))
-			&& (this.getDistanceBetween(other) < (radiiSum * 1.01))) {
-			return true;
-		}
-		return false;
-	}
+
 	
 
 }

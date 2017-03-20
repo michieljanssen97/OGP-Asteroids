@@ -1,5 +1,6 @@
 package asteroids.model;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -114,42 +115,35 @@ public class World {
 			// 1. Get first collision, if any
 			// Calculate all collisions, immediately continue if an apparent Collision is found
 			
-			Map<Double, Set<Entity>> map = new HashMap<Double, Set<Entity>>();
-			boolean collision = false;
+			Map<Set<Entity>, Double> collisionMap = new HashMap<Set<Entity>, Double>();
 			Double collisionTime;
 			
 			for (Entity entity1 : this.getEntities()) {
 				for (Entity entity2: this.getEntities()) {
-					
-					// Apparent collision
-				    if (entity1.apparentlyCollide(entity2) && (entity1 != entity2)) {
-				    	collisionTime = (double) 0;
-				    	collision = true;
-				    } else {
-				    	collisionTime = entity1.getTimeToCollision(entity2);
-				    	if (collisionTime != null) {
-				    		collision = true;
-				    	}
-				    }
-				    
-				    // Collision found, add to map of collisions
-				    if (collision) {
-			    		Set<Entity> collisionSet = new HashSet<Entity>();
-				    	collisionSet.add(entity1);
-				    	collisionSet.add(entity2);
-			    		map.put(collisionTime, collisionSet);
-			    		collision = false;
-				    }
+				    collisionTime = entity1.getTimeToCollision(entity2);
+			    	Set<Entity> collisionSet = new HashSet<Entity>();
+				    collisionSet.add(entity1);
+				    collisionSet.add(entity2);
+			    	collisionMap.put(collisionSet, collisionTime);
 				}
-				
-				if (map.containsKey((double) 0)) {
-					// First collision found, break
-					break;
-				}
-			} 
+			}
 			
-			// Get collision from map with lowest collisionTime/Key
-		}
+			// Get collision from collisionMap with lowest collisionTime
+			Set<Entity> firstCollisionSet = Collections.max(collisionMap.entrySet(), Map.Entry.comparingByValue()).getKey();
+			Double firstCollisionTime = collisionMap.get(firstCollisionSet);
+			
+			if (firstCollisionTime > duration) {
+				// Advance all bullets and ships delta t seconds
+				break;
+			} else {
+				// Advance all bullets and ships until right before delta firstCollisionTime
+				// resolve collision
+				//  Subtract firstTimeCollision from delta t and go to step 1.
+			}
+			
+		} 
+			
+			
 	}
 	
 	public IEntity getEntityAtPosition(double x, double y) {
