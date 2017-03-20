@@ -15,6 +15,7 @@ public interface IEntity {
 	public double getMass();
 	
 	public boolean isPartOfWorld();
+	public void makePartOfWorld();
 	public World getWorld();
 	
 	public double getDistanceBetween(Entity other);
@@ -22,4 +23,8 @@ public interface IEntity {
 	public double getTimeToCollision(Entity other);
 	public double[] getCollisionPosition(Entity other);
 	
+	public boolean significantOverlap(Entity other);
+	public boolean withinBoundaries(Entity other);
+	public boolean withinBoundaries(World world);
+	public boolean apparentlyCollide(Entity other);
 }

@@ -417,6 +417,42 @@ public class Entity implements IEntity {
 			}
 		}
 	}
+
+	@Override
+	public void makePartOfWorld() {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	public boolean significantOverlap(Entity entity) {
+		if (this.getDistanceBetween(entity) <= (this.getRadius() + entity.getRadius())) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	@Override
+	public boolean withinBoundaries(Entity other) {
+		// Check if this entity within other entity (user radius)
+		return true;
+	}
+
+	@Override
+	public boolean withinBoundaries(World world) {
+		// Check if this entity within borders of world (upper, lower, left, right)
+		return true;
+	}
+	
+	public boolean apparentlyCollide(Entity other) {
+		double radiiSum = this.getRadius() + other.getRadius();
+		
+		if (((radiiSum * 0.99) < this.getDistanceBetween(other))
+			&& (this.getDistanceBetween(other) < (radiiSum * 1.01))) {
+			return true;
+		}
+		return false;
+	}
 	
 
 }

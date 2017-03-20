@@ -1,6 +1,8 @@
 package asteroids.model;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 public class World {
@@ -82,7 +84,7 @@ public class World {
 	public void addEntity(Entity entity) throws NullPointerException {
 		if (entity == null){
 			throw new NullPointerException();
-		} else if (entity.isPartOfWorld() || significantOverlap(entity) || withinOverlap(entity, this)){
+		} else if (entity.isPartOfWorld() || significantOverlap(entity) || !entity.withinBoundaries(this)){
 			throw new IllegalArgumentException();
 		} else {
 			if (entity instanceof Ship) {
@@ -105,22 +107,67 @@ public class World {
 		}
 	}
 	
-	public void evolve(double duration){}
+	public void evolve(double duration){
+		
+		while (duration > 0) {
+		
+			// 1. Get first collision, if any
+			// Calculate all collisions, immediately continue if an apparent Collision is found
+			
+			Map<Double, Set<Entity>> map = new HashMap<Double, Set<Entity>>();
+			boolean collision = false;
+			Double collisionTime;
+			
+			for (Entity entity1 : this.getEntities()) {
+				for (Entity entity2: this.getEntities()) {
+					
+					// Apparent collision
+				    if (entity1.apparentlyCollide(entity2) && (entity1 != entity2)) {
+				    	collisionTime = (double) 0;
+				    	collision = true;
+				    } else {
+				    	collisionTime = entity1.getTimeToCollision(entity2);
+				    	if (collisionTime != null) {
+				    		collision = true;
+				    	}
+				    }
+				    
+				    // Collision found, add to map of collisions
+				    if (collision) {
+			    		Set<Entity> collisionSet = new HashSet<Entity>();
+				    	collisionSet.add(entity1);
+				    	collisionSet.add(entity2);
+			    		map.put(collisionTime, collisionSet);
+			    		collision = false;
+				    }
+				}
+				
+				if (map.containsKey((double) 0)) {
+					// First collision found, break
+					break;
+				}
+			} 
+			
+			// Get collision from map with lowest collisionTime/Key
+		}
+	}
 	
 	public IEntity getEntityAtPosition(double x, double y) {
-		Entity temp = null;
-		return temp;
+		for (Entity entity : this.getEntities()) {
+		    if ((entity.getPositionX() == x) && (entity.getPositionY() == y)) {
+		    	return entity;
+		    }
+		} 
+		return null;
 	}
 	
 	private boolean significantOverlap(Entity entity) {
-		return false;
-	}
-	
-	private boolean withinOverlap(Entity object, Entity container) {
-		return false;
-	}
-	
-	private boolean withinOverlap(Entity object, World container) {
+		
+		for (Entity other : this.getEntities()) {
+		    if (entity.significantOverlap(other) && (entity != other)) {
+		    	return true;
+		    }
+		} 
 		return false;
 	}
 
