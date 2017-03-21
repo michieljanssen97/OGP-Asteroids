@@ -25,6 +25,8 @@ public class Ship extends Entity {
 	private static final double MIN_RADIUS = 10;
 	private static final double THRUSTER_FORCE = 1 * Math.pow(10,21);
 	
+	private boolean thrusterActive = false;
+	
 	/**
 	 * Initialize this new ship with a given position, velocity, radius and orientation.
 	 * 
@@ -65,17 +67,6 @@ public class Ship extends Entity {
 		
 	};
 	
-
-	/**
-	 * Check whether the given duration is valid.
-	 * 
-	 * @param  duration
-	 * 		   The duration of this ship.
-	 * @return duration >= 0
-	 */
-	private boolean isValidDuration (double duration) {
-		return duration >= 0;
-	}
 	
 	/**
 	 * This method moves the ship with a given valid duration.
@@ -168,12 +159,16 @@ public class Ship extends Entity {
 		return this.world;
 	}
 	
-	public void thrustOn() {}
-	public void thrustOff() {}
+	public void thrustOn() {
+		this.thrusterActive = true;
+	}
+	public void thrustOff() {
+		this.thrusterActive = false;
+	}
 
 
 	public boolean IsThrusterActive() {
-		return false;
+		return this.thrusterActive;
 	}
 
 

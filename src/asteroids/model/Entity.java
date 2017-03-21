@@ -87,6 +87,17 @@ public class Entity implements IEntity {
 	}
 
 	/**
+	 * Check whether the given duration is valid.
+	 * 
+	 * @param  duration
+	 * 		   The duration of this ship.
+	 * @return duration >= 0
+	 */
+	protected boolean isValidDuration(double duration) {
+		return duration >= 0;
+	}
+	
+	/**
 	 * Check whether a given velocity is a valid velocity by 
 	 * returning a boolean indicating validness.
 	 * 

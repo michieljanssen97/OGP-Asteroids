@@ -16,7 +16,10 @@ public class Bullet extends Entity {
 		setRadius(radius);
 	}
 	
-	public double getMass(){return this.mass;}
+	public double getMass(){
+		// Also include mass of carried objects
+		return this.mass;
+	}
 	
 	public World getWorld(){return this.world;}
 	
@@ -24,7 +27,14 @@ public class Bullet extends Entity {
 	
 	public Ship getSource(){return this.source;}
 	
-	public void move() {
+	public void move(double duration) throws IllegalArgumentException {
+		if (isValidDuration(duration)) {
+			double deltaX = getVelocityX()*duration;
+			double deltaY = getVelocityY()*duration;
+			setPosition(getPositionX()+deltaX, getPositionY()+deltaY);
+		} else {
+			throw new IllegalArgumentException();
+		}
 		
 	}
 
