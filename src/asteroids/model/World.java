@@ -109,7 +109,7 @@ public class World {
 	}
 	
 	public void evolve(double duration) throws Exception {
-		
+		try {
 		while (duration > 0) {
 		
 			// 1. Get first collision, if any
@@ -120,7 +120,11 @@ public class World {
 			
 			for (Entity entity1 : this.getEntities()) {
 				for (Entity entity2: this.getEntities()) {
+					try {
 				    collisionTime = entity1.getTimeToCollision(entity2);
+					} catch (Exception e) {
+						continue;
+					}
 				    if (collisionTime == Double.POSITIVE_INFINITY){continue;}
 				    Entity[] collisionArray = { entity1, entity2 };
 			    	collisionMap.put(collisionArray, collisionTime);
@@ -128,16 +132,11 @@ public class World {
 			}
 			
 			// Get collision from collisionMap with lowest collisionTime
-			try {
 			Entity[] firstCollisionArray = Collections.min(collisionMap.entrySet(), Map.Entry.comparingByValue()).getKey();
-			} catch (Exception e) {
-				throw new Exception();
-			}
-			
 			
 			Double firstCollisionTime = collisionMap.get(firstCollisionArray);
 			
-			if (firstCollisionTime > duration || collisionMap.isEmpty()) {
+			if (firstCollisionTime > duration || collisionMap.isEmpty() || firstCollisionTime == null) {
 				// Advance all bullets and ships delta t seconds
 				for (Entity entity : this.getEntities()) {
 					entity.move(duration);
@@ -155,6 +154,9 @@ public class World {
 			}
 			
 		} 
+		} catch (Exception e) {
+			throw new Exception();
+		}
 			
 			
 	}

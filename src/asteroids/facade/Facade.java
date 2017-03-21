@@ -234,7 +234,11 @@ public class Facade implements asteroids.part2.facade.IFacade {
 
 	@Override
 	public void addBulletToWorld(World world, Bullet bullet) throws ModelException {
-		world.addEntity(bullet);
+		try {
+			world.addEntity(bullet);
+		} catch (Exception e) {
+			throw new ModelException("");
+		}
 	}
 
 	@Override
