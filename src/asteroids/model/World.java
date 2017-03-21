@@ -115,30 +115,36 @@ public class World {
 			// 1. Get first collision, if any
 			// Calculate all collisions, immediately continue if an apparent Collision is found
 			
-			Map<Set<Entity>, Double> collisionMap = new HashMap<Set<Entity>, Double>();
+			Map<Entity[], Double> collisionMap = new HashMap<Entity[], Double>();
 			Double collisionTime;
 			
 			for (Entity entity1 : this.getEntities()) {
 				for (Entity entity2: this.getEntities()) {
 				    collisionTime = entity1.getTimeToCollision(entity2);
-			    	Set<Entity> collisionSet = new HashSet<Entity>();
-				    collisionSet.add(entity1);
-				    collisionSet.add(entity2);
-			    	collisionMap.put(collisionSet, collisionTime);
+				    Entity[] collisionArray = { entity1, entity2 };
+			    	collisionMap.put(collisionArray, collisionTime);
 				}
 			}
 			
 			// Get collision from collisionMap with lowest collisionTime
-			Set<Entity> firstCollisionSet = Collections.max(collisionMap.entrySet(), Map.Entry.comparingByValue()).getKey();
-			Double firstCollisionTime = collisionMap.get(firstCollisionSet);
+			Entity[] firstCollisionArray = Collections.max(collisionMap.entrySet(), Map.Entry.comparingByValue()).getKey();
+			Double firstCollisionTime = collisionMap.get(firstCollisionArray);
 			
 			if (firstCollisionTime > duration) {
 				// Advance all bullets and ships delta t seconds
+				for (Entity entity : this.getEntities()) {
+					entity.move(duration);
+				}
 				break;
 			} else {
 				// Advance all bullets and ships until right before delta firstCollisionTime
+				for (Entity entity : this.getEntities()) {
+					entity.move(firstCollisionTime);
+				}
 				// resolve collision
+				resolveCollision(firstCollisionArray[0], firstCollisionArray[1]);
 				//  Subtract firstTimeCollision from delta t and go to step 1.
+				duration -= firstCollisionTime;
 			}
 			
 		} 
@@ -146,7 +152,7 @@ public class World {
 			
 	}
 	
-	public IEntity getEntityAtPosition(double x, double y) {
+	public Entity getEntityAtPosition(double x, double y) {
 		for (Entity entity : this.getEntities()) {
 		    if ((entity.getPositionX() == x) && (entity.getPositionY() == y)) {
 		    	return entity;
@@ -165,5 +171,8 @@ public class World {
 		return false;
 	}
 
+	private void resolveCollision(Entity entity1, Entity entity2) {
+		//
+	}
 
 }

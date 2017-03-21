@@ -7,8 +7,8 @@ import be.kuleuven.cs.som.annotate.Raw;
 public class Entity implements IEntity {
 	
 	protected static final double MAX_SPEED = 300000;
-	protected static final double MIN_RADIUS = 10;
-
+	protected static final double MIN_RADIUS = 0;
+	
 	protected double x;
 	protected double y;
 	
@@ -453,7 +453,8 @@ public class Entity implements IEntity {
 		// Check if this entity within borders of world (upper, lower, left, right)
 		return true;
 	}
-
 	
-
+	public void move(double duration) {
+		//has to be overrided
+	}
 }

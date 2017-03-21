@@ -23,6 +23,7 @@ public class Ship extends Entity {
 	
 	private static final double MAX_SPEED = 300000;
 	private static final double MIN_RADIUS = 10;
+	private static final double THRUSTER_FORCE = 1 * Math.pow(10,21);
 	
 	/**
 	 * Initialize this new ship with a given position, velocity, radius and orientation.
@@ -92,6 +93,17 @@ public class Ship extends Entity {
 	 */
 	public void move(double duration) throws IllegalArgumentException {
 		if (isValidDuration(duration)) {
+			
+			if (IsThrusterActive()) {
+				double a = this.getAcceleration();
+				if (a < 0) {
+					a = 0;
+				}
+				double newVelocityX = getVelocityX() + a*Math.cos(getOrientation())*duration;
+				double newVelocityY = getVelocityY() + a*Math.sin(getOrientation())*duration;
+				setVelocity(newVelocityX, newVelocityY);
+			}
+			
 			double deltaX = getVelocityX()*duration;
 			double deltaY = getVelocityY()*duration;
 			setPosition(getPositionX()+deltaX, getPositionY()+deltaY);
@@ -166,8 +178,7 @@ public class Ship extends Entity {
 
 
 	public double getAcceleration() {
-		// TODO Auto-generated method stub
-		return 0;
+		return THRUSTER_FORCE/this.getMass();
 	}
 
 

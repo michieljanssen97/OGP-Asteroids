@@ -14,6 +14,8 @@ public interface IEntity {
 	public double getOrientation() throws ModelException;
 	public double getMass();
 	
+	public void move(double duration);
+	
 	public boolean isPartOfWorld();
 	public void makePartOfWorld();
 	public World getWorld();
