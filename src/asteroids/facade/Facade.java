@@ -220,7 +220,11 @@ public class Facade implements asteroids.part2.facade.IFacade {
 
 	@Override
 	public void addShipToWorld(World world, Ship ship) throws ModelException {
-		world.addEntity(ship);
+		try {
+			world.addEntity(ship);
+		} catch (Exception e) {
+			throw new ModelException("");
+		}
 	}
 
 	@Override
@@ -309,7 +313,11 @@ public class Facade implements asteroids.part2.facade.IFacade {
 
 	@Override
 	public void evolve(World world, double dt, CollisionListener collisionListener) throws ModelException {
-		world.evolve(dt);
+		try {
+			world.evolve(dt);
+		} catch (Exception e) {
+			throw new ModelException("");
+		}
 	}
 
 	@Override

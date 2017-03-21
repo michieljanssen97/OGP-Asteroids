@@ -354,11 +354,11 @@ public class Entity implements IEntity {
 	 *         The other entity does not exist.
 	 *         | other == null
 	 */
-	public double getTimeToCollision(Entity other) throws NullPointerException {
+	public double getTimeToCollision(Entity other) throws NullPointerException, IllegalArgumentException {
 		if (other == null){
 			throw new NullPointerException();
 		} else if (other == this){
-			return new Double(0);
+			throw new IllegalArgumentException();
 		} else {
 			
 			double deltaPosX = other.getPositionX()-this.getPositionX();
@@ -391,8 +391,8 @@ public class Entity implements IEntity {
 	public boolean apparentlyCollide(Entity other) {
 		double radiiSum = this.getRadius() + other.getRadius();
 		
-		if (((radiiSum * 0.99) < this.getDistanceBetween(other))
-			&& (this.getDistanceBetween(other) < (radiiSum * 1.01))) {
+		if (((radiiSum * 0.99) <= this.getDistanceBetween(other))
+			&& (this.getDistanceBetween(other) <= (radiiSum * 1.01))) {
 			return true;
 		}
 		return false;
@@ -446,7 +446,7 @@ public class Entity implements IEntity {
 	}
 	
 	public boolean significantOverlap(Entity entity) {
-		if (this.getDistanceBetween(entity) <= (this.getRadius() + entity.getRadius())) {
+		if (this.getDistanceBetween(entity) <= (0.99 * (this.getRadius() + entity.getRadius()))) {
 			return true;
 		} else {
 			return false;
@@ -456,12 +456,21 @@ public class Entity implements IEntity {
 	@Override
 	public boolean withinBoundaries(Entity other) {
 		// Check if this entity within other entity (user radius)
-		return true;
+		if ((this.getDistanceBetween(other) <= Math.abs(this.getRadius() - other.getRadius()))) {
+			return true;
+		}
+		return false;
 	}
 
 	@Override
 	public boolean withinBoundaries(World world) {
 		// Check if this entity within borders of world (upper, lower, left, right)
+		if ((this.getPositionX() > (0.99*radius)) && (this.getPositionY() > (0.99*radius))) {}
+		else {return false;}
+		
+		if (((this.getPositionX() + (0.99*radius) < world.getWidth()) && ((this.getPositionX() + (0.99*radius) < world.getWidth())))) {}
+		else {return false;}
+		
 		return true;
 	}
 	

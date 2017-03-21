@@ -108,7 +108,7 @@ public class World {
 		}
 	}
 	
-	public void evolve(double duration){
+	public void evolve(double duration) throws Exception {
 		
 		while (duration > 0) {
 		
@@ -121,16 +121,23 @@ public class World {
 			for (Entity entity1 : this.getEntities()) {
 				for (Entity entity2: this.getEntities()) {
 				    collisionTime = entity1.getTimeToCollision(entity2);
+				    if (collisionTime == Double.POSITIVE_INFINITY){continue;}
 				    Entity[] collisionArray = { entity1, entity2 };
 			    	collisionMap.put(collisionArray, collisionTime);
 				}
 			}
 			
 			// Get collision from collisionMap with lowest collisionTime
-			Entity[] firstCollisionArray = Collections.max(collisionMap.entrySet(), Map.Entry.comparingByValue()).getKey();
+			try {
+			Entity[] firstCollisionArray = Collections.min(collisionMap.entrySet(), Map.Entry.comparingByValue()).getKey();
+			} catch (Exception e) {
+				throw new Exception();
+			}
+			
+			
 			Double firstCollisionTime = collisionMap.get(firstCollisionArray);
 			
-			if (firstCollisionTime > duration) {
+			if (firstCollisionTime > duration || collisionMap.isEmpty()) {
 				// Advance all bullets and ships delta t seconds
 				for (Entity entity : this.getEntities()) {
 					entity.move(duration);
@@ -172,7 +179,32 @@ public class World {
 	}
 
 	private void resolveCollision(Entity entity1, Entity entity2) {
-		//
+		if (entity1 instanceof Ship && entity2 instanceof Ship) {
+			
+			double deltaPosX = entity2.getPositionX()-entity1.getPositionX();
+			double deltaPosY = entity2.getPositionY()-entity1.getPositionY();
+
+			double deltaVelX = entity2.getVelocityX()-entity1.getVelocityX();
+			double deltaVelY = entity2.getVelocityY()-entity1.getVelocityY();
+			
+			double deltaVR = (deltaVelX*deltaPosX)  + (deltaVelY*deltaPosY);
+			
+			double radiusSum = entity1.getRadius() + entity2.getRadius();
+			double J = (2*entity1.getMass()*entity2.getMass()*deltaVR)/((entity1.getMass()+entity2.getMass())*radiusSum);
+			
+			double Jx = (J*deltaPosX)/radiusSum;	
+			double Jy = (J*deltaPosY)/radiusSum;
+			
+			
+			double newVelocityX1 = entity1.getVelocityX() + (Jx/entity1.getMass());
+			double newVelocityY1 = entity1.getVelocityY() + (Jy/entity1.getMass());
+			
+			double newVelocityX2 = entity2.getVelocityX() - (Jx/entity2.getMass());
+			double newVelocityY2 = entity2.getVelocityY() - (Jy/entity2.getMass());
+			
+			entity1.setVelocity(newVelocityX1, newVelocityY1);
+			entity2.setVelocity(newVelocityX2, newVelocityY2);
+		}
 	}
 
 }
