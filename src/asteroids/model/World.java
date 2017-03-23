@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class World {
+public class World implements ICollidable {
 	
 	private static final double MAX_WIDTH = Double.MAX_VALUE;
 	private static final double MAX_HEIGHT = Double.MAX_VALUE;
@@ -108,6 +108,58 @@ public class World {
 		}
 	}
 	
+	public double getNextCollisionTime() {
+		Entity[] entities = getNextCollisionEntities();
+		
+		double entityCollisionTime = entities[0].getTimeToCollision(entities[1]);
+		double boundaryCollisionTime = entities[0].getTimeToCollision(entities[0].getWorld());
+		
+		return Math.min(entityCollisionTime, boundaryCollisionTime);
+	}
+	
+	public double[] getNextCollisionPosition() {
+		Entity[] entities = getNextCollisionEntities();
+		
+		double entityCollisionTime = entities[0].getTimeToCollision(entities[1]);
+		double boundaryCollisionTime = entities[0].getTimeToCollision(entities[0].getWorld());
+		
+		double[] entityCollisionPosition = entities[0].getCollisionPosition(entities[1]);
+		double[] boundaryCollisionPosition = entities[0].getCollisionPosition(entities[0].getWorld());
+		
+		if (entityCollisionTime <= boundaryCollisionTime) {
+			return entityCollisionPosition;
+		} else if (entityCollisionTime > boundaryCollisionTime) {
+			return boundaryCollisionPosition;
+		} else {
+			return null;
+		}
+		
+		
+	}
+	
+	public Entity[] getNextCollisionEntities() {
+
+		Map<Entity[], Double> collisionMap = new HashMap<Entity[], Double>();
+		Double collisionTime;
+		
+		for (Entity entity1 : this.getEntities()) {
+			for (Entity entity2: this.getEntities()) {
+				try {
+			    collisionTime = entity1.getTimeToCollision(entity2);
+				} catch (Exception e) {
+					continue;
+				}
+			    if (collisionTime == Double.POSITIVE_INFINITY){continue;}
+			    Entity[] collisionArray = { entity1, entity2 };
+		    	collisionMap.put(collisionArray, collisionTime);
+			}
+		}
+		
+		// Get collision from collisionMap with lowest collisionTime
+		Entity[] firstCollisionArray = Collections.min(collisionMap.entrySet(), Map.Entry.comparingByValue()).getKey();
+		return firstCollisionArray;
+	}
+	
 	public void evolve(double duration) throws Exception {
 		try {
 		while (duration > 0) {
@@ -115,28 +167,9 @@ public class World {
 			// 1. Get first collision, if any
 			// Calculate all collisions, immediately continue if an apparent Collision is found
 			
-			Map<Entity[], Double> collisionMap = new HashMap<Entity[], Double>();
-			Double collisionTime;
+			Double firstCollisionTime = getNextCollisionTime();
 			
-			for (Entity entity1 : this.getEntities()) {
-				for (Entity entity2: this.getEntities()) {
-					try {
-				    collisionTime = entity1.getTimeToCollision(entity2);
-					} catch (Exception e) {
-						continue;
-					}
-				    if (collisionTime == Double.POSITIVE_INFINITY){continue;}
-				    Entity[] collisionArray = { entity1, entity2 };
-			    	collisionMap.put(collisionArray, collisionTime);
-				}
-			}
-			
-			// Get collision from collisionMap with lowest collisionTime
-			Entity[] firstCollisionArray = Collections.min(collisionMap.entrySet(), Map.Entry.comparingByValue()).getKey();
-			
-			Double firstCollisionTime = collisionMap.get(firstCollisionArray);
-			
-			if (firstCollisionTime > duration || collisionMap.isEmpty() || firstCollisionTime == null) {
+			if (firstCollisionTime > duration || firstCollisionTime.isNaN()) {
 				// Advance all bullets and ships delta t seconds
 				for (Entity entity : this.getEntities()) {
 					entity.move(duration);
@@ -148,7 +181,7 @@ public class World {
 					entity.move(firstCollisionTime);
 				}
 				// resolve collision
-				resolveCollision(firstCollisionArray[0], firstCollisionArray[1]);
+				resolveCollision(getNextCollisionEntities()[0], getNextCollisionEntities()[1]);
 				//  Subtract firstTimeCollision from delta t and go to step 1.
 				duration -= firstCollisionTime;
 			}
@@ -179,8 +212,11 @@ public class World {
 		return false;
 	}
 
-	private void resolveCollision(Entity entity1, Entity entity2) {
+	private void resolveCollision(ICollidable entity1, ICollidable entity2) {
 		if (entity1 instanceof Ship && entity2 instanceof Ship) {
+			
+			entity1 = (Entity) entity1;
+			entity2 = (Entity) entity2;
 			
 			double deltaPosX = entity2.getPositionX()-entity1.getPositionX();
 			double deltaPosY = entity2.getPositionY()-entity1.getPositionY();
@@ -205,9 +241,26 @@ public class World {
 			
 			entity1.setVelocity(newVelocityX1, newVelocityY1);
 			entity2.setVelocity(newVelocityX2, newVelocityY2);
-		} else if (entity1 instanceof Ship && entity2 instanceof Bullet) {
+			
+		} else if ((entity1 instanceof Ship && entity2 instanceof Bullet) ||
+				(entity2 instanceof Ship && entity1 instanceof Bullet)) {
 			
 		}
 	}
+
+
+	@Override
+	public double getTimeToCollision(ICollidable other) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public double[] getCollisionPosition(ICollidable other) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	
 
 }

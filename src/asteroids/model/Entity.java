@@ -4,7 +4,7 @@ import be.kuleuven.cs.som.annotate.Basic;
 import be.kuleuven.cs.som.annotate.Immutable;
 import be.kuleuven.cs.som.annotate.Raw;
 
-public abstract class Entity implements IEntity {
+public abstract class Entity implements ICollidable {
 	
 	protected static final double MAX_SPEED = 300000;
 	protected static final double MIN_RADIUS = 0;
@@ -222,7 +222,7 @@ public abstract class Entity implements IEntity {
 	 * Return the orientation of this entity.
 	 * @return this.orientation
 	 */
-	@Basic @Immutable @Override
+	@Basic @Immutable
 	public double getOrientation() {
 		return this.orientation;
 	}
@@ -243,7 +243,7 @@ public abstract class Entity implements IEntity {
 	}
 	
 	public double getMass() {
-		return 0;
+		return this.mass;
 	}
 	
 	protected boolean isValidMass(double mass) {
@@ -258,13 +258,11 @@ public abstract class Entity implements IEntity {
 		}
 	}
 	
-	@Override
 	public boolean isPartOfWorld() {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
-	@Override
 	public World getWorld() {
 		// TODO Auto-generated method stub
 		return null;
@@ -354,7 +352,7 @@ public abstract class Entity implements IEntity {
 	 *         The other entity does not exist.
 	 *         | other == null
 	 */
-	public double getTimeToCollision(Entity other) throws NullPointerException, IllegalArgumentException {
+	public double getTimeToCollision(ICollidable other) throws NullPointerException, IllegalArgumentException {
 		if (other == null){
 			throw new NullPointerException();
 		} else if (other == this){
@@ -461,7 +459,7 @@ public abstract class Entity implements IEntity {
 	 *         The other entity does not exist.
 	 *         | other == null
 	 */
-	public double[] getCollisionPosition(Entity other) throws NullPointerException {      
+	public double[] getCollisionPosition(ICollidable other) throws NullPointerException {      
 		if (other == null){
 			throw new NullPointerException();
 		} else if (this.overlap(other)) {
@@ -480,7 +478,6 @@ public abstract class Entity implements IEntity {
 		}
 	}
 
-	@Override
 	public void makePartOfWorld() {
 		// TODO Auto-generated method stub
 		
@@ -494,7 +491,6 @@ public abstract class Entity implements IEntity {
 		}
 	}
 	
-	@Override
 	public boolean withinBoundaries(Entity other) {
 		// Check if this entity within other entity (user radius)
 		if ((this.getDistanceBetween(other) <= Math.abs(this.getRadius() - other.getRadius()))) {
@@ -503,7 +499,6 @@ public abstract class Entity implements IEntity {
 		return false;
 	}
 
-	@Override
 	public boolean withinBoundaries(World world) {
 		// Check if this entity within borders of world (upper, lower, left, right)
 		if ((this.getPositionX() > (0.99*radius)) && (this.getPositionY() > (0.99*radius))) {}
