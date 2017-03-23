@@ -171,7 +171,6 @@ public class World {
 	}
 	
 	private boolean significantOverlap(Entity entity) {
-		
 		for (Entity other : this.getEntities()) {
 		    if (entity.significantOverlap(other) && (entity != other)) {
 		    	return true;
@@ -206,6 +205,8 @@ public class World {
 			
 			entity1.setVelocity(newVelocityX1, newVelocityY1);
 			entity2.setVelocity(newVelocityX2, newVelocityY2);
+		} else if (entity1 instanceof Ship && entity2 instanceof Bullet) {
+			
 		}
 	}
 

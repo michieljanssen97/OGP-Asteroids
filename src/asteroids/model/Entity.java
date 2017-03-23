@@ -4,7 +4,7 @@ import be.kuleuven.cs.som.annotate.Basic;
 import be.kuleuven.cs.som.annotate.Immutable;
 import be.kuleuven.cs.som.annotate.Raw;
 
-public class Entity implements IEntity {
+public abstract class Entity implements IEntity {
 	
 	protected static final double MAX_SPEED = 300000;
 	protected static final double MIN_RADIUS = 0;
@@ -39,7 +39,7 @@ public class Entity implements IEntity {
 	 * 		  The y-coordinate for this new entity.
 	 * @return !(Double.isNaN(x) || Double.isNaN(y))
 	 */
-	protected boolean isValidPosition(double x, double y) {
+	protected static boolean isValidPosition(double x, double y) {
 		return !(Double.isNaN(x) || Double.isNaN(y));
 	}
 	
@@ -388,6 +388,47 @@ public class Entity implements IEntity {
 		}
 	}
 	
+	public double getTimeToCollision(World world) throws NullPointerException, IllegalArgumentException {
+		
+		double distanceToHorizontalWall = 0;
+		double distanceToVerticalWall = 0;
+		
+		if (getVelocityX() > 0 && getVelocityY() > 0){
+			distanceToHorizontalWall = world.getHeight();
+			distanceToVerticalWall = world.getWidth();
+		} else if (getVelocityX() < 0 && getVelocityY() > 0){
+			distanceToVerticalWall = 0;
+			distanceToHorizontalWall = world.getHeight();
+		} else if (getVelocityX() < 0 && getVelocityY() < 0){
+			distanceToVerticalWall = 0;
+			distanceToHorizontalWall = 0;
+		} else if (getVelocityX() > 0 && getVelocityY() < 0){
+			distanceToVerticalWall = world.getWidth();
+			distanceToHorizontalWall = 0;
+		}
+		
+		double verticalCollisionTime = (distanceToVerticalWall - (getPositionY()+getRadius()))/getVelocityY();
+		double horizontalCollisionTime = (distanceToHorizontalWall - (getPositionX()+getRadius()))/getVelocityX();
+		return Math.min(verticalCollisionTime, horizontalCollisionTime);
+	}
+	
+	public double[] getCollisionPosition(World world) {      
+		if (world == null){
+			throw new NullPointerException();
+		} 
+		else {
+			
+			if (getTimeToCollision(world) != Double.POSITIVE_INFINITY ){
+				double posX = this.getPositionX() + this.getTimeToCollision(world)*this.getVelocityX();
+				double posY = this.getPositionY() + this.getTimeToCollision(world)*this.getVelocityY();
+				double[] pos =  {posX, posY};
+				return pos;	
+			} else {
+				return null;
+			}
+		}
+	}
+	
 	public boolean apparentlyCollide(Entity other) {
 		double radiiSum = this.getRadius() + other.getRadius();
 		
@@ -474,7 +515,5 @@ public class Entity implements IEntity {
 		return true;
 	}
 	
-	public void move(double duration) {
-		//has to be overrided
-	}
+	public abstract void move(double duration);
 }

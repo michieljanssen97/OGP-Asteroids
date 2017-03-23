@@ -151,7 +151,9 @@ public class Ship extends Entity {
 	private World world;
 	
 	public boolean isPartOfWorld() {
-		// TODO Auto-generated method stub
+		if (this.world != null) {
+			return true;
+		}
 		return false;
 	}
 	

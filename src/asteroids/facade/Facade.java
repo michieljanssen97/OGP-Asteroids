@@ -281,7 +281,7 @@ public class Facade implements asteroids.part2.facade.IFacade {
 
 	@Override
 	public double getTimeCollisionBoundary(Object object) throws ModelException {
-		// TODO Auto-generated method stub
+		object.getTimeToCollision(object.getWorld());
 		return 0;
 	}
 
