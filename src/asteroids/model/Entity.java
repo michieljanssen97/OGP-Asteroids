@@ -4,7 +4,7 @@ import be.kuleuven.cs.som.annotate.Basic;
 import be.kuleuven.cs.som.annotate.Immutable;
 import be.kuleuven.cs.som.annotate.Raw;
 
-public abstract class Entity implements IEntity {
+public abstract class Entity implements ICollidable {
 	
 	protected static final double MAX_SPEED = 300000;
 	protected static final double MIN_RADIUS = 0;
@@ -18,6 +18,8 @@ public abstract class Entity implements IEntity {
 	protected double radius;
 	protected double orientation;
 	protected double mass;
+	
+	protected World world;
 	
 	protected boolean isTerminated = false;
 	
@@ -222,7 +224,7 @@ public abstract class Entity implements IEntity {
 	 * Return the orientation of this entity.
 	 * @return this.orientation
 	 */
-	@Basic @Immutable @Override
+	@Basic @Immutable
 	public double getOrientation() {
 		return this.orientation;
 	}
@@ -243,7 +245,7 @@ public abstract class Entity implements IEntity {
 	}
 	
 	public double getMass() {
-		return 0;
+		return this.mass;
 	}
 	
 	protected boolean isValidMass(double mass) {
@@ -258,16 +260,15 @@ public abstract class Entity implements IEntity {
 		}
 	}
 	
-	@Override
 	public boolean isPartOfWorld() {
-		// TODO Auto-generated method stub
+		if (this.getWorld() != null) {
+			return true;
+		}
 		return false;
 	}
 
-	@Override
 	public World getWorld() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.world;
 	}
 
 	/**
@@ -324,6 +325,17 @@ public abstract class Entity implements IEntity {
 			double distance = getDistanceBetween(other);
 			return radiusSum >= distance;
 		}
+	}
+	
+
+	@Override
+	/**
+	 * Helper function
+	 */
+	public double getTimeToCollision(ICollidable collidable) {
+		if (collidable instanceof Entity) {return this.getTimeToCollision((Entity) collidable);}
+		else if (collidable instanceof World) {return this.getTimeToCollision((World) collidable);}
+		else {return 0;}
 	}
 	
 	/**
@@ -412,6 +424,17 @@ public abstract class Entity implements IEntity {
 		return Math.min(verticalCollisionTime, horizontalCollisionTime);
 	}
 	
+	
+	/**
+	 * Helper function
+	 */
+	@Override
+	public double[] getCollisionPosition(ICollidable collidable) {
+		if (collidable instanceof Entity) {return this.getCollisionPosition((Entity) collidable);}
+		else if (collidable instanceof World) {return this.getCollisionPosition((World) collidable);}
+		else {return new double[]{0.0, 0.0};}
+	}
+	
 	public double[] getCollisionPosition(World world) {      
 		if (world == null){
 			throw new NullPointerException();
@@ -427,16 +450,6 @@ public abstract class Entity implements IEntity {
 				return null;
 			}
 		}
-	}
-	
-	public boolean apparentlyCollide(Entity other) {
-		double radiiSum = this.getRadius() + other.getRadius();
-		
-		if (((radiiSum * 0.99) <= this.getDistanceBetween(other))
-			&& (this.getDistanceBetween(other) <= (radiiSum * 1.01))) {
-			return true;
-		}
-		return false;
 	}
 	
 	/**
@@ -479,11 +492,22 @@ public abstract class Entity implements IEntity {
 			}
 		}
 	}
+	
+	
 
-	@Override
 	public void makePartOfWorld() {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	public boolean apparentlyCollide(Entity other) {
+		double radiiSum = this.getRadius() + other.getRadius();
+		
+		if (((radiiSum * 0.99) <= this.getDistanceBetween(other))
+			&& (this.getDistanceBetween(other) <= (radiiSum * 1.01))) {
+			return true;
+		}
+		return false;
 	}
 	
 	public boolean significantOverlap(Entity entity) {
@@ -494,7 +518,6 @@ public abstract class Entity implements IEntity {
 		}
 	}
 	
-	@Override
 	public boolean withinBoundaries(Entity other) {
 		// Check if this entity within other entity (user radius)
 		if ((this.getDistanceBetween(other) <= Math.abs(this.getRadius() - other.getRadius()))) {
@@ -503,7 +526,6 @@ public abstract class Entity implements IEntity {
 		return false;
 	}
 
-	@Override
 	public boolean withinBoundaries(World world) {
 		// Check if this entity within borders of world (upper, lower, left, right)
 		if ((this.getPositionX() > (0.99*radius)) && (this.getPositionY() > (0.99*radius))) {}
@@ -516,4 +538,5 @@ public abstract class Entity implements IEntity {
 	}
 	
 	public abstract void move(double duration);
+	
 }
