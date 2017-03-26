@@ -19,6 +19,8 @@ public abstract class Entity implements ICollidable {
 	protected double orientation;
 	protected double mass;
 	
+	protected World world;
+	
 	protected boolean isTerminated = false;
 	
 	public boolean isTerminated() {
@@ -259,13 +261,14 @@ public abstract class Entity implements ICollidable {
 	}
 	
 	public boolean isPartOfWorld() {
-		// TODO Auto-generated method stub
+		if (this.getWorld() != null) {
+			return true;
+		}
 		return false;
 	}
 
 	public World getWorld() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.world;
 	}
 
 	/**
@@ -324,6 +327,17 @@ public abstract class Entity implements ICollidable {
 		}
 	}
 	
+
+	@Override
+	/**
+	 * Helper function
+	 */
+	public double getTimeToCollision(ICollidable collidable) {
+		if (collidable instanceof Entity) {return this.getTimeToCollision((Entity) collidable);}
+		else if (collidable instanceof World) {return this.getTimeToCollision((World) collidable);}
+		else {return 0;}
+	}
+	
 	/**
 	 * This method calculates when, if ever, two entities will collide. 
 	 * 
@@ -352,7 +366,7 @@ public abstract class Entity implements ICollidable {
 	 *         The other entity does not exist.
 	 *         | other == null
 	 */
-	public double getTimeToCollision(ICollidable other) throws NullPointerException, IllegalArgumentException {
+	public double getTimeToCollision(Entity other) throws NullPointerException, IllegalArgumentException {
 		if (other == null){
 			throw new NullPointerException();
 		} else if (other == this){
@@ -410,6 +424,17 @@ public abstract class Entity implements ICollidable {
 		return Math.min(verticalCollisionTime, horizontalCollisionTime);
 	}
 	
+	
+	/**
+	 * Helper function
+	 */
+	@Override
+	public double[] getCollisionPosition(ICollidable collidable) {
+		if (collidable instanceof Entity) {return this.getCollisionPosition((Entity) collidable);}
+		else if (collidable instanceof World) {return this.getCollisionPosition((World) collidable);}
+		else {return new double[]{0.0, 0.0};}
+	}
+	
 	public double[] getCollisionPosition(World world) {      
 		if (world == null){
 			throw new NullPointerException();
@@ -425,16 +450,6 @@ public abstract class Entity implements ICollidable {
 				return null;
 			}
 		}
-	}
-	
-	public boolean apparentlyCollide(Entity other) {
-		double radiiSum = this.getRadius() + other.getRadius();
-		
-		if (((radiiSum * 0.99) <= this.getDistanceBetween(other))
-			&& (this.getDistanceBetween(other) <= (radiiSum * 1.01))) {
-			return true;
-		}
-		return false;
 	}
 	
 	/**
@@ -459,7 +474,7 @@ public abstract class Entity implements ICollidable {
 	 *         The other entity does not exist.
 	 *         | other == null
 	 */
-	public double[] getCollisionPosition(ICollidable other) throws NullPointerException {      
+	public double[] getCollisionPosition(Entity other) throws NullPointerException {      
 		if (other == null){
 			throw new NullPointerException();
 		} else if (this.overlap(other)) {
@@ -477,10 +492,22 @@ public abstract class Entity implements ICollidable {
 			}
 		}
 	}
+	
+	
 
 	public void makePartOfWorld() {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	public boolean apparentlyCollide(Entity other) {
+		double radiiSum = this.getRadius() + other.getRadius();
+		
+		if (((radiiSum * 0.99) <= this.getDistanceBetween(other))
+			&& (this.getDistanceBetween(other) <= (radiiSum * 1.01))) {
+			return true;
+		}
+		return false;
 	}
 	
 	public boolean significantOverlap(Entity entity) {
@@ -511,4 +538,5 @@ public abstract class Entity implements ICollidable {
 	}
 	
 	public abstract void move(double duration);
+	
 }

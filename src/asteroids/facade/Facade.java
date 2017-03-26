@@ -313,7 +313,7 @@ public class Facade implements asteroids.part2.facade.IFacade {
 		try {
 			world.evolve(dt);
 		} catch (Exception e) {
-			throw new ModelException("");
+			throw new ModelException(e.toString());
 		}
 	}
 

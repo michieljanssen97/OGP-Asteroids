@@ -109,54 +109,42 @@ public class World implements ICollidable {
 	}
 	
 	public double getNextCollisionTime() {
-		Entity[] entities = getNextCollisionEntities();
-		
-		double entityCollisionTime = entities[0].getTimeToCollision(entities[1]);
-		double boundaryCollisionTime = entities[0].getTimeToCollision(entities[0].getWorld());
-		
-		return Math.min(entityCollisionTime, boundaryCollisionTime);
+		ICollidable[] collidables = getNextCollisionObjects();
+		double collisionTime = collidables[0].getTimeToCollision(collidables[1]);
+		return collisionTime;
 	}
 	
 	public double[] getNextCollisionPosition() {
-		Entity[] entities = getNextCollisionEntities();
-		
-		double entityCollisionTime = entities[0].getTimeToCollision(entities[1]);
-		double boundaryCollisionTime = entities[0].getTimeToCollision(entities[0].getWorld());
-		
-		double[] entityCollisionPosition = entities[0].getCollisionPosition(entities[1]);
-		double[] boundaryCollisionPosition = entities[0].getCollisionPosition(entities[0].getWorld());
-		
-		if (entityCollisionTime <= boundaryCollisionTime) {
-			return entityCollisionPosition;
-		} else if (entityCollisionTime > boundaryCollisionTime) {
-			return boundaryCollisionPosition;
-		} else {
-			return null;
-		}
-		
-		
+		ICollidable[] collidables = getNextCollisionObjects();
+		double[] collisionPosition = collidables[0].getCollisionPosition(collidables[1]);
+		return collisionPosition;
 	}
 	
-	public Entity[] getNextCollisionEntities() {
+	public ICollidable[] getNextCollisionObjects() {
 
-		Map<Entity[], Double> collisionMap = new HashMap<Entity[], Double>();
+		Map<ICollidable[], Double> collisionMap = new HashMap<ICollidable[], Double>();
 		Double collisionTime;
 		
 		for (Entity entity1 : this.getEntities()) {
+			
+			// Calculate time of collision with other entities
 			for (Entity entity2: this.getEntities()) {
-				try {
 			    collisionTime = entity1.getTimeToCollision(entity2);
-				} catch (Exception e) {
-					continue;
-				}
 			    if (collisionTime == Double.POSITIVE_INFINITY){continue;}
-			    Entity[] collisionArray = { entity1, entity2 };
+			    
+			    ICollidable[] collisionArray = { entity1, entity2 };
 		    	collisionMap.put(collisionArray, collisionTime);
 			}
+			
+			// Calculate time of collision with world
+			collisionTime = entity1.getTimeToCollision(this);
+			ICollidable[] collisionArray = { entity1, this };
+	    	collisionMap.put(collisionArray, collisionTime);
+			
 		}
 		
 		// Get collision from collisionMap with lowest collisionTime
-		Entity[] firstCollisionArray = Collections.min(collisionMap.entrySet(), Map.Entry.comparingByValue()).getKey();
+		ICollidable[] firstCollisionArray = Collections.min(collisionMap.entrySet(), Map.Entry.comparingByValue()).getKey();
 		return firstCollisionArray;
 	}
 	
@@ -181,7 +169,16 @@ public class World implements ICollidable {
 					entity.move(firstCollisionTime);
 				}
 				// resolve collision
-				resolveCollision(getNextCollisionEntities()[0], getNextCollisionEntities()[1]);
+				ICollidable[] collidables = getNextCollisionObjects();
+				
+				if (collidables[1] instanceof Entity && collidables[2] instanceof Entity) {
+					resolveCollision((Entity)collidables[1], (Entity)collidables[2]);
+				} else if (collidables[1] instanceof World && collidables[2] instanceof Entity) {
+					resolveCollision((Entity)collidables[2], (World)collidables[1]);
+				} else if (collidables[1] instanceof Entity && collidables[2] instanceof World) {
+					resolveCollision((Entity)collidables[1], (World)collidables[2]);
+				}
+				
 				//  Subtract firstTimeCollision from delta t and go to step 1.
 				duration -= firstCollisionTime;
 			}
@@ -211,8 +208,12 @@ public class World implements ICollidable {
 		} 
 		return false;
 	}
-
-	private void resolveCollision(ICollidable entity1, ICollidable entity2) {
+	
+	private void resolveCollision(Entity entity, World world) {
+		// resolve collision between world and entity
+	}
+	
+	private void resolveCollision(Entity entity1, Entity entity2) {
 		if (entity1 instanceof Ship && entity2 instanceof Ship) {
 			
 			entity1 = (Entity) entity1;
@@ -248,19 +249,20 @@ public class World implements ICollidable {
 		}
 	}
 
-
 	@Override
-	public double getTimeToCollision(ICollidable other) {
-		// TODO Auto-generated method stub
-		return 0;
+	public double[] getCollisionPosition(ICollidable collidable) {
+		if (!(collidable instanceof World)) {
+			return collidable.getCollisionPosition(this);
+		}
+		double[] position = {0.0, 0.0};
+		return position;
 	}
 
 	@Override
-	public double[] getCollisionPosition(ICollidable other) {
-		// TODO Auto-generated method stub
-		return null;
+	public double getTimeToCollision(ICollidable collidable) {
+		if (!(collidable instanceof World)) {
+			return collidable.getTimeToCollision(this);
+		}
+		return 0.0;
 	}
-	
-	
-
 }

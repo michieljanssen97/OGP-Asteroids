@@ -206,5 +206,8 @@ public class Ship extends Entity {
 		// TODO Auto-generated method stub
 		return 0;
 	}
+
+
+
 	
 }
