@@ -88,10 +88,11 @@ public class World implements ICollidable {
 		} else if (entity.isPartOfWorld() || significantOverlap(entity) || !entity.withinBoundaries(this)){
 			throw new IllegalArgumentException();
 		} else {
+			entity.makePartOfWorld(this);
 			if (entity instanceof Ship) {
-			ships.add((Ship) entity);
+				ships.add((Ship) entity);
 			} else if (entity instanceof Bullet) {
-			bullets.add((Bullet) entity);
+				bullets.add((Bullet) entity);
 			}
 		}
 		
@@ -216,9 +217,6 @@ public class World implements ICollidable {
 	private void resolveCollision(Entity entity1, Entity entity2) {
 		if (entity1 instanceof Ship && entity2 instanceof Ship) {
 			
-			entity1 = (Entity) entity1;
-			entity2 = (Entity) entity2;
-			
 			double deltaPosX = entity2.getPositionX()-entity1.getPositionX();
 			double deltaPosY = entity2.getPositionY()-entity1.getPositionY();
 
@@ -232,7 +230,6 @@ public class World implements ICollidable {
 			
 			double Jx = (J*deltaPosX)/radiusSum;	
 			double Jy = (J*deltaPosY)/radiusSum;
-			
 			
 			double newVelocityX1 = entity1.getVelocityX() + (Jx/entity1.getMass());
 			double newVelocityY1 = entity1.getVelocityY() + (Jy/entity1.getMass());

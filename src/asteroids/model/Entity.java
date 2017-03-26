@@ -495,9 +495,8 @@ public abstract class Entity implements ICollidable {
 	
 	
 
-	public void makePartOfWorld() {
-		// TODO Auto-generated method stub
-		
+	public void makePartOfWorld(World world) {
+		this.world = world;
 	}
 	
 	public boolean apparentlyCollide(Entity other) {

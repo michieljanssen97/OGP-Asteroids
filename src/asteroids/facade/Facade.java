@@ -247,7 +247,7 @@ public class Facade implements asteroids.part2.facade.IFacade {
 	}
 
 	@Override
-	public Set<? extends Bullet> getBulletsOnShip(Ship ship) throws ModelException {
+	public Set<Bullet> getBulletsOnShip(Ship ship) throws ModelException {
 		return ship.getBullets();
 	}
 
@@ -258,14 +258,20 @@ public class Facade implements asteroids.part2.facade.IFacade {
 
 	@Override
 	public void loadBulletOnShip(Ship ship, Bullet bullet) throws ModelException {
-		Set<Bullet> bullets = new HashSet<Bullet>();
-		bullets.add(bullet);
-		ship.loadBullets(bullets);
+		try {
+			ship.loadBullets(bullet);
+		} catch (Exception e) {
+			throw new ModelException(e.getMessage());
+		}
 	}
 
 	@Override
 	public void loadBulletsOnShip(Ship ship, Collection<Bullet> bullets) throws ModelException {
-		ship.loadBullets(bullets);
+		try {
+			ship.loadBullets(bullets.toArray(new Bullet[bullets.size()]));
+		} catch (Exception e) {
+			throw new ModelException(e.toString());
+		}
 	}
 
 	@Override
@@ -313,7 +319,7 @@ public class Facade implements asteroids.part2.facade.IFacade {
 		try {
 			world.evolve(dt);
 		} catch (Exception e) {
-			throw new ModelException(e.toString());
+			throw new ModelException(e.getMessage());
 		}
 	}
 

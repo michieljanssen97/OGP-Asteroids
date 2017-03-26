@@ -1,6 +1,8 @@
 package asteroids.model;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 import be.kuleuven.cs.som.annotate.*;
@@ -24,6 +26,8 @@ public class Ship extends Entity {
 	private static final double MAX_SPEED = 300000;
 	private static final double MIN_RADIUS = 10;
 	private static final double THRUSTER_FORCE = 1 * Math.pow(10,21);
+	
+	private Set<Bullet> bullets = new HashSet<Bullet>();
 	
 	private boolean thrusterActive = false;
 	
@@ -61,6 +65,11 @@ public class Ship extends Entity {
 			setRadius(radius);
 			setOrientation(orientation);
 			setMass(mass);
+			
+			for (int i=0; i < 15; i += 1) {
+				this.bullets.add(new Bullet(this.x, this.y, 0, 0, 11));
+			}
+			
 		} catch (IllegalArgumentException e) {
 			throw e;
 		}
@@ -147,9 +156,6 @@ public class Ship extends Entity {
 				
 	}
 	
-
-	private World world;
-	
 	public boolean isPartOfWorld() {
 		if (this.world != null) {
 			return true;
@@ -175,24 +181,29 @@ public class Ship extends Entity {
 
 
 	public double getAcceleration() {
-		return THRUSTER_FORCE/this.getMass();
+		return THRUSTER_FORCE/(float)this.getMass();
 	}
 
 
-	public Set<? extends Bullet> getBullets() {
-		// TODO Auto-generated method stub
-		return null;
+	public Set<Bullet> getBullets() {
+		return this.bullets;
 	}
 
-	public void loadBullets(Collection<Bullet> bullets) {
-		// TODO Auto-generated method stub
-		
+	public void loadBullets(Bullet... bullets) throws Exception {
+		try {
+			for(Bullet bullet: bullets) {
+				if (bullet != null) {
+					this.bullets.add(bullet);
+				}
+			}
+		} catch (Exception e) {
+			throw new Exception();
+		}
 	}
 
 
 	public void removeBullet(Bullet bullet) {
-		// TODO Auto-generated method stub
-		
+		this.bullets.remove(bullet);
 	}
 
 
@@ -201,10 +212,16 @@ public class Ship extends Entity {
 		
 	}
 
-
 	public int getNbBulletsOnShip() {
-		// TODO Auto-generated method stub
-		return 0;
+		return this.bullets.size();
+	}
+	
+	public double getMass() {
+		double bullet_mass = 0;
+		for (Bullet bullet : this.getBullets()) {
+			bullet_mass += bullet.getMass();
+		}
+		return bullet_mass + this.mass;
 	}
 
 
