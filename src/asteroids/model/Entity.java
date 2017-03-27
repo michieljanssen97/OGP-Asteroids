@@ -257,7 +257,7 @@ public abstract class Entity implements ICollidable {
 		if (isValidMass(mass)) {
 			this.mass = mass;
 		} else {
-			this.mass = MIN_DENSITY;
+			this.mass = (4.0/3.0)*Math.PI*Math.pow(this.getRadius(), 3)*MIN_DENSITY;
 		}
 	}
 	

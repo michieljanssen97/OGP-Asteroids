@@ -24,7 +24,7 @@ public class Ship extends Entity {
 	private static final double MAX_SPEED = 300000;
 	private static final double MIN_RADIUS = 10;
 	private static final double MIN_DENSITY = 1.42E12;
-	private static final double THRUSTER_FORCE = 1 * Math.pow(10,21);
+	private static final double THRUSTER_FORCE = 1E21;
 	
 	private Set<Bullet> bullets = new HashSet<Bullet>();
 	
@@ -179,16 +179,26 @@ public class Ship extends Entity {
 	public Set<Bullet> getBullets() {
 		return this.bullets;
 	}
+	
+	
+	public boolean isValidBullet(Bullet bullet){
+		return bullet.getPositionX()+bullet.getRadius()<=this.getPositionX()+this.getRadius() &&
+			   bullet.getPositionX()-bullet.getRadius()>=this.getPositionX()-this.getRadius() &&
+			   bullet.getPositionX()+bullet.getRadius()<=this.getPositionX()+this.getRadius() &&
+			   bullet.getPositionX()+bullet.getRadius()<=this.getPositionX()+this.getRadius();
+	}
 
-	public void loadBullets(Bullet... bullets) throws Exception {
+	public void loadBullets(Bullet... bullets) throws NullPointerException {
 		try {
 			for(Bullet bullet: bullets) {
 				if (bullet != null) {
-					this.bullets.add(bullet);
+					if (isValidBullet(bullet)){
+						this.bullets.add(bullet);
+					}
 				}
 			}
 		} catch (Exception e) {
-			throw new Exception();
+			throw new NullPointerException();
 		}
 	}
 
@@ -198,8 +208,20 @@ public class Ship extends Entity {
 	}
 
 
-	public void fireBullet() {
-		// TODO Auto-generated method stub
+	public void fireBullet(Bullet bullet) throws NullPointerException {
+		try {
+			if (this.isPartOfWorld() && bullet != null){
+				// First remove the bullet from the collection of the ship's bullets. Then reduce the mass of the ship + bullets.
+				// Then set the position of the bullet next to the ship and set the velocity of the bullet.
+				removeBullet(bullet);
+				this.mass -= bullet.getMass();
+				bullet.setPosition(this.getPositionX()+this.getRadius()*Math.cos(this.orientation)+bullet.getRadius()*Math.cos(bullet.orientation), 
+						this.getPositionY()+this.getRadius()*Math.sin(this.orientation)+bullet.getRadius()*Math.sin(bullet.orientation));
+				bullet.setVelocity(250*Math.cos(this.orientation), 250*Math.sin(this.orientation));
+			}	
+		} catch (Exception e) {
+			throw new NullPointerException();
+		}
 		
 	}
 
@@ -209,7 +231,7 @@ public class Ship extends Entity {
 	
 	@Override
 	protected boolean isValidMass(double mass) {
-		if (mass >= (4/3.0)*Math.PI*Math.pow(this.getRadius(), 3)*MIN_DENSITY ) {
+		if (mass >= (4.0/3.0)*Math.PI*Math.pow(this.getRadius(), 3)*MIN_DENSITY ) {
 			return true;
 		}
 		return false;
