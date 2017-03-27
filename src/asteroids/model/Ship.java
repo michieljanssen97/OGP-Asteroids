@@ -181,18 +181,11 @@ public class Ship extends Entity {
 	}
 	
 	
-	public boolean isValidBullet(Bullet bullet){
-		return bullet.getPositionX()+bullet.getRadius()<=this.getPositionX()+this.getRadius() &&
-			   bullet.getPositionX()-bullet.getRadius()>=this.getPositionX()-this.getRadius() &&
-			   bullet.getPositionX()+bullet.getRadius()<=this.getPositionX()+this.getRadius() &&
-			   bullet.getPositionX()+bullet.getRadius()<=this.getPositionX()+this.getRadius();
-	}
-
 	public void loadBullets(Bullet... bullets) throws NullPointerException {
 		try {
 			for(Bullet bullet: bullets) {
 				if (bullet != null) {
-					if (isValidBullet(bullet)){
+					if (bullet.withinBoundaries(this)){
 						this.bullets.add(bullet);
 					}
 				}
