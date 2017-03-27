@@ -63,18 +63,12 @@ public class Ship extends Entity {
 			setVelocity(xVelocity, yVelocity);
 			setRadius(radius);
 			setOrientation(orientation);
-			setMass(mass);
-			
-			for (int i=0; i < 15; i += 1) {
-				this.bullets.add(new Bullet(this.x, this.y, 0, 0, 11));
-			}
-			
+			setMass(mass);	
 		} catch (IllegalArgumentException e) {
 			throw e;
 		}
 		
 	};
-	
 	
 	/**
 	 * This method moves the ship with a given valid duration.
@@ -90,7 +84,7 @@ public class Ship extends Entity {
 	 * @throws IllegalArgumentException
 	 *         | ! isValidDuration(duration)
 	 */
-	public void advance(double duration) throws IllegalArgumentException {
+	public void move(double duration) throws IllegalArgumentException {
 		if (isValidDuration(duration)) {			
 			double deltaX = getVelocityX()*duration;
 			double deltaY = getVelocityY()*duration;

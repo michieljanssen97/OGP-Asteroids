@@ -537,6 +537,6 @@ public abstract class Entity implements ICollidable {
 		return true;
 	}
 	
-	public abstract void advance(double duration);
+	public abstract void move(double duration);
 	
 }
