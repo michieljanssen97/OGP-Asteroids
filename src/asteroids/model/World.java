@@ -109,16 +109,15 @@ public class World implements ICollidable {
 		}
 	}
 	
-	public double getNextCollisionTime() {
-		
+	public double getNextCollisionTime() throws Exception {
 		double collisionTime;
 		try {
 			ICollidable[] collidables = getNextCollisionObjects();
 			collisionTime = collidables[0].getTimeToCollision(collidables[1]);
+			return collisionTime;
 		} catch (Exception e) {
-			collisionTime = Double.POSITIVE_INFINITY;
+			throw e;
 		}
-		return collisionTime;
 	}
 	
 	public double[] getNextCollisionPosition() {
@@ -156,13 +155,17 @@ public class World implements ICollidable {
 	}
 	
 	public void evolve(double duration) throws Exception {
-		try {
 		while (duration > 0) {
 		
 			// 1. Get first collision, if any
 			// Calculate all collisions, immediately continue if an apparent Collision is found
 			
-			Double firstCollisionTime = getNextCollisionTime();
+			Double firstCollisionTime;
+			try {
+				firstCollisionTime = getNextCollisionTime();
+			} catch (Exception e) {
+				firstCollisionTime = Double.POSITIVE_INFINITY;
+			}
 			
 			if (firstCollisionTime > duration || firstCollisionTime.isNaN()) {
 				// Advance all bullets and ships delta t seconds
@@ -180,6 +183,7 @@ public class World implements ICollidable {
 				
 				if (collidables[1] instanceof Entity && collidables[2] instanceof Entity) {
 					resolveCollision((Entity)collidables[1], (Entity)collidables[2]);
+					throw new Exception();
 				} else if (collidables[1] instanceof World && collidables[2] instanceof Entity) {
 					resolveCollision((Entity)collidables[2], (World)collidables[1]);
 				} else if (collidables[1] instanceof Entity && collidables[2] instanceof World) {
@@ -189,13 +193,7 @@ public class World implements ICollidable {
 				//  Subtract firstTimeCollision from delta t and go to step 1.
 				duration -= firstCollisionTime;
 			}
-			
 		} 
-		} catch (Exception e) {
-			throw new Exception();
-		}
-			
-			
 	}
 	
 	public Entity getEntityAtPosition(double x, double y) {
@@ -256,9 +254,9 @@ public class World implements ICollidable {
 	public double[] getCollisionPosition(ICollidable collidable) {
 		if (!(collidable instanceof World)) {
 			return collidable.getCollisionPosition(this);
+		} else {
+			return new double[]{0, 0};
 		}
-		double[] position = {0.0, 0.0};
-		return position;
 	}
 
 	@Override

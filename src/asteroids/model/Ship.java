@@ -164,14 +164,14 @@ public class Ship extends Entity {
 		return this.world;
 	}
 	
-	public void thrustOn() {
-		this.thrusterActive = true;
+	public void toggleThruster() {
+		if (thrusterActive) {
+			thrusterActive = false;
+		} else if (!thrusterActive) {
+			thrusterActive = true;
+		}
 	}
-	public void thrustOff() {
-		this.thrusterActive = false;
-	}
-
-
+	
 	public boolean IsThrusterActive() {
 		return this.thrusterActive;
 	}
@@ -215,7 +215,7 @@ public class Ship extends Entity {
 	
 	@Override
 	protected boolean isValidMass(double mass) {
-		if (mass >= (4/3.0)*Math.PI*this.getRadius()*MIN_DENSITY ) {
+		if (mass >= (4/3.0)*Math.PI*Math.pow(this.getRadius(), 3)*MIN_DENSITY ) {
 			return true;
 		}
 		return false;

@@ -115,7 +115,7 @@ public class Facade implements asteroids.part2.facade.IFacade {
 
 	@Override
 	public void setThrusterActive(Ship ship, boolean active) throws ModelException {
-		ship.thrustOn();
+		ship.toggleThruster();
 	}
 
 	@Override
@@ -299,7 +299,11 @@ public class Facade implements asteroids.part2.facade.IFacade {
 
 	@Override
 	public double getTimeNextCollision(World world) throws ModelException {
-		return world.getNextCollisionTime();
+		try {
+			return world.getNextCollisionTime();
+		} catch (Exception e) {
+			throw new ModelException(e.getMessage());
+		}
 	}
 
 	@Override

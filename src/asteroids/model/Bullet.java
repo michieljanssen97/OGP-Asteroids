@@ -4,8 +4,8 @@ public class Bullet extends Entity {
 
 	protected static final double MAX_SPEED = 300000;
 	protected static final double MIN_RADIUS = 1;
+	protected static final double DENSITY = 7.8E12;
 	
-	private double mass; 
 	private World world; 
 	private Ship ship; 
 	private Ship source; 	
@@ -17,8 +17,8 @@ public class Bullet extends Entity {
 	}
 	
 	public double getMass(){
-		// Also include mass of carried objects
-		return this.mass;
+		double mass = (4/3.0)*Math.PI*Math.pow(this.getRadius(), 3)*DENSITY;
+		return mass;
 	}
 	
 	public World getWorld(){return this.world;}
