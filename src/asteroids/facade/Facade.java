@@ -1,14 +1,12 @@
 package asteroids.facade;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Set;
 
 import asteroids.model.Bullet;
 import asteroids.model.Entity;
 import asteroids.model.Ship;
 import asteroids.model.World;
-import asteroids.part1.facade.IFacade;
 import asteroids.part2.CollisionListener;
 import asteroids.util.ModelException;
 
@@ -41,15 +39,6 @@ public class Facade implements asteroids.part2.facade.IFacade {
 	@Override
 	public double getShipOrientation(Ship ship) throws ModelException {
 		return ship.getOrientation();
-	}
-
-	@Override
-	public void move(Ship ship, double dt) throws ModelException {
-		try {
-			ship.move(dt);
-		} catch (IllegalArgumentException e) {
-			throw new ModelException("Wrong duration.");
-		}
 	}
 
 	@Override
@@ -229,7 +218,11 @@ public class Facade implements asteroids.part2.facade.IFacade {
 
 	@Override
 	public void removeShipFromWorld(World world, Ship ship) throws ModelException {
-		world.removeEntity(ship);
+		try {
+			world.removeEntity(ship);
+		} catch (Exception e) {
+			throw new ModelException("");
+		}
 	}
 
 	@Override

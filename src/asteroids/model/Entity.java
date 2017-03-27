@@ -8,6 +8,7 @@ public abstract class Entity implements ICollidable {
 	
 	protected static final double MAX_SPEED = 300000;
 	protected static final double MIN_RADIUS = 0;
+	private static final double MIN_DENSITY = 0;
 	
 	protected double x;
 	protected double y;
@@ -256,7 +257,7 @@ public abstract class Entity implements ICollidable {
 		if (isValidMass(mass)) {
 			this.mass = mass;
 		} else {
-			this.mass = 0;
+			this.mass = MIN_DENSITY;
 		}
 	}
 	
@@ -536,6 +537,6 @@ public abstract class Entity implements ICollidable {
 		return true;
 	}
 	
-	public abstract void move(double duration);
+	public abstract void advance(double duration);
 	
 }

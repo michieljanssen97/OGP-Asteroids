@@ -82,7 +82,7 @@ public class World implements ICollidable {
 	
 	// implement defensively.
 	
-	public void addEntity(Entity entity) throws NullPointerException {
+	public void addEntity(Entity entity) throws IllegalArgumentException, NullPointerException {
 		if (entity == null){
 			throw new NullPointerException();
 		} else if (entity.isPartOfWorld() || significantOverlap(entity) || !entity.withinBoundaries(this)){
@@ -110,8 +110,14 @@ public class World implements ICollidable {
 	}
 	
 	public double getNextCollisionTime() {
-		ICollidable[] collidables = getNextCollisionObjects();
-		double collisionTime = collidables[0].getTimeToCollision(collidables[1]);
+		
+		double collisionTime;
+		try {
+			ICollidable[] collidables = getNextCollisionObjects();
+			collisionTime = collidables[0].getTimeToCollision(collidables[1]);
+		} catch (Exception e) {
+			collisionTime = Double.POSITIVE_INFINITY;
+		}
 		return collisionTime;
 	}
 	
@@ -161,13 +167,13 @@ public class World implements ICollidable {
 			if (firstCollisionTime > duration || firstCollisionTime.isNaN()) {
 				// Advance all bullets and ships delta t seconds
 				for (Entity entity : this.getEntities()) {
-					entity.move(duration);
+					entity.advance(duration);
 				}
 				break;
 			} else {
 				// Advance all bullets and ships until right before delta firstCollisionTime
 				for (Entity entity : this.getEntities()) {
-					entity.move(firstCollisionTime);
+					entity.advance(firstCollisionTime);
 				}
 				// resolve collision
 				ICollidable[] collidables = getNextCollisionObjects();

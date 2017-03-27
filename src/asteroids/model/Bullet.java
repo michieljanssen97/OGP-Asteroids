@@ -27,7 +27,7 @@ public class Bullet extends Entity {
 	
 	public Ship getSource(){return this.source;}
 	
-	public void move(double duration) throws IllegalArgumentException {
+	public void advance(double duration) throws IllegalArgumentException {
 		if (isValidDuration(duration)) {
 			double deltaX = getVelocityX()*duration;
 			double deltaY = getVelocityY()*duration;

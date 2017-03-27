@@ -1,7 +1,5 @@
 package asteroids.model;
 
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -25,6 +23,7 @@ public class Ship extends Entity {
 	
 	private static final double MAX_SPEED = 300000;
 	private static final double MIN_RADIUS = 10;
+	private static final double MIN_DENSITY = 1.42E12;
 	private static final double THRUSTER_FORCE = 1 * Math.pow(10,21);
 	
 	private Set<Bullet> bullets = new HashSet<Bullet>();
@@ -91,22 +90,20 @@ public class Ship extends Entity {
 	 * @throws IllegalArgumentException
 	 *         | ! isValidDuration(duration)
 	 */
-	public void move(double duration) throws IllegalArgumentException {
-		if (isValidDuration(duration)) {
-			
-			if (IsThrusterActive()) {
-				double a = this.getAcceleration();
-				if (a < 0) {
-					a = 0;
-				}
-				double newVelocityX = getVelocityX() + a*Math.cos(getOrientation())*duration;
-				double newVelocityY = getVelocityY() + a*Math.sin(getOrientation())*duration;
-				setVelocity(newVelocityX, newVelocityY);
-			}
-			
+	public void advance(double duration) throws IllegalArgumentException {
+		if (isValidDuration(duration)) {			
 			double deltaX = getVelocityX()*duration;
 			double deltaY = getVelocityY()*duration;
 			setPosition(getPositionX()+deltaX, getPositionY()+deltaY);
+			
+			if (IsThrusterActive()) {
+				double amount = this.getAcceleration();
+				if (amount < 0) {
+					amount = 0;
+				}
+				this.thrust(amount*duration);
+			}
+			
 		} else {
 			throw new IllegalArgumentException();
 		}
@@ -214,6 +211,14 @@ public class Ship extends Entity {
 
 	public int getNbBulletsOnShip() {
 		return this.bullets.size();
+	}
+	
+	@Override
+	protected boolean isValidMass(double mass) {
+		if (mass >= (4/3.0)*Math.PI*this.getRadius()*MIN_DENSITY ) {
+			return true;
+		}
+		return false;
 	}
 	
 	public double getMass() {
