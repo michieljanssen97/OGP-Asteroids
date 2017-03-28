@@ -387,7 +387,7 @@ public abstract class Entity implements ICollidable {
 			
 			
 			if (this.apparentlyCollide(other)) {
-				return new Double(0);
+				return 0.0;
 			} 
 			else {
 				if (deltaVR >= 0){
@@ -402,6 +402,8 @@ public abstract class Entity implements ICollidable {
 	}
 	
 	public double getTimeToCollision(World world) throws NullPointerException, IllegalArgumentException {
+		
+		// TODO: fix error with negative timetocollision
 		
 		double distanceToHorizontalWall = 0;
 		double distanceToVerticalWall = 0;
@@ -420,8 +422,8 @@ public abstract class Entity implements ICollidable {
 			distanceToHorizontalWall = 0;
 		}
 		
-		double verticalCollisionTime = (distanceToVerticalWall - (getPositionY()+getRadius()))/getVelocityY();
-		double horizontalCollisionTime = (distanceToHorizontalWall - (getPositionX()+getRadius()))/getVelocityX();
+		double verticalCollisionTime = Math.abs(distanceToVerticalWall - (getPositionY()+getRadius()))/Math.abs(getVelocityY());
+		double horizontalCollisionTime = Math.abs(distanceToHorizontalWall - (getPositionX()+getRadius()))/Math.abs(getVelocityX());
 		return Math.min(verticalCollisionTime, horizontalCollisionTime);
 	}
 	

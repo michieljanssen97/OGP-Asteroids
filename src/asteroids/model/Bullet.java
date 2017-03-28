@@ -8,7 +8,7 @@ public class Bullet extends Entity {
 	
 	private World world; 
 	private Ship ship; 
-	private Ship source; 	
+	private Ship source;
 
 	public Bullet(double x, double y, double xVelocity, double yVelocity, double radius) {
 		setPosition(x, y);
@@ -49,6 +49,7 @@ public class Bullet extends Entity {
 	public void makePartOfShip(Ship ship) {
 		if (!isPartOfWorld() && !isPartOfShip()) {
 			this.ship = ship;
+			this.source = ship;
 		}
 	};
 	

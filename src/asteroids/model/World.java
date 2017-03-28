@@ -118,21 +118,26 @@ public class World implements ICollidable {
 		}
 	}
 	
-	public double getNextCollisionTime() throws Exception {
-		double collisionTime;
+	public double getNextCollisionTime() {
+		Double collisionTime = null;
+		ICollidable[] collidables = getNextCollisionObjects();
 		try {
-			ICollidable[] collidables = getNextCollisionObjects();
 			collisionTime = collidables[0].getTimeToCollision(collidables[1]);
-			return collisionTime;
-		} catch (Exception e) {
-			throw e;
+		} catch (Exception e ){
+			collisionTime = Double.POSITIVE_INFINITY;
 		}
+		return collisionTime;
+
 	}
 	
 	public double[] getNextCollisionPosition() {
 		ICollidable[] collidables = getNextCollisionObjects();
+		try {
 		double[] collisionPosition = collidables[0].getCollisionPosition(collidables[1]);
 		return collisionPosition;
+		} catch (Exception e) {
+			return null;
+		}	
 	}
 	
 	public ICollidable[] getNextCollisionObjects() {
@@ -144,7 +149,11 @@ public class World implements ICollidable {
 			
 			// Calculate time of collision with other entities
 			for (Entity entity2: this.getEntities()) {
-			    collisionTime = entity1.getTimeToCollision(entity2);
+				try {
+					collisionTime = entity1.getTimeToCollision(entity2);
+				} catch (Exception e) {
+					collisionTime = Double.POSITIVE_INFINITY;
+				}
 			    if (collisionTime == Double.POSITIVE_INFINITY){continue;}
 			    
 			    ICollidable[] collisionArray = { entity1, entity2 };
@@ -170,38 +179,42 @@ public class World implements ICollidable {
 			// Calculate all collisions, immediately continue if an apparent Collision is found
 			
 			Double firstCollisionTime;
+			ICollidable[] collidables = null;
 			try {
 				firstCollisionTime = getNextCollisionTime();
+				collidables = getNextCollisionObjects();
 			} catch (Exception e) {
 				firstCollisionTime = Double.POSITIVE_INFINITY;
 			}
 			
-			if (firstCollisionTime > duration || firstCollisionTime.isNaN() || firstCollisionTime == Double.POSITIVE_INFINITY) {
-				// Advance all bullets and ships delta t seconds
-				for (Entity entity : this.getEntities()) {
-					entity.move(duration);
-				}
-				break;
-			} else {
-				// Advance all bullets and ships until right before delta firstCollisionTime
-				for (Entity entity : this.getEntities()) {
-					entity.move(firstCollisionTime);
-				}
-				// resolve collision
-				ICollidable[] collidables = getNextCollisionObjects();
-				
+			if (firstCollisionTime > duration) {
+				advanceEntities(duration);
+				return;
+			} else {				
+				advanceEntities(firstCollisionTime);
+
 				if (collidables[0] instanceof Entity && collidables[1] instanceof Entity) {
 					resolveCollision((Entity)collidables[0], (Entity)collidables[1]);
+					((Entity)collidables[0]).move(duration);
+					((Entity)collidables[1]).move(duration);
 				} else if (collidables[0] instanceof World && collidables[1] instanceof Entity) {
 					resolveCollision((Entity)collidables[0], (World)collidables[1]);
+					((Entity)collidables[1]).move(duration);
 				} else if (collidables[0] instanceof Entity && collidables[1] instanceof World) {
 					resolveCollision((Entity)collidables[0], (World)collidables[1]);
+					((Entity)collidables[0]).move(duration);
 				}
-				
+			
 				//  Subtract firstTimeCollision from delta t and go to step 1.
 				duration -= firstCollisionTime;
 			}
 		} 
+	}
+	
+	public void advanceEntities(double duration) {
+		for (Entity entity : this.getEntities()) {
+			entity.move(duration);
+		}
 	}
 	
 	public Entity getEntityAtPosition(double x, double y) {
@@ -266,7 +279,7 @@ public class World implements ICollidable {
 			
 		} else if ((entity1 instanceof Ship && entity2 instanceof Bullet)) {
 			
-			if (((Bullet) entity2).isPartOfShip()) {
+			if (((Bullet) entity2).getSource() == entity1) {
 				((Ship) entity1).loadBullets((Bullet) entity2);
 			} else {
 				this.removeEntity(entity1);
@@ -275,7 +288,7 @@ public class World implements ICollidable {
 			
 		} else if ((entity2 instanceof Ship && entity1 instanceof Bullet)) {
 			
-			if (((Bullet) entity1).isPartOfShip()) {
+			if (((Bullet) entity1).getSource() == entity2) {
 				((Ship) entity2).loadBullets((Bullet) entity1);
 			} else {
 				this.removeEntity(entity2);
