@@ -403,8 +403,6 @@ public abstract class Entity implements ICollidable {
 	
 	public double getTimeToCollision(World world) throws NullPointerException, IllegalArgumentException {
 		
-		// TODO: fix error with negative timetocollision
-		
 		double distanceToHorizontalWall = 0;
 		double distanceToVerticalWall = 0;
 		
@@ -422,8 +420,8 @@ public abstract class Entity implements ICollidable {
 			distanceToHorizontalWall = 0;
 		}
 		
-		double verticalCollisionTime = Math.abs(distanceToVerticalWall - (getPositionY()+getRadius()))/Math.abs(getVelocityY());
-		double horizontalCollisionTime = Math.abs(distanceToHorizontalWall - (getPositionX()+getRadius()))/Math.abs(getVelocityX());
+		double verticalCollisionTime = Math.abs(distanceToVerticalWall - (getPositionX()+getRadius()))/Math.abs(getVelocityX());
+		double horizontalCollisionTime = Math.abs(distanceToHorizontalWall - (getPositionY()+getRadius()))/Math.abs(getVelocityY());
 		return Math.min(verticalCollisionTime, horizontalCollisionTime);
 	}
 	
