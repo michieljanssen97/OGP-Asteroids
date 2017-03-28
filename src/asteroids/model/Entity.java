@@ -494,10 +494,10 @@ public abstract class Entity implements ICollidable {
 		}
 	}
 	
-	
-
 	public void makePartOfWorld(World world) {
+		if (!isPartOfWorld()) {
 		this.world = world;
+		}
 	}
 	
 	public boolean apparentlyCollide(Entity other) {

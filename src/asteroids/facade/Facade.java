@@ -274,7 +274,11 @@ public class Facade implements asteroids.part2.facade.IFacade {
 
 	@Override
 	public void fireBullet(Ship ship) throws ModelException {
-		ship.fireBullet();
+		try {
+			ship.fireBullet();
+		} catch (Exception e) {
+			throw new ModelException(e.getMessage());
+		}
 	}
 
 	@Override

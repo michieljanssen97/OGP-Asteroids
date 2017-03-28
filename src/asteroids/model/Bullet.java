@@ -23,8 +23,6 @@ public class Bullet extends Entity {
 	
 	public World getWorld(){return this.world;}
 	
-	public Ship getShip(){return this.ship;}
-	
 	public Ship getSource(){return this.source;}
 	
 	public void move(double duration) throws IllegalArgumentException {
@@ -37,6 +35,36 @@ public class Bullet extends Entity {
 		}
 		
 	}
+	
+	public void makePartOfWorld(World world) {
+		if (!isPartOfWorld() && !isPartOfShip()) {
+			try {
+				this.world = world;
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public void makePartOfShip(Ship ship) {
+		if (!isPartOfWorld() && !isPartOfShip()) {
+			this.ship = ship;
+		}
+	};
+	
+	public void removeFromShip() {
+		this.ship = null;
+	};
+	
+	public boolean isPartOfShip() {
+		if (this.ship instanceof Ship) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public Ship getShip() {return this.ship;}
 
 }
 

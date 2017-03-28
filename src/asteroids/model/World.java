@@ -92,7 +92,10 @@ public class World implements ICollidable {
 			if (entity instanceof Ship) {
 				for (int i=0; i < 15; i += 1) {
 					try {
-						((Ship) entity).loadBullets(new Bullet(entity.x, entity.y, 0, 0, 0));
+						Bullet newbullet = new Bullet(entity.x, entity.y, entity.getRadius()*0.11, 0, 0);
+						newbullet.makePartOfShip((Ship) entity);
+						((Ship) entity).loadBullets(newbullet);
+						
 					} catch (Exception e) {
 					}
 				}
@@ -173,7 +176,7 @@ public class World implements ICollidable {
 				firstCollisionTime = Double.POSITIVE_INFINITY;
 			}
 			
-			if (firstCollisionTime > duration || firstCollisionTime.isNaN()) {
+			if (firstCollisionTime > duration || firstCollisionTime.isNaN() || firstCollisionTime == Double.POSITIVE_INFINITY) {
 				// Advance all bullets and ships delta t seconds
 				for (Entity entity : this.getEntities()) {
 					entity.move(duration);
@@ -187,13 +190,12 @@ public class World implements ICollidable {
 				// resolve collision
 				ICollidable[] collidables = getNextCollisionObjects();
 				
-				if (collidables[1] instanceof Entity && collidables[2] instanceof Entity) {
-					resolveCollision((Entity)collidables[1], (Entity)collidables[2]);
-					throw new Exception();
-				} else if (collidables[1] instanceof World && collidables[2] instanceof Entity) {
-					resolveCollision((Entity)collidables[2], (World)collidables[1]);
-				} else if (collidables[1] instanceof Entity && collidables[2] instanceof World) {
-					resolveCollision((Entity)collidables[1], (World)collidables[2]);
+				if (collidables[0] instanceof Entity && collidables[1] instanceof Entity) {
+					resolveCollision((Entity)collidables[0], (Entity)collidables[1]);
+				} else if (collidables[0] instanceof World && collidables[1] instanceof Entity) {
+					resolveCollision((Entity)collidables[0], (World)collidables[1]);
+				} else if (collidables[0] instanceof Entity && collidables[1] instanceof World) {
+					resolveCollision((Entity)collidables[0], (World)collidables[1]);
 				}
 				
 				//  Subtract firstTimeCollision from delta t and go to step 1.
@@ -221,7 +223,19 @@ public class World implements ICollidable {
 	}
 	
 	private void resolveCollision(Entity entity, World world) {
-		// resolve collision between world and entity
+		double distanceToLeftWall = entity.getPositionX();
+		double distanceToRightWall = world.getWidth() - entity.getPositionX();
+		double distanceToUpperWall = world.getHeight() - entity.getPositionY();
+		double distanceToBottomWall = entity.getPositionY();
+		
+		double minDistance = Math.min(Math.min(distanceToUpperWall, distanceToBottomWall), Math.min(distanceToLeftWall, distanceToRightWall));
+		
+		if (minDistance == distanceToLeftWall || minDistance == distanceToRightWall) {
+			entity.setVelocity(-entity.getVelocityX(), entity.getVelocityY());
+		} else if (minDistance == distanceToUpperWall || minDistance == distanceToBottomWall) {
+			entity.setVelocity(entity.getVelocityX(), -entity.getVelocityY());
+		}
+		
 	}
 	
 	private void resolveCollision(Entity entity1, Entity entity2) {
@@ -250,9 +264,27 @@ public class World implements ICollidable {
 			entity1.setVelocity(newVelocityX1, newVelocityY1);
 			entity2.setVelocity(newVelocityX2, newVelocityY2);
 			
-		} else if ((entity1 instanceof Ship && entity2 instanceof Bullet) ||
-				(entity2 instanceof Ship && entity1 instanceof Bullet)) {
+		} else if ((entity1 instanceof Ship && entity2 instanceof Bullet)) {
 			
+			if (((Bullet) entity2).isPartOfShip()) {
+				((Ship) entity1).loadBullets((Bullet) entity2);
+			} else {
+				this.removeEntity(entity1);
+				this.removeEntity(entity2);
+			}
+			
+		} else if ((entity2 instanceof Ship && entity1 instanceof Bullet)) {
+			
+			if (((Bullet) entity1).isPartOfShip()) {
+				((Ship) entity2).loadBullets((Bullet) entity1);
+			} else {
+				this.removeEntity(entity2);
+				this.removeEntity(entity1);
+			}
+			
+		} else if ((entity2 instanceof Bullet && entity1 instanceof Bullet)) {
+			this.removeEntity(entity2);
+			this.removeEntity(entity1);
 		}
 	}
 

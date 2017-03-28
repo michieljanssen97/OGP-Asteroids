@@ -186,6 +186,7 @@ public class Ship extends Entity {
 			for(Bullet bullet: bullets) {
 				if (bullet != null) {
 					if (bullet.withinBoundaries(this)){
+						bullet.makePartOfShip(this);
 						this.bullets.add(bullet);
 					}
 				}
@@ -197,25 +198,32 @@ public class Ship extends Entity {
 
 
 	public void removeBullet(Bullet bullet) {
+		bullet.removeFromShip();
 		this.bullets.remove(bullet);
 	}
 
 
-	public void fireBullet(Bullet bullet) throws NullPointerException {
-		try {
-			if (this.isPartOfWorld() && bullet != null){
-				// First remove the bullet from the collection of the ship's bullets. Then reduce the mass of the ship + bullets.
-				// Then set the position of the bullet next to the ship and set the velocity of the bullet.
-				removeBullet(bullet);
-				this.mass -= bullet.getMass();
-				bullet.setPosition(this.getPositionX()+this.getRadius()*Math.cos(this.orientation)+bullet.getRadius()*Math.cos(bullet.orientation), 
-						this.getPositionY()+this.getRadius()*Math.sin(this.orientation)+bullet.getRadius()*Math.sin(bullet.orientation));
+	public void fireBullet() throws IllegalArgumentException, NullPointerException, Exception {
+		if (this.isPartOfWorld() && (getNbBulletsOnShip() > 0)) {
+			
+			Bullet bullet = this.bullets.iterator().next();
+			
+			if (bullet != null) {
+
+				bullet.setPosition(this.getPositionX()+(this.getRadius()+bullet.getRadius())*Math.cos(this.orientation), 
+						this.getPositionY()+(this.getRadius()+bullet.getRadius())*Math.sin(this.orientation));
 				bullet.setVelocity(250*Math.cos(this.orientation), 250*Math.sin(this.orientation));
-			}	
-		} catch (Exception e) {
-			throw new NullPointerException();
-		}
-		
+				
+				if (bullet.withinBoundaries(world)) {
+					this.removeBullet(bullet);
+					this.world.addEntity(bullet);
+				} else {
+					bullet.removeFromShip();
+				}
+				
+
+			}
+		}		
 	}
 
 	public int getNbBulletsOnShip() {
