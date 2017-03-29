@@ -532,6 +532,10 @@ public abstract class Entity implements ICollidable {
 		}
 	}
 	
+	public void removeFromWorld() {
+		this.world = null;
+	}
+	
 	public boolean apparentlyCollide(Entity other) {
 		double radiiSum = this.getRadius() + other.getRadius();
 		
