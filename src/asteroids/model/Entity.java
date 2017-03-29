@@ -484,15 +484,47 @@ public abstract class Entity implements ICollidable {
 		else {
 			
 			if (getTimeToCollision(other) != Double.POSITIVE_INFINITY ){
-				double posX = this.getPositionX() + this.getTimeToCollision(other)*this.getVelocityX();
-				double posY = this.getPositionY() + this.getTimeToCollision(other)*this.getVelocityY();
-				double[] pos =  {posX, posY};
-				return pos;	
+				double thisposX = this.getPositionX() + this.getTimeToCollision(other)*this.getVelocityX();
+				double thisposY = this.getPositionY() + this.getTimeToCollision(other)*this.getVelocityY();
+				double otherposX = other.getPositionX() + other.getTimeToCollision(this)*other.getVelocityX();
+				double otherposY = other.getPositionY() + other.getTimeToCollision(this)*other.getVelocityY();
+				double posX =0;
+				double posY=0;
+				
+				// split up in 4 quadrants...
+				if (thisposX<=otherposX && thisposY<=otherposY){
+					double angle = Math.atan2(Math.abs(other.getPositionY()-this.getPositionY()),Math.abs(other.getPositionX()-this.getPositionX()));
+					posX = thisposX+this.getRadius()*Math.cos(angle);
+					posY = thisposY+this.getRadius()*Math.sin(angle);
+					
+				} else if (thisposX>=otherposX && thisposY<=otherposY){
+					double angle = Math.atan2(Math.abs(other.getPositionY()-this.getPositionY()),Math.abs(other.getPositionX()-this.getPositionX()));
+					posX = thisposX-this.getRadius()*Math.cos(angle);
+					posY =thisposY+this.getRadius()*Math.sin(angle);
+					
+					
+				}else if (thisposX>=otherposX && thisposY>=otherposY){
+					double angle = Math.atan2(Math.abs(other.getPositionY()-this.getPositionY()),Math.abs(other.getPositionX()-this.getPositionX()));
+					posX= thisposX-this.getRadius()*Math.cos(angle);
+					posY = thisposY-this.getRadius()*Math.sin(angle);
+					
+					
+				}else if (thisposX<=otherposX && thisposY>=otherposY){
+					double angle = Math.atan2(Math.abs(other.getPositionY()-this.getPositionY()),Math.abs(other.getPositionX()-this.getPositionX()));
+					posX = thisposX-this.getRadius()*Math.cos(angle);
+					posY = thisposY+this.getRadius()*Math.sin(angle);
+					
+					
+				}
+				double[] pos = {posX,posY};
+				return pos;
+				
 			} else {
 				return null;
 			}
 		}
 	}
+	
 	
 	public void makePartOfWorld(World world) {
 		if (!isPartOfWorld()) {
