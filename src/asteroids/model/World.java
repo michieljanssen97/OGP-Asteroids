@@ -93,7 +93,6 @@ public class World implements ICollidable {
 				for (int i=0; i < 15; i += 1) {
 					try {
 						Bullet newbullet = new Bullet(entity.x, entity.y, entity.getRadius()*0.11, 0, 0);
-						newbullet.makePartOfShip((Ship) entity);
 						((Ship) entity).loadBullets(newbullet);
 						
 					} catch (Exception e) {
@@ -110,6 +109,7 @@ public class World implements ICollidable {
 		if (entity == null){
 			throw new NullPointerException();
 		} else {
+			entity.removeFromWorld();
 			if (entity instanceof Ship) {
 			ships.remove(entity);
 			} else if (entity instanceof Bullet) {
