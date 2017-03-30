@@ -493,26 +493,26 @@ public abstract class Entity implements ICollidable {
 				
 				// split up in 4 quadrants...
 				if (thisposX<=otherposX && thisposY<=otherposY){
-					double angle = Math.atan2(Math.abs(other.getPositionY()-this.getPositionY()),Math.abs(other.getPositionX()-this.getPositionX()));
+					double angle = Math.atan2(Math.abs(otherposY-thisposY),Math.abs(otherposX-thisposX));
 					posX = thisposX+this.getRadius()*Math.cos(angle);
 					posY = thisposY+this.getRadius()*Math.sin(angle);
 					
 				} else if (thisposX>=otherposX && thisposY<=otherposY){
-					double angle = Math.atan2(Math.abs(other.getPositionY()-this.getPositionY()),Math.abs(other.getPositionX()-this.getPositionX()));
+					double angle = Math.atan2(Math.abs(otherposY-thisposY),Math.abs(otherposX-thisposX));
 					posX = thisposX-this.getRadius()*Math.cos(angle);
 					posY =thisposY+this.getRadius()*Math.sin(angle);
 					
 					
 				}else if (thisposX>=otherposX && thisposY>=otherposY){
-					double angle = Math.atan2(Math.abs(other.getPositionY()-this.getPositionY()),Math.abs(other.getPositionX()-this.getPositionX()));
+					double angle = Math.atan2(Math.abs(otherposY-thisposY),Math.abs(otherposX-thisposX));
 					posX= thisposX-this.getRadius()*Math.cos(angle);
 					posY = thisposY-this.getRadius()*Math.sin(angle);
 					
 					
 				}else if (thisposX<=otherposX && thisposY>=otherposY){
-					double angle = Math.atan2(Math.abs(other.getPositionY()-this.getPositionY()),Math.abs(other.getPositionX()-this.getPositionX()));
-					posX = thisposX-this.getRadius()*Math.cos(angle);
-					posY = thisposY+this.getRadius()*Math.sin(angle);
+					double angle = Math.atan2(Math.abs(otherposY-thisposY),Math.abs(otherposX-thisposX));
+					posX = thisposX+this.getRadius()*Math.cos(angle);
+					posY = thisposY-this.getRadius()*Math.sin(angle);
 					
 					
 				}
