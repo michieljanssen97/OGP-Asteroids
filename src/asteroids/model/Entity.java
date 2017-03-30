@@ -40,7 +40,10 @@ public abstract class Entity implements ICollidable {
 	 *        The x-coordinate for this new entity.
 	 * @param y
 	 * 		  The y-coordinate for this new entity.
-	 * @return !(Double.isNaN(x) || Double.isNaN(y))
+	 * @invar Both x and y parameters must be a number
+	 * 		  | Double.isNaN(x) != true
+	 * 		  | Double.isNaN(y) != true
+	 * @return result == !(Double.isNaN(x) || Double.isNaN(y))
 	 */
 	protected static boolean isValidPosition(double x, double y) {
 		return !(Double.isNaN(x) || Double.isNaN(y));
@@ -48,16 +51,12 @@ public abstract class Entity implements ICollidable {
 	
 	/**
 	 * Return the x-coordinate of this entity.
-	 * 
-	 * @return this.x
 	 */
 	@Basic @Immutable
 	public double getPositionX() {return this.x;}
 	
 	/**
 	 * Return the y-coordinate of this entity.
-	 * 
-	 * @return this.y
 	 */
 	@Basic @Immutable
 	public double getPositionY() {return this.y;}
@@ -72,6 +71,8 @@ public abstract class Entity implements ICollidable {
 	 * @param y
 	 *        The y-coordinate for this new entity.
 	 * @invar x and y are real numbers. 
+	 * 		  | Double.isNaN(x) != true
+	 * 		  | Double.isNaN(y) != true
 	 * @post  The position of the entity is equal to the given x- and y-coordinate.
 	 *        | new.getPositionX() == x
 	 *        | new.getPositionY() == y
@@ -94,7 +95,9 @@ public abstract class Entity implements ICollidable {
 	 * 
 	 * @param  duration
 	 * 		   The duration of this ship.
-	 * @return duration >= 0
+	 * @invar ...
+	 * 		| Double.isNaN(duration) != true
+	 * @return result == duration >= 0
 	 */
 	protected boolean isValidDuration(double duration) {
 		return duration >= 0;
@@ -108,6 +111,9 @@ public abstract class Entity implements ICollidable {
 	 *        The x-velocity of this entity.
 	 * @param y
 	 *        The y-velocity of this entity.
+	 * @invar x and y are real numbers. 
+	 * 		  | Double.isNaN(x) != true
+	 * 		  | Double.isNaN(y) != true
 	 * @return True if and only if the speed is greater then zero 
 	 *         and the speed is less or equal to MAX_SPEED.
 	 *         | result == 
@@ -118,13 +124,12 @@ public abstract class Entity implements ICollidable {
 			return false;
 		} else {
 			double speed = Math.sqrt(Math.pow(x, 2)+Math.pow(y, 2));
-			return 0 <= speed && speed <= MAX_SPEED;
+			return 0 <= speed && speed <= getMaxSpeed();
 		}
 	}
 
 	/**
 	 * Return the horizontal velocity of this entity.
-	 * @return this.velocityX
 	 */
 	@Basic @Immutable
 	public double getVelocityX() {
@@ -133,7 +138,6 @@ public abstract class Entity implements ICollidable {
 
 	/**
 	 * Return the vertical velocity of this entity.
-	 * @return this.velocityY
 	 */
 	@Basic @Immutable
 	public double getVelocityY() {
@@ -141,7 +145,7 @@ public abstract class Entity implements ICollidable {
 	}
 	
 	/**
-	 * Set the velocity to a given valid velocity. If the magnitude of the velocity is larger than the allowed maximum speed (=300000) 
+	 * Set the velocity to a given valid velocity. If the magnitude of the velocity is larger than the allowed maximum speed (MAX_SPEED)
 	 * it will be reduced until it is valid (=MAX_SPEED). If the given velocity is NaN the velocity will be set to zero.
 	 * 
 	 * Implemented totally.
@@ -150,6 +154,9 @@ public abstract class Entity implements ICollidable {
 	 * 	      The x-coordinate of this entity.
 	 * @param y
 	 *        The y-coordinate of this entity.
+	 * @invar x and y are real numbers. 
+	 * 		  | Double.isNaN(x) != true
+	 * 		  | Double.isNaN(y) != true
 	 * @post  If the magnitude of the velocity is less then MAX_SPEED 
 	 *        then we set the velocity to the given velocity.
 	 *        | new.getVelocityX() == x
@@ -169,7 +176,7 @@ public abstract class Entity implements ICollidable {
 		} else {
 			if (! (Double.isNaN(x) || Double.isNaN(y))) {
 				double constantAngle = Math.atan(y/x);
-			    this.velocityX = Math.sqrt((Math.pow(MAX_SPEED,2))/(1+Math.pow(Math.tan(constantAngle), 2)));
+			    this.velocityX = Math.sqrt((Math.pow(getMaxSpeed(),2))/(1+Math.pow(Math.tan(constantAngle), 2)));
 				this.velocityY = this.velocityX * Math.tan(constantAngle) ; 
 			} else {
 				this.velocityX = 0;
@@ -179,8 +186,25 @@ public abstract class Entity implements ICollidable {
 	}
 
 	/**
+	 * Returns the entities maximum speed
+	 */
+	@Basic @Immutable
+	public double getMaxSpeed() {return MAX_SPEED;}
+	
+	/**
+	 * Returns the entities minimum radius
+	 */
+	@Basic @Immutable
+	public double getMinRadius() {return MIN_RADIUS;}
+	
+	/**
+	 * Returns the entities minimum density
+	 */
+	@Basic @Immutable
+	public double getMinDensity() {return MIN_DENSITY;}
+	
+	/**
 	 * Return the radius of this entity.
-	 * @return this.radius
 	 */
 	@Basic @Immutable
 	public double getRadius() {
@@ -191,10 +215,12 @@ public abstract class Entity implements ICollidable {
 	 * Check whether a radius is valid. The radius must be greater then 10.
 	 * 
 	 * @param radius
-	 * @return (radius > MIN_RADIUS) && (! Double.isNaN(radius))
+	 * @invar radius is a real number
+	 * 		| Double.isNaN(radius)
+	 * @see implementation
 	 */
 	protected boolean isValidRadius(double radius) {
-		return (radius > MIN_RADIUS) && (! Double.isNaN(radius));
+		return (radius > getMinRadius()) && (! Double.isNaN(radius));
 	}
 		
 	/**
@@ -220,10 +246,8 @@ public abstract class Entity implements ICollidable {
 		}
 	}
 	
-
 	/**
 	 * Return the orientation of this entity.
-	 * @return this.orientation
 	 */
 	@Basic @Immutable
 	public double getOrientation() {
@@ -245,22 +269,45 @@ public abstract class Entity implements ICollidable {
 		this.orientation = angle;
 	}
 	
+	/**
+	 * Returns the entities mass
+	 */
+	@Basic @Immutable
 	public double getMass() {
 		return this.mass;
 	}
 	
-	protected boolean isValidMass(double mass) {
-		return true;
-	}
+	protected boolean isValidMass(double mass){return true;};
 	
+	/**
+	 * Set the mass to a given valid mass, otherwise set to the minimum valid mass
+	 * 
+	 * @invar The mass must be valid
+	 * 		| isValidMass(mass) == true
+	 * @param mass
+	 * @post The entities mass is set to the given mass if valid, otherwise it is set to the minimum valid mass
+	 * 		| if (isValidMass(mass))
+	 * 	    | 	new.getMass() == mass
+	 * 		| else 
+	 * 		| 	new.getMass() == (4.0/3.0)*Math.PI*Math.pow(this.getRadius(), 3)*MIN_DENSITY;
+	 */
+	@Raw
 	protected void setMass(double mass) {
 		if (isValidMass(mass)) {
 			this.mass = mass;
 		} else {
-			this.mass = (4.0/3.0)*Math.PI*Math.pow(this.getRadius(), 3)*MIN_DENSITY;
+			this.mass = (4.0/3.0)*Math.PI*Math.pow(this.getRadius(), 3)*getMinDensity();
 		}
 	}
 	
+	/**
+	 * Returns a boolean indicating whether an entity belongs to a world
+	 * @return ...
+	 * 		 | if (this.getWorld() == null)
+	 * 		 | 		result == false
+	 * 		 | else 
+	 * 		 | 		result == true
+	 */
 	public boolean isPartOfWorld() {
 		if (this.getWorld() != null) {
 			return true;
@@ -268,6 +315,10 @@ public abstract class Entity implements ICollidable {
 		return false;
 	}
 
+	/**
+	 * Returns the world this entity is associated with
+	 * @see implementation
+	 */
 	public World getWorld() {
 		return this.world;
 	}
@@ -285,7 +336,6 @@ public abstract class Entity implements ICollidable {
 	 *         The other entity does not exist.
 	 *         | other == null
 	 */
-	
 	public double getDistanceBetween(Entity other) throws NullPointerException {
 		if (other == this) {
 			return new Double(0);
@@ -329,10 +379,20 @@ public abstract class Entity implements ICollidable {
 	}
 	
 
-	@Override
+
 	/**
-	 * Helper function
+	 * Helper function to use the correct getTimeToCollision function
+	 * 
+	 * @param collidable
+	 * @post Returns the getTimeToCollision function associated with the given ICollidable
+	 * 		 | if (ICollidable instanceof Entity)
+	 * 		 | 		result == getTimeToCollision((Entity) collidable)
+	 * 		 | else if (ICollidable instanceof World)
+	 * 		 | 		result == getTimeToCollision((World) collidable)
+	 * 		 | else 
+	 * 		 | 		result == 0
 	 */
+	@Override
 	public double getTimeToCollision(ICollidable collidable) {
 		if (collidable instanceof Entity) {return this.getTimeToCollision((Entity) collidable);}
 		else if (collidable instanceof World) {return this.getTimeToCollision((World) collidable);}
@@ -343,6 +403,10 @@ public abstract class Entity implements ICollidable {
 	 * This method calculates when, if ever, two entities will collide. 
 	 * 
 	 * Implement defensively.
+	 * 
+	 * @return The time to collision specifies the amount of time in which two entities will collide, if they are
+	 * 		   not already overlapping. 
+	 * 		 | 
 	 * 
 	 * Declarative specification for the case where the method returns a finite value:
 	 * 
@@ -401,6 +465,7 @@ public abstract class Entity implements ICollidable {
 		}
 	}
 	
+	
 	public double getTimeToCollision(World world) throws NullPointerException, IllegalArgumentException {
 		
 		double distanceToHorizontalWall = 0;
@@ -425,9 +490,17 @@ public abstract class Entity implements ICollidable {
 		return Math.min(verticalCollisionTime, horizontalCollisionTime);
 	}
 	
-	
 	/**
-	 * Helper function
+	 * Helper function to use the correct getCollisionPosition function
+	 * 
+	 * @param collidable
+	 * @post Returns the getCollisionPosition function associated with the given ICollidable
+	 * 		 | if (ICollidable instanceof Entity)
+	 * 		 | 		result == getCollisionPosition((Entity) collidable)
+	 * 		 | else if (ICollidable instanceof World)
+	 * 		 | 		result == getCollisionPosition((World) collidable)
+	 * 		 | else 
+	 * 		 | 		result == {0.0, 0.0}
 	 */
 	@Override
 	public double[] getCollisionPosition(ICollidable collidable) {
@@ -436,12 +509,23 @@ public abstract class Entity implements ICollidable {
 		else {return new double[]{0.0, 0.0};}
 	}
 	
-	public double[] getCollisionPosition(World world) {      
+	/**
+	 * Returns the position of the next boundary collision, if any
+	 * 
+	 * @param world
+	 * @return ...
+	 * 		| if (getTimeToCollision(world) != Double.POSITIVE_INFINITY )
+	 * 		|		result == {this.getPositionX() + this.getTimeToCollision(world)*this.getVelocityX(), 
+	 * 		|				   this.getPositionY() + this.getTimeToCollision(world)*this.getVelocityY()}
+	 * 		| else
+	 * 		|		result == null
+	 * @throws NullPointerException
+	 * 		| world == null
+	 */
+	public double[] getCollisionPosition(World world) throws NullPointerException {      
 		if (world == null){
 			throw new NullPointerException();
-		} 
-		else {
-			
+		} else {
 			if (getTimeToCollision(world) != Double.POSITIVE_INFINITY ){
 				double posX = this.getPositionX() + this.getTimeToCollision(world)*this.getVelocityX();
 				double posY = this.getPositionY() + this.getTimeToCollision(world)*this.getVelocityY();
@@ -491,7 +575,6 @@ public abstract class Entity implements ICollidable {
 				double posX =0;
 				double posY=0;
 				
-				// split up in 4 quadrants...
 				if (thisposX<=otherposX && thisposY<=otherposY){
 					double angle = Math.atan2(Math.abs(otherposY-thisposY),Math.abs(otherposX-thisposX));
 					posX = thisposX+this.getRadius()*Math.cos(angle);
@@ -514,7 +597,6 @@ public abstract class Entity implements ICollidable {
 					posX = thisposX+this.getRadius()*Math.cos(angle);
 					posY = thisposY-this.getRadius()*Math.sin(angle);
 					
-					
 				}
 				double[] pos = {posX,posY};
 				return pos;
@@ -525,17 +607,43 @@ public abstract class Entity implements ICollidable {
 		}
 	}
 	
-	
+	/**
+	 * Associates this entity with a particular world
+	 * @param world
+	 * @post The entity is associated with the given world
+	 * 		| if (!isPartOfWorld())
+	 * 		|		new.world == world
+	 */		
+		 	
 	public void makePartOfWorld(World world) {
 		if (!isPartOfWorld()) {
 		this.world = world;
 		}
 	}
 	
+	/**
+	 * Removes any association with a world
+	 * @see implementation
+	 */
 	public void removeFromWorld() {
 		this.world = null;
 	}
 	
+	/**
+	 * Indicates whether this entity apparently collides with another entity
+	 * 
+	 * @define apparently collide
+	 * 		| Two objects A and B apparently collide if the distance between the centres 
+	 * 		| of A and B is between 99% and 101% of the sum of the objects’ radii σ_A and σ_B .
+	 * 
+	 * @param other
+	 * @return ...
+	 * 		 | if (apparent collision)
+	 * 		 | 		result == true
+	 * 		 | else 
+	 * 		 | 		result == false
+	 * 		
+	 */
 	public boolean apparentlyCollide(Entity other) {
 		double radiiSum = this.getRadius() + other.getRadius();
 		
@@ -546,6 +654,21 @@ public abstract class Entity implements ICollidable {
 		return false;
 	}
 	
+	/**
+	 * Indicates whether this entity significantly overlaps with another entity
+	 * 
+	 * @define significant overlap
+	 * 		| Two objects A and B overlap significantly if the distance between the centres of A and B 
+	 * 		| is ≤ 99% of the sum of the objects radii σ_A and σ_B .
+	 * 
+	 * @param other
+	 * @return ...
+	 * 		 | if (significant overlap)
+	 * 		 | 		result == true
+	 * 		 | else 
+	 * 		 | 		result == false
+	 * 		
+	 */
 	public boolean significantOverlap(Entity entity) {
 		if (this.getDistanceBetween(entity) <= (0.99 * (this.getRadius() + entity.getRadius()))) {
 			return true;
@@ -554,6 +677,20 @@ public abstract class Entity implements ICollidable {
 		}
 	}
 	
+	/**
+	 * Indicates whether this entity lies within the boundaries of another entity
+	 * 
+	 * @define within boundaries
+	 * 		| An object A apparently lies within the boundaries of a container C if the distance 
+	 * 		| between each boundary of C and the centre of A is ≥ 99% of the radius of A.
+	 * @param other
+	 * @return ...
+	 * 		 | if (within boundaries)
+	 * 		 | 		result == true
+	 * 		 | else 
+	 * 		 | 		result == false
+	 * 		
+	 */
 	public boolean withinBoundaries(Entity other) {
 		// Check if this entity within other entity (user radius)
 		if ((this.getDistanceBetween(other) <= Math.abs(this.getRadius() - other.getRadius()))) {
@@ -562,12 +699,26 @@ public abstract class Entity implements ICollidable {
 		return false;
 	}
 
+	/**
+	 * Indicates whether this entity lies within the boundaries of a given world
+	 * 
+	 * @define within boundaries
+	 * 		| An object A apparently lies within the boundaries of a container C if the distance 
+	 * 		| between each boundary of C and the centre of A is ≥ 99% of the radius of A.
+	 * @param world
+	 * @return ...
+	 * 		 | if (within boundaries)
+	 * 		 | 		result == true
+	 * 		 | else 
+	 * 		 | 		result == false
+	 * 		
+	 */
 	public boolean withinBoundaries(World world) {
 		// Check if this entity within borders of world (upper, lower, left, right)
-		if ((this.getPositionX() > (0.99*radius)) && (this.getPositionY() > (0.99*radius))) {}
+		if ((this.getPositionX() > (0.99*getRadius())) && (this.getPositionY() > (0.99*getRadius()))) {}
 		else {return false;}
 		
-		if (((this.getPositionX() + (0.99*radius) < world.getWidth()) && ((this.getPositionX() + (0.99*radius) < world.getWidth())))) {}
+		if (((this.getPositionX() + (0.99*getRadius()) < world.getWidth()) && ((this.getPositionX() + (0.99*getRadius()) < world.getWidth())))) {}
 		else {return false;}
 		
 		return true;

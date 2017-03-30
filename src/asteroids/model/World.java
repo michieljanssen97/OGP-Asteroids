@@ -41,12 +41,15 @@ public class World implements ICollidable {
 		return this.height;
 	}
 	
+	public double getMaxWidth(){return MAX_WIDTH;}
+	public double getMaxHeight(){return MAX_HEIGHT;}
+	
 	private boolean isValidWidth(double width) {
-		return (0 <= width &&  width <= MAX_WIDTH);
+		return (0 <= width &&  width <= getMaxWidth());
 	}
 	
 	private boolean isValidHeight(double height) {
-		return (0 <= height &&  height <= MAX_HEIGHT);
+		return (0 <= height &&  height <= getMaxHeight());
 	}
 	
 	private void setSize(double width, double height){
@@ -281,6 +284,7 @@ public class World implements ICollidable {
 			
 			if (((Bullet) entity2).getSource() == entity1) {
 				((Ship) entity1).loadBullets((Bullet) entity2);
+				this.removeEntity(entity2);
 			} else {
 				this.removeEntity(entity1);
 				this.removeEntity(entity2);
@@ -290,6 +294,7 @@ public class World implements ICollidable {
 			
 			if (((Bullet) entity1).getSource() == entity2) {
 				((Ship) entity2).loadBullets((Bullet) entity1);
+				this.removeEntity(entity1);
 			} else {
 				this.removeEntity(entity2);
 				this.removeEntity(entity1);

@@ -16,8 +16,10 @@ public class Bullet extends Entity {
 		setRadius(radius);
 	}
 	
+	public double getDensity() {return DENSITY;}
+	
 	public double getMass(){
-		double mass = (4/3.0)*Math.PI*Math.pow(this.getRadius(), 3)*DENSITY;
+		double mass = (4/3.0)*Math.PI*Math.pow(this.getRadius(), 3)*getDensity();
 		return mass;
 	}
 	
@@ -54,7 +56,7 @@ public class Bullet extends Entity {
 	};
 	
 	public void removeFromShip() {
-		this.ship = null;
+		this.ship = null; 
 	};
 	
 	public boolean isPartOfShip() {

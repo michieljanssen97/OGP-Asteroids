@@ -26,9 +26,12 @@ public class Ship extends Entity {
 	private static final double MIN_DENSITY = 1.42E12;
 	private static final double THRUSTER_FORCE = 1E21;
 	
+	
 	private Set<Bullet> bullets = new HashSet<Bullet>();
 	
 	private boolean thrusterActive = false;
+	
+	public double getThrusterForce() {return THRUSTER_FORCE;}
 	
 	/**
 	 * Initialize this new ship with a given position, velocity, radius and orientation.
@@ -172,7 +175,7 @@ public class Ship extends Entity {
 
 
 	public double getAcceleration() {
-		return THRUSTER_FORCE/(float)this.getMass();
+		return getThrusterForce()/(float)this.getMass();
 	}
 
 
@@ -203,20 +206,28 @@ public class Ship extends Entity {
 	}
 
 
-	public void fireBullet() throws IllegalArgumentException, NullPointerException, Exception {
+	public void fireBullet() {
 		if (this.isPartOfWorld() && (getNbBulletsOnShip() > 0)) {
 			
 			Bullet bullet = this.bullets.iterator().next();
 			
 			if (bullet != null) {
 
-				bullet.setPosition(this.getPositionX()+(this.getRadius()+bullet.getRadius())*Math.cos(this.orientation), 
-						this.getPositionY()+(this.getRadius()+bullet.getRadius())*Math.sin(this.orientation));
+				double posX = this.getPositionX()+(this.getRadius()+bullet.getRadius())*Math.cos(this.orientation);
+				double posY = this.getPositionY()+(this.getRadius()+bullet.getRadius())*Math.sin(this.orientation);
+				
+				bullet.setPosition(posX, posY);
 				bullet.setVelocity(250*Math.cos(this.orientation), 250*Math.sin(this.orientation));
 				
 				if (bullet.withinBoundaries(world)) {
 					this.removeBullet(bullet);
-					this.world.addEntity(bullet);
+					try {
+						this.world.addEntity(bullet);
+					} catch (Exception e) {
+						// Something went wrong
+						System.out.println(e.getMessage());
+					}
+					
 				} else {
 					bullet.removeFromShip();
 				}
@@ -232,7 +243,7 @@ public class Ship extends Entity {
 	
 	@Override
 	protected boolean isValidMass(double mass) {
-		if (mass >= (4.0/3.0)*Math.PI*Math.pow(this.getRadius(), 3)*MIN_DENSITY ) {
+		if (mass >= (4.0/3.0)*Math.PI*Math.pow(this.getRadius(), 3)*getMinDensity() ) {
 			return true;
 		}
 		return false;
@@ -243,6 +254,7 @@ public class Ship extends Entity {
 		for (Bullet bullet : this.getBullets()) {
 			bullet_mass += bullet.getMass();
 		}
+
 		return bullet_mass + this.mass;
 	}
 
