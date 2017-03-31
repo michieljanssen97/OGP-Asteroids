@@ -275,6 +275,8 @@ public class World implements ICollidable {
 		} else if ((entity1 instanceof Ship && entity2 instanceof Bullet)) {
 			
 			if (((Bullet) entity2).getSource() == entity1) {
+				entity2.removeFromWorld();
+				entity2.setPosition(entity1.getPositionX(), entity1.getPositionY());
 				((Ship) entity1).loadBullets((Bullet) entity2);
 				this.removeEntity(entity2);
 			} else {
@@ -286,6 +288,7 @@ public class World implements ICollidable {
 			
 			if (((Bullet) entity1).getSource() == entity2) {
 				entity1.removeFromWorld();
+				entity1.setPosition(entity2.getPositionX(), entity2.getPositionY());
 				((Ship) entity2).loadBullets((Bullet) entity1);
 				this.removeEntity(entity1);
 			} else {

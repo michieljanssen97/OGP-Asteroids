@@ -173,13 +173,15 @@ public class Ship extends Entity {
 	}
 	
 	
-	public void loadBullets(Bullet... bullets) throws NullPointerException {
+	public void loadBullets(Bullet... bullets) throws NullPointerException, AssertionError {
 		try {
 			for(Bullet bullet: bullets) {
 				if (bullet != null) {
 					if (bullet.withinBoundaries(this) && bullet.canBePartOfShip()){
 						bullet.makePartOfShip(this);
 						this.bullets.add(bullet);
+					} else {
+						throw new AssertionError("Either the bullet cannot be part of the ship or the bullet doesn't lie within the ship's boudnaries");
 					}
 				}
 			}
@@ -202,8 +204,9 @@ public class Ship extends Entity {
 			
 			if (bullet != null) {
 
-				double posX = this.getPositionX()+(this.getRadius()+bullet.getRadius())*Math.cos(this.orientation);
-				double posY = this.getPositionY()+(this.getRadius()+bullet.getRadius())*Math.sin(this.orientation);
+				double distanceBetweenBulletAndShip = 1;
+				double posX = this.getPositionX()+(this.getRadius()+bullet.getRadius()+distanceBetweenBulletAndShip)*Math.cos(this.orientation);
+				double posY = this.getPositionY()+(this.getRadius()+bullet.getRadius()+distanceBetweenBulletAndShip)*Math.sin(this.orientation);
 				
 				bullet.setPosition(posX, posY);
 				bullet.setVelocity(250*Math.cos(this.orientation), 250*Math.sin(this.orientation));

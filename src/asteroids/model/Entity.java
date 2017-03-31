@@ -479,7 +479,7 @@ public abstract class Entity implements ICollidable {
 			double d = Math.pow(deltaVR, 2) - ((deltaVV)*(deltaRR - Math.pow(this.getRadius()+other.getRadius(), 2)));
 			
 			
-			if (this.apparentlyCollide(other)) {
+			if (this.apparentlyCollide(other) || this.significantOverlap(other)) {
 				return 0.0;
 			} 
 			else {
@@ -499,6 +499,10 @@ public abstract class Entity implements ICollidable {
 		
 		double distanceToHorizontalWall = 0;
 		double distanceToVerticalWall = 0;
+		
+		if (!withinBoundaries(world)) {
+			return 0.0;
+		} 
 		
 		if (getVelocityX() > 0 && getVelocityY() > 0){
 			distanceToHorizontalWall = world.getHeight();
