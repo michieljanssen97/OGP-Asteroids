@@ -301,6 +301,14 @@ public abstract class Entity implements ICollidable {
 	}
 	
 	/**
+	 * Returns the world this entity is associated with
+	 * @see implementation
+	 */
+	public World getWorld() {
+		return this.world;
+	}
+	
+	/**
 	 * Returns a boolean indicating whether an entity belongs to a world
 	 * @return ...
 	 * 		 | if (this.getWorld() == null)
@@ -314,15 +322,36 @@ public abstract class Entity implements ICollidable {
 		}
 		return false;
 	}
-
-	/**
-	 * Returns the world this entity is associated with
-	 * @see implementation
-	 */
-	public World getWorld() {
-		return this.world;
+	
+	public boolean canBePartOfWorld() {
+		if (isPartOfWorld()) {
+			return false;
+		}
+		return true;
 	}
 
+	/**
+	 * Associates this entity with a particular world
+	 * @param world
+	 * @post The entity is associated with the given world
+	 * 		| if (!isPartOfWorld())
+	 * 		|		new.world == world
+	 */		
+		 	
+	public void makePartOfWorld(World world) {
+		if (canBePartOfWorld()) {
+			this.world = world;
+		}
+	}
+	
+	/**
+	 * Removes any association with a world
+	 * @see implementation
+	 */
+	public void removeFromWorld() {
+		this.world = null;
+	}
+	
 	/**
 	 * This method measures the distance between two given entities.
 	 * 
@@ -605,28 +634,6 @@ public abstract class Entity implements ICollidable {
 				return null;
 			}
 		}
-	}
-	
-	/**
-	 * Associates this entity with a particular world
-	 * @param world
-	 * @post The entity is associated with the given world
-	 * 		| if (!isPartOfWorld())
-	 * 		|		new.world == world
-	 */		
-		 	
-	public void makePartOfWorld(World world) {
-		if (!isPartOfWorld()) {
-		this.world = world;
-		}
-	}
-	
-	/**
-	 * Removes any association with a world
-	 * @see implementation
-	 */
-	public void removeFromWorld() {
-		this.world = null;
 	}
 	
 	/**

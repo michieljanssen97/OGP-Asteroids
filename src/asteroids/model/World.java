@@ -83,27 +83,19 @@ public class World implements ICollidable {
 		return entities;
 	}
 	
-	// implement defensively.
-	
 	public void addEntity(Entity entity) throws Exception, IllegalArgumentException, NullPointerException {
 		if (entity == null){
 			throw new NullPointerException();
 		} else if (entity.isPartOfWorld() || significantOverlap(entity) || !entity.withinBoundaries(this)){
 			throw new IllegalArgumentException();
 		} else {
-			entity.makePartOfWorld(this);
-			if (entity instanceof Ship) {
-				for (int i=0; i < 15; i += 1) {
-					try {
-						Bullet newbullet = new Bullet(entity.x, entity.y, entity.getRadius()*0.11, 0, 0);
-						((Ship) entity).loadBullets(newbullet);
-						
-					} catch (Exception e) {
-					}
+			if (entity.canBePartOfWorld()) {
+				entity.makePartOfWorld(this);
+				if (entity instanceof Ship) {
+					ships.add((Ship) entity);
+				} else if (entity instanceof Bullet) {
+					bullets.add((Bullet) entity);
 				}
-				ships.add((Ship) entity);
-			} else if (entity instanceof Bullet) {
-				bullets.add((Bullet) entity);
 			}
 		}
 		
@@ -114,9 +106,9 @@ public class World implements ICollidable {
 		} else {
 			entity.removeFromWorld();
 			if (entity instanceof Ship) {
-			ships.remove(entity);
+				ships.remove(entity);
 			} else if (entity instanceof Bullet) {
-			bullets.remove(entity);
+				bullets.remove(entity);
 			}
 		}
 	}
@@ -293,6 +285,7 @@ public class World implements ICollidable {
 		} else if ((entity2 instanceof Ship && entity1 instanceof Bullet)) {
 			
 			if (((Bullet) entity1).getSource() == entity2) {
+				entity1.removeFromWorld();
 				((Ship) entity2).loadBullets((Bullet) entity1);
 				this.removeEntity(entity1);
 			} else {

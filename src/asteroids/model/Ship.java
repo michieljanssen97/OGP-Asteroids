@@ -150,17 +150,6 @@ public class Ship extends Entity {
 				
 	}
 	
-	public boolean isPartOfWorld() {
-		if (this.world != null) {
-			return true;
-		}
-		return false;
-	}
-	
-	public World getWorld() {
-		return this.world;
-	}
-	
 	public void toggleThruster() {
 		if (thrusterActive) {
 			thrusterActive = false;
@@ -188,7 +177,7 @@ public class Ship extends Entity {
 		try {
 			for(Bullet bullet: bullets) {
 				if (bullet != null) {
-					if (bullet.withinBoundaries(this)){
+					if (bullet.withinBoundaries(this) && bullet.canBePartOfShip()){
 						bullet.makePartOfShip(this);
 						this.bullets.add(bullet);
 					}
@@ -219,17 +208,16 @@ public class Ship extends Entity {
 				bullet.setPosition(posX, posY);
 				bullet.setVelocity(250*Math.cos(this.orientation), 250*Math.sin(this.orientation));
 				
+				removeBullet(bullet);
 				if (bullet.withinBoundaries(world)) {
-					this.removeBullet(bullet);
+					
 					try {
 						this.world.addEntity(bullet);
 					} catch (Exception e) {
-						// Something went wrong
 						System.out.println(e.getMessage());
-					}
-					
+					}	
 				} else {
-					bullet.removeFromShip();
+					bullet.terminate();
 				}
 				
 
