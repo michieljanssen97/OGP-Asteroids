@@ -195,6 +195,7 @@ public class World implements ICollidable {
 				} else if (collidables[0] instanceof World && collidables[1] instanceof Entity) {
 					resolveCollision((Entity)collidables[0], (World)collidables[1]);
 					((Entity)collidables[1]).move(duration);
+					
 				} else if (collidables[0] instanceof Entity && collidables[1] instanceof World) {
 					resolveCollision((Entity)collidables[0], (World)collidables[1]);
 					((Entity)collidables[0]).move(duration);
@@ -244,7 +245,14 @@ public class World implements ICollidable {
 			entity.setVelocity(entity.getVelocityX(), -entity.getVelocityY());
 		}
 		
+		if (entity instanceof Bullet){
+			if (((Bullet) entity).getCounter() == true){
+				this.removeEntity(((Bullet) entity));
+			}
+		}
+		
 	}
+	
 	
 	private void resolveCollision(Entity entity1, Entity entity2) {
 		if (entity1 instanceof Ship && entity2 instanceof Ship) {
@@ -275,6 +283,7 @@ public class World implements ICollidable {
 		} else if ((entity1 instanceof Ship && entity2 instanceof Bullet)) {
 			
 			if (((Bullet) entity2).getSource() == entity1) {
+				((Bullet) entity2).setCounter(0);
 				entity2.removeFromWorld();
 				entity2.setPosition(entity1.getPositionX(), entity1.getPositionY());
 				((Ship) entity1).loadBullets((Bullet) entity2);
@@ -287,6 +296,7 @@ public class World implements ICollidable {
 		} else if ((entity2 instanceof Ship && entity1 instanceof Bullet)) {
 			
 			if (((Bullet) entity1).getSource() == entity2) {
+				((Bullet) entity1).setCounter(0);
 				entity1.removeFromWorld();
 				entity1.setPosition(entity2.getPositionX(), entity2.getPositionY());
 				((Ship) entity2).loadBullets((Bullet) entity1);

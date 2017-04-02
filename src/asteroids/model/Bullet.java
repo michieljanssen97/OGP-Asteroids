@@ -15,7 +15,20 @@ public class Bullet extends Entity {
 		setVelocity(xVelocity, yVelocity);
 		setRadius(radius);
 	}
+	private int counter = 0;
+
+	public boolean getCounter(){
+		if (counter == 2){		
+			return true;
+		} else {
+			counter +=1;
+			return false;
+		}
+	}
 	
+	public void setCounter(int counter){
+		this.counter = counter;
+	}
 	public double getDensity() {return DENSITY;}
 	
 	public double getMass(){
