@@ -204,7 +204,7 @@ public abstract class Entity implements ICollidable {
 	public double getMinDensity() {return MIN_DENSITY;}
 	
 	/**
-	 * Return the radius of this entity.
+	 * Returns the radius of this entity.
 	 */
 	@Basic @Immutable
 	public double getRadius() {

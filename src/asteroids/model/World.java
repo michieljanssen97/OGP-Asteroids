@@ -246,12 +246,13 @@ public class World implements ICollidable {
 		}
 		
 		if (entity instanceof Bullet){
-			if (((Bullet) entity).getCounter() == true){
+			if (((Bullet) entity).Counter() == true){
 				this.removeEntity(((Bullet) entity));
 			}
 		}
-		
 	}
+		
+
 	
 	
 	private void resolveCollision(Entity entity1, Entity entity2) {

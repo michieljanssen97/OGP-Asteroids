@@ -24,13 +24,15 @@ public class Ship extends Entity {
 	private static final double MAX_SPEED = 300000;
 	private static final double MIN_RADIUS = 10;
 	private static final double MIN_DENSITY = 1.42E12;
-	private static final double THRUSTER_FORCE = 1E21;
+	private static final double THRUSTER_FORCE = 1.1E21;
 	
 	
 	private Set<Bullet> bullets = new HashSet<Bullet>();
 	
 	private boolean thrusterActive = false;
-	
+	/**
+	 * Return the maximum exerted force on a ship.
+	 */
 	public double getThrusterForce() {return THRUSTER_FORCE;}
 	
 	/**
@@ -149,7 +151,15 @@ public class Ship extends Entity {
 		setVelocity(newVelocityX, newVelocityY);
 				
 	}
-	
+	/**
+	 * This method toggles the thruster of a ship.
+	 *@post If the thruster is active the thruster is set to non active.
+	 * 	    | if (thrusterActive) 
+	 *      |    then thrusterActive == false
+	 *@post If the thruster is non active the thruster is set to active.
+	 * 	    | if (!thrusterActive) 
+	 *      |    then thrusterActive == true    
+	 */
 	public void toggleThruster() {
 		if (thrusterActive) {
 			thrusterActive = false;
@@ -157,22 +167,43 @@ public class Ship extends Entity {
 			thrusterActive = true;
 		}
 	}
-	
+	/**
+	 * Returns the state of the thruster.
+	 */
+    @Basic
 	public boolean IsThrusterActive() {
 		return this.thrusterActive;
 	}
 
-
+    /**
+     * Returns the amount or acceleration that a ship will feel.
+     * @see implementation
+     */
 	public double getAcceleration() {
 		return getThrusterForce()/(float)this.getMass();
 	}
 
-
+    /**
+     * Returns a set of bullets that belongs to a ship.
+     */
 	public Set<Bullet> getBullets() {
 		return this.bullets;
 	}
 	
-	
+	/**
+	 * This method adds one or multiple bullet(s) to a certain ship if the bullet is a valid bullet.
+	 * 
+	 * @param bullets
+	 *        The collection of bullets that needs to be added onto a ship.
+	 * @post  The bullet(s) are added to a ship's set of bullets and the bullet(s) are also associated with that ship.
+	 *        | bullet.makePartOfShip(this)
+	 *        | this.bullets.add(bullet)
+	 *        | bullet.isPartOfShip() == true
+	 * @throws NullPointerException
+	 *         | bullet == null
+	 * @throws AssertionError
+	 *        | (!bullet.makePartOfShip(this)) || (!bullet.withinBoundaries(this))
+	 */
 	public void loadBullets(Bullet... bullets) throws NullPointerException, AssertionError {
 		try {
 			for(Bullet bullet: bullets) {
@@ -190,13 +221,24 @@ public class Ship extends Entity {
 		}
 	}
 
-
+    /**
+     * Removes a bullet from the set of bullets and removes the association with it's ship.
+     * @param bullet
+     */
 	public void removeBullet(Bullet bullet) {
 		bullet.removeFromShip();
 		this.bullets.remove(bullet);
 	}
 
-
+    /**
+     * This method makes it possible to fire a bullet from a ship.
+     * @post If the given bullet (random bullet chosen out of the set of bullets) is not equal to zero
+     *       the ship can fire that bullet. The bullet gets a x- and y-coordinate as well as a x- and y-velocity.
+     *       After the position and velocity is set, the bullet is removed from the collection of bullets.
+     *       Then the method checks whether the bullet can be added to the world or not.
+     *      
+     *      WAARSCHIJNLIJK HIER OOK EEN DECLARATIEVE BESCHRIJVING BETER VAN TOEPASSING....
+     */
 	public void fireBullet() {
 		if (this.isPartOfWorld() && (getNbBulletsOnShip() > 0)) {
 			
@@ -204,7 +246,7 @@ public class Ship extends Entity {
 			
 			if (bullet != null) {
 
-				double distanceBetweenBulletAndShip = 1;
+				double distanceBetweenBulletAndShip = 1.0;
 				double posX = this.getPositionX()+(this.getRadius()+bullet.getRadius()+distanceBetweenBulletAndShip)*Math.cos(this.orientation);
 				double posY = this.getPositionY()+(this.getRadius()+bullet.getRadius()+distanceBetweenBulletAndShip)*Math.sin(this.orientation);
 				
@@ -227,11 +269,17 @@ public class Ship extends Entity {
 			}
 		}		
 	}
-
+   /**
+    * Return the number of bullets that are associated with a ship.
+    */
+	@Basic
 	public int getNbBulletsOnShip() {
 		return this.bullets.size();
 	}
-	
+	/**
+	 * Return whether the given mass is a valid mass.
+	 * @see implementation
+	 */
 	@Override
 	protected boolean isValidMass(double mass) {
 		if (mass >= (4.0/3.0)*Math.PI*Math.pow(this.getRadius(), 3)*getMinDensity() ) {
@@ -239,14 +287,22 @@ public class Ship extends Entity {
 		}
 		return false;
 	}
-	
+	/**
+	 * Return the mass of a ship (ship + bullets loaded on that ship).
+	 * @post  The given ship's total mass is the mass of the ship itself plus all the masses of the bullets.
+	 *        | bullet_mass == 0
+	 *        | for (Bullet bullet : this.getBullets())
+			  |       bullet_mass += bullet.getMass();
+			  | new.getMass() == this.getMass() + bullet_mass
+	 */
 	public double getMass() {
 		double bullet_mass = 0;
 		for (Bullet bullet : this.getBullets()) {
 			bullet_mass += bullet.getMass();
 		}
-
+		
 		return bullet_mass + this.mass;
+		
 	}
 
 
