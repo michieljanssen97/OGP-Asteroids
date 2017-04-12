@@ -10,6 +10,13 @@ import asteroids.model.World;
 import asteroids.part2.CollisionListener;
 import asteroids.util.ModelException;
 
+/**
+ * 
+ * A class that implements the required facade interface for the Asteroids game.
+ *
+ * @author Michiel Janssen & Jelle Pelgrims
+ *
+ */
 
 public class Facade implements asteroids.part2.facade.IFacade {
 

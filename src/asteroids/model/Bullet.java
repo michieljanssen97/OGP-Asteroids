@@ -2,6 +2,13 @@ package asteroids.model;
 
 import be.kuleuven.cs.som.annotate.*;
 
+/**
+ * A class that defines a bullet for the Asteroids game.
+ * 
+ * @author Michiel Janssen & Jelle Pelgrims
+ *
+ */
+
 public class Bullet extends Entity {
 
 	protected static final double MAX_SPEED = 300000;

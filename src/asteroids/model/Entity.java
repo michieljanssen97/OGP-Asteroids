@@ -4,6 +4,14 @@ import be.kuleuven.cs.som.annotate.Basic;
 import be.kuleuven.cs.som.annotate.Immutable;
 import be.kuleuven.cs.som.annotate.Raw;
 
+/**
+ * 
+ * A class that defines a entity for the Asteroids game.
+ *
+ * @author Michiel Janssen & Jelle Pelgrims
+ *
+ */
+
 public abstract class Entity implements ICollidable {
 	
 	protected static final double MAX_SPEED = 300000;
@@ -533,13 +541,13 @@ public abstract class Entity implements ICollidable {
 	 * 		 | else if (ICollidable instanceof World)
 	 * 		 | 		result == getCollisionPosition((World) collidable)
 	 * 		 | else 
-	 * 		 | 		result == {0.0, 0.0}
+	 * 		 | 		result == null
 	 */
 	@Override
 	public double[] getCollisionPosition(ICollidable collidable) {
 		if (collidable instanceof Entity) {return this.getCollisionPosition((Entity) collidable);}
 		else if (collidable instanceof World) {return this.getCollisionPosition((World) collidable);}
-		else {return new double[]{0.0, 0.0};}
+		else {return null;}
 	}
 	
 	/**

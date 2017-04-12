@@ -6,6 +6,14 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * 
+ * A class that defines a world for the Asteroids game.
+ *
+ * @author Michiel Janssen & Jelle Pelgrims
+ *
+ */
+
 public class World implements ICollidable {
 	
 	private static final double MAX_WIDTH = Double.MAX_VALUE;
@@ -242,8 +250,8 @@ public class World implements ICollidable {
 	}
 	
 	/**
-	 * Returns the next collision time
-	 * @return see implementation
+	 * Returns the next collision time, null if no collisions
+	 * @see implementation
 	 */
 	public double getNextCollisionTime() {
 		Double collisionTime = null;
@@ -251,29 +259,33 @@ public class World implements ICollidable {
 		try {
 			collisionTime = collidables[0].getTimeToCollision(collidables[1]);
 		} catch (Exception e){
-			collisionTime = Double.POSITIVE_INFINITY;
+			// No harm done
 		}
 		return collisionTime;
 
 	}
 
 	/**
-	 * Returns the next collision position
+	 * Returns the next collision position, null if no collisions
 	 * @see implementation 
 	 */
 	public double[] getNextCollisionPosition() {
+		double[] collisionPosition = null;
 		ICollidable[] collidables = getNextCollisionObjects();
 		try {
-		double[] collisionPosition = collidables[0].getCollisionPosition(collidables[1]);
-		return collisionPosition;
+			collisionPosition = collidables[0].getCollisionPosition(collidables[1]);
 		} catch (Exception e) {
-			return null;
-		}	
+			// No harm done
+		}
+		return collisionPosition;
 	}
 	
 	/**
-	 * Returns the two objects that will collide first
-	 * @return
+	 * Returns the two objects that will collide first, null if no collisions
+	 * 
+	 * ???
+	 * 
+	 * @return An ICollidable array containing the two colliding objects, or null if no collisions occur 
 	 */
 	public ICollidable[] getNextCollisionObjects() {
 
@@ -289,7 +301,7 @@ public class World implements ICollidable {
 				} catch (Exception e) {
 					collisionTime = Double.POSITIVE_INFINITY;
 				}
-			    if (collisionTime == Double.POSITIVE_INFINITY){continue;}
+			    if (collisionTime == Double.POSITIVE_INFINITY || collisionTime == null){continue;}
 			    
 			    ICollidable[] collisionArray = { entity1, entity2 };
 		    	collisionMap.put(collisionArray, collisionTime);
@@ -302,11 +314,25 @@ public class World implements ICollidable {
 			
 		}
 		
-		// Get collision from collisionMap with lowest collisionTime
-		ICollidable[] firstCollisionArray = Collections.min(collisionMap.entrySet(), Map.Entry.comparingByValue()).getKey();
-		return firstCollisionArray;
+		if (collisionMap.isEmpty()) {
+			return null;
+		} else {
+			// Get collision from collisionMap with lowest collisionTime
+			ICollidable[] firstCollisionArray = Collections.min(collisionMap.entrySet(), Map.Entry.comparingByValue()).getKey();
+			return firstCollisionArray;
+		}
+		
 	}
 	
+	
+	/**
+	 * A function for advancing the game
+	 * 
+	 * @effect 
+	 * 
+	 * @param duration
+	 * @throws Exception
+	 */
 	public void evolve(double duration) throws Exception {
 		while (duration > 0) {
 		
@@ -319,7 +345,7 @@ public class World implements ICollidable {
 				firstCollisionTime = getNextCollisionTime();
 				collidables = getNextCollisionObjects();
 			} catch (Exception e) {
-				firstCollisionTime = Double.POSITIVE_INFINITY;
+				firstCollisionTime = null;
 			}
 			
 			if (firstCollisionTime > duration) {
@@ -347,12 +373,27 @@ public class World implements ICollidable {
 		} 
 	}
 	
+	/**
+	 * Advances all entities in this world
+	 * 
+	 * @param duration
+	 * @post All entities in this world are advanced for the given duration
+	 * 		 | for entity in this.GetEntities()
+	 * 		 | 		entity.move(duration)
+	 */
 	public void advanceEntities(double duration) {
 		for (Entity entity : this.getEntities()) {
 			entity.move(duration);
 		}
 	}
 	
+	/**
+	 * Returns the entity at the given position
+	 * 
+	 * @param x
+	 * @param y
+	 * @return The entity at the given position, or null if there is none
+	 */
 	public Entity getEntityAtPosition(double x, double y) {
 		for (Entity entity : this.getEntities()) {
 		    if ((entity.getPositionX() == x) && (entity.getPositionY() == y)) {
@@ -362,6 +403,12 @@ public class World implements ICollidable {
 		return null;
 	}
 	
+	/**
+	 * Returns a boolean indicating whether there is significant overlap between this entity and other entities
+	 * 
+	 * @param entity
+	 * @see implementation
+	 */
 	private boolean significantOverlap(Entity entity) {
 		for (Entity other : this.getEntities()) {
 		    if (entity.significantOverlap(other) && (entity != other)) {
