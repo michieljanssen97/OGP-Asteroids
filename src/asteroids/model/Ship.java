@@ -30,6 +30,7 @@ public class Ship extends Entity {
 	private Set<Bullet> bullets = new HashSet<Bullet>();
 	
 	private boolean thrusterActive = false;
+	
 	/**
 	 * Return the maximum exerted force on a ship.
 	 */
@@ -151,6 +152,7 @@ public class Ship extends Entity {
 		setVelocity(newVelocityX, newVelocityY);
 				
 	}
+	
 	/**
 	 * This method toggles the thruster of a ship.
 	 *@post If the thruster is active the thruster is set to non active.
@@ -167,6 +169,7 @@ public class Ship extends Entity {
 			thrusterActive = true;
 		}
 	}
+	
 	/**
 	 * Returns the state of the thruster.
 	 */
@@ -269,6 +272,7 @@ public class Ship extends Entity {
 			}
 		}		
 	}
+	
    /**
     * Return the number of bullets that are associated with a ship.
     */
@@ -276,6 +280,7 @@ public class Ship extends Entity {
 	public int getNbBulletsOnShip() {
 		return this.bullets.size();
 	}
+	
 	/**
 	 * Return whether the given mass is a valid mass.
 	 * @see implementation
@@ -287,6 +292,7 @@ public class Ship extends Entity {
 		}
 		return false;
 	}
+	
 	/**
 	 * Return the mass of a ship (ship + bullets loaded on that ship).
 	 * @post  The given ship's total mass is the mass of the ship itself plus all the masses of the bullets.

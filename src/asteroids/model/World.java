@@ -22,36 +22,115 @@ public class World implements ICollidable {
 	private double width;
 	private double height;
 	
+	/**
+	 * Instantiate a new world with a given width and height
+	 * 
+	 * @param width
+	 * @param height
+	 * @post The width of the new world is equal to the given width
+	 * 	     | new.getWidth() == width
+	 * @post The height of the new world is equal to the given height
+	 * 		 | new.getheight() == height
+	 */
 	public World(double width, double height) {
 		setSize(width,height);
 	}
 	
+	/**
+	 * Returns a boolean indicating whether this particular world is terminated
+	 * @see implementation
+	 */
 	public boolean isTerminated() {
 		return this.isTerminated;
 	}
 	
+	/**
+	 * Terminates this world
+	 * @post ...
+	 * 		 | new.isTerminated() == true
+	 */
 	public void terminate() {
 		this.isTerminated = true;
 	}
 
+	/**
+	 * Returns the width of this world
+	 * @see implementation
+	 */
 	public double getWidth(){
 		return this.width;
 	}
+	
+	/**
+	 * Returns the height of this world
+	 * @see implementation
+	 */
 	public double getHeight(){
 		return this.height;
 	}
 	
+	/**
+	 * Returns the maximum width of this world
+	 * @see implementation
+	 */
 	public double getMaxWidth(){return MAX_WIDTH;}
+	
+	/**
+	 * Returns the maximum height of this world
+	 * @see implementation
+	 */
 	public double getMaxHeight(){return MAX_HEIGHT;}
 	
+	/**
+	 * Returns a boolean indicating whether the given width is valid
+	 * 
+	 * @param width
+	 * @invar The given width should be larger than or equal to zero
+	 * 		  | 0 <= width
+	 * @invar The given width should be smaller than or equal to the maximum width of this world
+	 * 		  | width <= getMaxWidth()
+	 * @return ...
+	 * 		  | (0 <= width &&  width <= getMaxWidth())
+	 * 		   
+	 */
 	private boolean isValidWidth(double width) {
 		return (0 <= width &&  width <= getMaxWidth());
 	}
 	
+	/**
+	 * Returns a boolean indicating whether the given width is valid
+	 * 
+	 * @param height
+	 * @invar The given height should be larger than or equal to zero
+	 * 		  | 0 <= height
+	 * @invar The given height should be smaller than or equal to the maximum height of this world
+	 * 		  | width <= getMaxHeight()
+	 * @return ...
+	 * 		  | (0 <= height && height <= getMaxHeight())
+	 * 		   
+	 */
 	private boolean isValidHeight(double height) {
 		return (0 <= height &&  height <= getMaxHeight());
 	}
 	
+	/**
+	 * Sets this worlds dimensions to the given dimensions
+	 * 
+	 * @param width
+	 * @param height
+	 * @post The width of this world is equal to the given width given that it is valid, 
+	 * 		 otherwise the width will be set to the default width
+	 * 		 | if (isValidWidth(width))
+	 * 		 | 	   new.getWidth() == width
+	 * 		 | else
+	 * 		 |     new.getWidth() == DEFAULT_WIDTH
+	 * @post The height of this world is equal to the given height given that it is valid, 
+	 * 		 otherwise the height will be set to the default height
+	 * 		 | if (isValidHeight(height))
+	 * 		 | 	   new.getHeight() == height
+	 * 		 | else
+	 * 		 |     new.getHeight() == DEFAULT_HEIGHT
+	 */
 	private void setSize(double width, double height){
 		
 		if (isValidWidth(width)) {
@@ -67,15 +146,27 @@ public class World implements ICollidable {
 		}
 	}
 	
-	
+	/**
+	 * Returns the ships in this world
+	 * @see implementation
+	 */
 	public Set<Ship> getShips(){
 		return this.ships;
 	}
 	
+	/**
+	 * Returns the bullets in this world
+	 * @see implementation
+	 */
 	public Set<Bullet> getBullets(){
 		return this.bullets;
 	}
 	
+	/**
+	 * Returns the entities in this world
+	 * @return All ships and bullets in the world are returned
+	 *         | this.bullets + this.ships
+	 */
 	public Set<Entity> getEntities(){
 		Set<Entity> entities = new HashSet<Entity>();
 		entities.addAll(this.bullets);
@@ -83,7 +174,29 @@ public class World implements ICollidable {
 		return entities;
 	}
 	
-	public void addEntity(Entity entity) throws Exception, IllegalArgumentException, NullPointerException {
+	/**
+	 * Adds an entity to this world
+	 * 
+	 * @param entity
+	 * @post Associate the given entity with this world, if possible
+	 * 		 | if entity.canBePartOfWorld()
+	 * 		 |     entity.isPartOfWorld(this) == true
+	 * @post Add the entity to the world
+	 * 		 | if entity.canBePartOfWorld()
+	 * 		 | 	   if (entity instanceof Ship)
+	 * 	     |			this.ships.contains((Ship) entity) == true
+	 * 		 |		else if (entity instanceof Bullet)
+	 * 		 |          this.bullets.contains((Bullet) entity) == true
+	 * @throws IllegalArgumentException
+	 * 		   The given entity is null
+	 * 		   | entity == null
+	 * @throws NullPointerException
+	 * 		   The given entity is already a part of this world, 
+	 * 		   the given entity overlaps with another entity in this world
+	 *         or the given entity does not completely lie within the boundaries of this world
+	 * 		   | (entity.isPartOfWorld() || significantOverlap(entity) || !entity.withinBoundaries(this))
+	 */
+	public void addEntity(Entity entity) throws IllegalArgumentException, NullPointerException {
 		if (entity == null){
 			throw new NullPointerException();
 		} else if (entity.isPartOfWorld() || significantOverlap(entity) || !entity.withinBoundaries(this)){
@@ -98,8 +211,23 @@ public class World implements ICollidable {
 				}
 			}
 		}
-		
 	}
+	
+	/**
+	 * Removes an entity from this world
+	 * 
+	 * @param entity
+	 * @post The entity is not associated with this world any longer
+	 * 		 | entity.isPartOfWorld(this) == false
+	 * @post The entity does not exist in this world any longer
+	 * 		 | if (entity instanceof Ship)
+	 * 	     |		this.ships.contains((Ship) entity) == false
+	 * 		 |	else if (entity instanceof Bullet)
+	 * 		 |      this.bullets.contains((Bullet) entity) == false
+	 * @throws NullPointerException
+	 * 		   The given entity is null
+	 * 		   | entity == null
+	 */
 	public void removeEntity(Entity entity) throws NullPointerException {
 		if (entity == null){
 			throw new NullPointerException();
@@ -113,18 +241,26 @@ public class World implements ICollidable {
 		}
 	}
 	
+	/**
+	 * Returns the next collision time
+	 * @return see implementation
+	 */
 	public double getNextCollisionTime() {
 		Double collisionTime = null;
 		ICollidable[] collidables = getNextCollisionObjects();
 		try {
 			collisionTime = collidables[0].getTimeToCollision(collidables[1]);
-		} catch (Exception e ){
+		} catch (Exception e){
 			collisionTime = Double.POSITIVE_INFINITY;
 		}
 		return collisionTime;
 
 	}
-	
+
+	/**
+	 * Returns the next collision position
+	 * @see implementation 
+	 */
 	public double[] getNextCollisionPosition() {
 		ICollidable[] collidables = getNextCollisionObjects();
 		try {
@@ -135,6 +271,10 @@ public class World implements ICollidable {
 		}	
 	}
 	
+	/**
+	 * Returns the two objects that will collide first
+	 * @return
+	 */
 	public ICollidable[] getNextCollisionObjects() {
 
 		Map<ICollidable[], Double> collisionMap = new HashMap<ICollidable[], Double>();

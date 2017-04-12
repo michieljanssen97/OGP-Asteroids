@@ -40,6 +40,7 @@ public class Bullet extends Entity {
 		setVelocity(xVelocity, yVelocity);
 		setRadius(radius);
 	}
+	
     /**
      * Checks when a bullet is about to hit a wall for the third time.
      * 
@@ -53,6 +54,7 @@ public class Bullet extends Entity {
 			return false;
 		}
 	}
+	
 	/**
 	 * Set the counter to the given counter.
 	 * @param counter
@@ -61,6 +63,7 @@ public class Bullet extends Entity {
 	public void setCounter(int counter){
 		this.counter = counter;
 	}
+	
 	/**
 	 * Returns the density of the bullet.
 	 */
@@ -77,6 +80,7 @@ public class Bullet extends Entity {
 		double mass = (4/3.0)*Math.PI*Math.pow(this.getRadius(), 3)*getDensity();
 		return mass;
 	}
+	
 	/**
 	 * Returns the source of the bullet.
 	 */
@@ -119,6 +123,7 @@ public class Bullet extends Entity {
 		}
 		return true;
 	}
+	
 	/**
 	 * Check whether a bullet can be part of a ship.
 	 * 
@@ -130,6 +135,7 @@ public class Bullet extends Entity {
 		}
 		return true;
 	}
+	
 	/**
 	 * Make a bullet part of a ship.
 	 * 
@@ -160,6 +166,7 @@ public class Bullet extends Entity {
 			return false;
 		}
 	}
+	
 	/**
 	 * Return the current ship a bullet belongs to.
 	 */

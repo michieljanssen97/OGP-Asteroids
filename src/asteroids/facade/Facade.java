@@ -254,7 +254,7 @@ public class Facade implements asteroids.part2.facade.IFacade {
 		try {
 			ship.loadBullets(bullet);
 		} catch (Exception e) {
-			throw new ModelException(e.getMessage());
+			throw new ModelException("");
 		}
 	}
 
@@ -263,7 +263,7 @@ public class Facade implements asteroids.part2.facade.IFacade {
 		try {
 			ship.loadBullets(bullets.toArray(new Bullet[bullets.size()]));
 		} catch (Exception e) {
-			throw new ModelException(e.toString());
+			throw new ModelException("");
 		}
 	}
 
@@ -302,7 +302,7 @@ public class Facade implements asteroids.part2.facade.IFacade {
 		try {
 			return world.getNextCollisionTime();
 		} catch (Exception e) {
-			throw new ModelException(e.getMessage());
+			throw new ModelException("");
 		}
 	}
 
@@ -316,7 +316,7 @@ public class Facade implements asteroids.part2.facade.IFacade {
 			try {
 				world.evolve(dt);
 			} catch (Exception e) {
-				throw new ModelException(e.getMessage());
+				throw new ModelException("");
 			}
 	}
 
