@@ -1,4 +1,4 @@
-package asteroids.tests;
+package asteroids.tests.Part1;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -11,7 +11,7 @@ import asteroids.facade.Facade;
 import asteroids.part1.facade.IFacade;
 import asteroids.util.ModelException;
 
-public class Part1TestPartial {
+public class TestPartial {
 	
 	private static final double EPSILON = 0.0001;
 
