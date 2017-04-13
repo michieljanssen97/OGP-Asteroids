@@ -14,9 +14,9 @@ import be.kuleuven.cs.som.annotate.Raw;
 
 public abstract class Entity implements ICollidable {
 	
-	protected static final double MAX_SPEED = 300000;
-	protected static final double MIN_RADIUS = 0;
-	private static final double MIN_DENSITY = 0;
+	protected static double MAX_SPEED = 300000;
+	protected static double MIN_RADIUS = 0;
+	protected static double MIN_DENSITY = 0;
 	
 	protected double x;
 	protected double y;
@@ -197,19 +197,19 @@ public abstract class Entity implements ICollidable {
 	 * Returns the entities maximum speed
 	 */
 	@Basic @Immutable
-	public double getMaxSpeed() {return MAX_SPEED;}
+	public abstract double getMaxSpeed();
 	
 	/**
 	 * Returns the entities minimum radius
 	 */
 	@Basic @Immutable
-	public double getMinRadius() {return MIN_RADIUS;}
+	public abstract double getMinRadius();
 	
 	/**
 	 * Returns the entities minimum density
 	 */
 	@Basic @Immutable
-	public double getMinDensity() {return MIN_DENSITY;}
+	public abstract double getMinDensity();
 	
 	/**
 	 * Returns the radius of this entity.
@@ -220,7 +220,7 @@ public abstract class Entity implements ICollidable {
 	}
 	
 	/**
-	 * Check whether a radius is valid. The radius must be greater then 10.
+	 * Check whether a radius is valid. The radius must be greater then MIN_RADIUS.
 	 * 
 	 * @param radius
 	 * @invar radius is a real number
@@ -228,7 +228,7 @@ public abstract class Entity implements ICollidable {
 	 * @see implementation
 	 */
 	protected boolean isValidRadius(double radius) {
-		return (radius > getMinRadius()) && (! Double.isNaN(radius));
+		return (radius > getMinRadius()) && (!Double.isNaN(radius));
 	}
 		
 	/**

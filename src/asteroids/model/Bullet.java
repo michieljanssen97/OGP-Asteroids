@@ -11,15 +11,23 @@ import be.kuleuven.cs.som.annotate.*;
 
 public class Bullet extends Entity {
 
-	protected static final double MAX_SPEED = 300000;
-	protected static final double MIN_RADIUS = 1;
-	protected static final double DENSITY = 7.8E12;
+	protected static double MAX_SPEED = 300000;
+	protected static double MIN_RADIUS = 1;
+	protected static double DENSITY = 7.8E12;
+	
 	private int counter = 0;
-
-	 
 	private Ship ship; 
 	private Ship source;
 
+	@Override
+	public double getMaxSpeed() {return MAX_SPEED;}
+
+	@Override
+	public double getMinRadius() {return MIN_RADIUS;}
+
+	@Override
+	public double getMinDensity() {return MIN_DENSITY;}
+	
 	/**
 	 * Initialize this new bullet with a given position, velocity, radius.
 	 * 
@@ -57,9 +65,17 @@ public class Bullet extends Entity {
 		if (counter == 2){		
 			return true;
 		} else {
-			counter +=1;
+			setCounter(getCounter() + 1);
 			return false;
 		}
+	}
+	
+	/**
+	 * Get the value of the counter
+	 * @see implementation
+	 */
+	public int getCounter() {
+		return counter;
 	}
 	
 	/**
@@ -149,7 +165,7 @@ public class Bullet extends Entity {
 	 * @see implementation
 	 */
 	public void makePartOfShip(Ship ship) {
-		if (!isPartOfWorld() && !isPartOfShip()) {
+		if (canBePartOfShip()) {
 			this.ship = ship;
 			this.source = ship;
 		}

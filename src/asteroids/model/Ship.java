@@ -21,15 +21,24 @@ import be.kuleuven.cs.som.annotate.*;
  */
 public class Ship extends Entity {
 	
-	private static final double MAX_SPEED = 300000;
-	private static final double MIN_RADIUS = 10;
-	private static final double MIN_DENSITY = 1.42E12;
+	private static double MAX_SPEED = 300000;
+	private static double MIN_RADIUS = 10;
+	private static double MIN_DENSITY = 1.42E12;
 	private static final double THRUSTER_FORCE = 1.1E21;
 	
 	
 	private Set<Bullet> bullets = new HashSet<Bullet>();
 	
 	private boolean thrusterActive = false;
+	
+	@Override
+	public double getMaxSpeed() {return MAX_SPEED;}
+
+	@Override
+	public double getMinRadius() {return MIN_RADIUS;}
+
+	@Override
+	public double getMinDensity() {return MIN_DENSITY;}
 	
 	/**
 	 * Return the maximum exerted force on a ship.
@@ -310,8 +319,5 @@ public class Ship extends Entity {
 		return bullet_mass + this.mass;
 		
 	}
-
-
-
 	
 }
