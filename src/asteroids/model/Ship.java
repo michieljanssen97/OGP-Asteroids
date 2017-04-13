@@ -216,20 +216,18 @@ public class Ship extends Entity {
 	 * @throws AssertionError
 	 *        | (!bullet.makePartOfShip(this)) || (!bullet.withinBoundaries(this))
 	 */
-	public void loadBullets(Bullet... bullets) throws NullPointerException, AssertionError {
-		try {
-			for(Bullet bullet: bullets) {
-				if (bullet != null) {
-					if (bullet.withinBoundaries(this) && bullet.canBePartOfShip()){
-						bullet.makePartOfShip(this);
-						this.bullets.add(bullet);
-					} else {
-						throw new AssertionError("Either the bullet cannot be part of the ship or the bullet doesn't lie within the ship's boudnaries");
-					}
+	public void loadBullets(Bullet... bullets) throws AssertionError {
+		for(Bullet bullet: bullets) {
+			if (bullet != null) {
+				if (bullet.withinBoundaries(this) && bullet.canBePartOfShip()){
+					bullet.makePartOfShip(this);
+					this.bullets.add(bullet);
+				} else {
+					throw new AssertionError("Either the bullet cannot be part of the ship or the bullet doesn't lie within the ship's boundaries");
 				}
+			} else {
+				throw new NullPointerException("Bullet was null");
 			}
-		} catch (Exception e) {
-			throw new NullPointerException();
 		}
 	}
 
