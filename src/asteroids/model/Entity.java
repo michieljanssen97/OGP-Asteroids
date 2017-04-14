@@ -32,6 +32,34 @@ public abstract class Entity implements ICollidable {
 	
 	protected boolean isTerminated = false;
 	
+	/**
+	 * Initialize this new entity with a given position, velocity, radius.
+	 * 
+	 * @param x
+	 *        The x-coordinate for this new entity.
+	 * @param y
+	 * 		  The y-coordinate for this new entity.
+	 * @param xVelocity
+	 *        The velocity in the x direction for this new entity.
+	 * @param yVelocity
+	 *        The velocity in the y direction for this new entity.
+	 * @param radius
+	 * 		  The given radius for this new entity.
+	 * @post  The position of this new entity is equal to the given x- and y-coordinate.
+	 * 		  | new.getPositionX() == x
+	 * 	      | new.getPositionY() == y
+	 * @post  The velocity of this new entity is equal to the given x- and y-velocity.
+	 *        | new.getVelocityX() == xVelocity
+	 *        | new.getVelocityY() == yVelocity
+	 * @post  The radius of this new entity is equal to the given radius.
+	 *        | new.getRadius() == radius
+	 */
+	public Entity(double x, double y, double xVelocity, double yVelocity, double radius) {
+		setPosition(x, y);
+		setVelocity(xVelocity, yVelocity);
+		setRadius(radius);
+	}
+	
 	public boolean isTerminated() {
 		return this.isTerminated;
 	}

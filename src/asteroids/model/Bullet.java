@@ -19,6 +19,14 @@ public class Bullet extends Entity {
 	private Ship ship; 
 	private Ship source;
 
+	/**
+	 * Initialize this new bullet with a given position, velocity, radius.
+	 * @see superclass constructor
+	 */
+	public Bullet(double x, double y, double xVelocity, double yVelocity, double radius) {
+		super(x, y, xVelocity, yVelocity, radius);
+	}
+	
 	@Override
 	public double getMaxSpeed() {return MAX_SPEED;}
 
@@ -27,34 +35,6 @@ public class Bullet extends Entity {
 
 	@Override
 	public double getMinDensity() {return MIN_DENSITY;}
-	
-	/**
-	 * Initialize this new bullet with a given position, velocity, radius.
-	 * 
-	 * @param x
-	 *        The x-coordinate for this new bullet.
-	 * @param y
-	 * 		  The y-coordinate for this new bullet.
-	 * @param xVelocity
-	 *        The velocity in the x direction for this new bullet.
-	 * @param yVelocity
-	 *        The velocity in the y direction for this new bullet.
-	 * @param radius
-	 * 		  The given radius for this new bullet.
-	 * @post  The position of this new bullet is equal to the given x- and y-coordinate.
-	 * 		  | new.getPositionX() == x
-	 * 	      | new.getPositionY() == y
-	 * @post  The velocity of this new bullet is equal to the given x- and y-velocity.
-	 *        | new.getVelocityX() == xVelocity
-	 *        | new.getVelocityY() == yVelocity
-	 * @post  The radius of this new ship is equal to the given radius.
-	 *        | new.getRadius() == radius
-	 */
-	public Bullet(double x, double y, double xVelocity, double yVelocity, double radius) {
-		setPosition(x, y);
-		setVelocity(xVelocity, yVelocity);
-		setRadius(radius);
-	}
 	
     /**
      * Checks when a bullet is about to hit a wall for the third time.

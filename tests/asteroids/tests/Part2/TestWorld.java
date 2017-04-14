@@ -124,6 +124,23 @@ public class TestWorld {
 
 	}
 	
+	@Test
+	public void testEvolve() throws Exception {
+		// Entity collide with wall
+		Ship ship = new Ship(21, 75, -1, 0, 20, 0, 1.0E20);
+		world.addEntity(ship);
+		world.evolve(45.0);
+		assertEquals(ship.getPositionX(), 11, EPSILON);
+		assertEquals(ship.getPositionY(), 75, EPSILON);
+		// ?? Fout in evolve ??
+		
+		// Ship Collide with ship
+		// ...
+		
+		// Ship collide with bullet
+		// ...
+	}
+	
 
 
 }

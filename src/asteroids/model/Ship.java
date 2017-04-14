@@ -47,36 +47,16 @@ public class Ship extends Entity {
 	
 	/**
 	 * Initialize this new ship with a given position, velocity, radius and orientation.
-	 * 
-	 * @param x
-	 *        The x-coordinate for this new ship.
-	 * @param y
-	 * 		  The y-coordinate for this new ship.
-	 * @param xVelocity
-	 *        The velocity in the x direction for this new ship.
-	 * @param yVelocity
-	 *        The velocity in the y direction for this new ship.
-	 * @param radius
-	 * 		  The given radius for this new ship.
-	 * @param orientation
-	 *        The given orientation for this new ship.
-	 * @post  The position of this new ship is equal to the given x- and y-coordinate.
-	 * 		  | new.getPositionX() == x
-	 * 	      | new.getPositionY() == y
-	 * @post  The velocity of this new ship is equal to the given x- and y-velocity.
-	 *        | new.getVelocityX() == xVelocity
-	 *        | new.getVelocityY() == yVelocity
-	 * @post  The radius of this new ship is equal to the given radius.
-	 *        | new.getRadius() == radius
+	 * @see superclass constructor
 	 * @post  The orientation of this new ship is equal to the given orientation.
-	 *        | new.getOrientation() == orientation  
+	 *        | new.getOrientation() == orientation 
+	 * @post  The mass of this new ship is equal to the given orientation.
+	 *        | new.getMass() == mass
 	 * @throws IllegalArgumentException
 	 */
 	public Ship(double x, double y, double xVelocity, double yVelocity, double radius, double orientation, double mass) throws IllegalArgumentException {
+		super(x, y, xVelocity, yVelocity, radius);
 		try {
-			setPosition(x, y);
-			setVelocity(xVelocity, yVelocity);
-			setRadius(radius);
 			setOrientation(orientation);
 			setMass(mass);	
 		} catch (IllegalArgumentException e) {
