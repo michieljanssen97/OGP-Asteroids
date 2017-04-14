@@ -140,7 +140,6 @@ public class World implements ICollidable {
 	 * 		 |     new.getHeight() == DEFAULT_HEIGHT
 	 */
 	private void setSize(double width, double height){
-		
 		if (isValidWidth(width)) {
 			this.width = width;
 		} else {
@@ -207,8 +206,12 @@ public class World implements ICollidable {
 	public void addEntity(Entity entity) throws IllegalArgumentException, NullPointerException {
 		if (entity == null){
 			throw new NullPointerException();
-		} else if (entity.isPartOfWorld() || significantOverlap(entity) || !entity.withinBoundaries(this)){
-			throw new IllegalArgumentException();
+		} else if (entity.isPartOfWorld()){
+			throw new IllegalArgumentException("Entity is already part of world");
+		} else if (significantOverlap(entity)) {
+			throw new IllegalArgumentException("Entity overlaps with another entity");
+		} else if (!entity.withinBoundaries(this)) {
+			throw new IllegalArgumentException("Entity does not lie within the world's boundaries");
 		} else {
 			if (entity.canBePartOfWorld()) {
 				entity.makePartOfWorld(this);
@@ -253,10 +256,10 @@ public class World implements ICollidable {
 	 * Returns the next collision time, null if no collisions
 	 * @see implementation
 	 */
-	public double getNextCollisionTime() {
+	public Double getNextCollisionTime() {
 		Double collisionTime = null;
-		ICollidable[] collidables = getNextCollisionObjects();
 		try {
+			ICollidable[] collidables = getNextCollisionObjects();
 			collisionTime = collidables[0].getTimeToCollision(collidables[1]);
 		} catch (Exception e){
 			// No harm done
@@ -271,8 +274,8 @@ public class World implements ICollidable {
 	 */
 	public double[] getNextCollisionPosition() {
 		double[] collisionPosition = null;
-		ICollidable[] collidables = getNextCollisionObjects();
 		try {
+			ICollidable[] collidables = getNextCollisionObjects();
 			collisionPosition = collidables[0].getCollisionPosition(collidables[1]);
 		} catch (Exception e) {
 			// No harm done
@@ -409,7 +412,7 @@ public class World implements ICollidable {
 	 * @param entity
 	 * @see implementation
 	 */
-	private boolean significantOverlap(Entity entity) {
+	public boolean significantOverlap(Entity entity) {
 		for (Entity other : this.getEntities()) {
 		    if (entity.significantOverlap(other) && (entity != other)) {
 		    	return true;
