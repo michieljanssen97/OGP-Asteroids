@@ -37,9 +37,22 @@ public class TestWorld {
 		Ship ship = new Ship(25, 75, 1, 2, 11, 0, 1.0E20);
 		assertEquals(ship.getTimeToCollision(world), 14/2, EPSILON);
 		
-		ship = new Ship(50, 50, 1, 1, 11, 0, 1.0E20);
+		ship = new Ship(50, 50, 0, -1, 11, 0, 1.0E20);
 		assertEquals(ship.getTimeToCollision(world), 39, EPSILON);
+		
+		ship = new Ship(50, 50, -1, 2, 11, 0, 1.0E20);
+		assertEquals(ship.getTimeToCollision(world), 19.5, EPSILON);
+		
+		ship = new Ship(50, 50, -1, -2, 11, 0, 1.0E20);
+		assertEquals(ship.getTimeToCollision(world), 19.5, EPSILON);
+		
+		ship = new Ship(50, 50, 1, -2, 11, 0, 1.0E20);
+		assertEquals(ship.getTimeToCollision(world), 19.5, EPSILON);
+		
+		ship = new Ship(40, 50, -10, -2, 11, 0, 1.0E20);
+		assertEquals(ship.getTimeToCollision(world), 2.9, EPSILON);
 	}
+	
 	
 	@Test
 	public void testAddEntity() throws IllegalArgumentException {
@@ -85,7 +98,8 @@ public class TestWorld {
 		Bullet bullet2 = new Bullet(20, 5, -1, 0, 2);
 		world.addEntity(bullet1);
 		world.addEntity(bullet2);
-		assertEquals(3, world.getNextCollisionTime(), EPSILON);
+		assertEquals(15, world.getNextCollisionPosition()[0], EPSILON);
+		assertEquals(5, world.getNextCollisionPosition()[1], EPSILON);
 	}
 	
 	@Test
@@ -126,16 +140,26 @@ public class TestWorld {
 	
 	@Test
 	public void testEvolve() throws Exception {
+		
 		// Entity collide with wall
+		world = new World(100, 100);
 		Ship ship = new Ship(21, 75, -1, 0, 20, 0, 1.0E20);
 		world.addEntity(ship);
-		world.evolve(45.0);
-		assertEquals(ship.getPositionX(), 11, EPSILON);
+		assertEquals(1, world.getNextCollisionTime(), EPSILON);
+		world.evolve(23.0);
+		assertEquals(ship.getPositionX(), 42, EPSILON);
 		assertEquals(ship.getPositionY(), 75, EPSILON);
-		// ?? Fout in evolve ??
 		
 		// Ship Collide with ship
-		// ...
+		world = new World(100, 100);
+		Ship ship1 = new Ship(21, 75, 1, 0, 20, 0, 1.0E20); 
+		Ship ship2 = new Ship(75, 75, -1, 0, 20, 0, 1.0E20); 
+		world.addEntity(ship1);
+		world.addEntity(ship2);
+		world.evolve(7.0);
+		assertEquals(28, ship1.getPositionX(), EPSILON);
+		assertEquals(68, ship2.getPositionX(), EPSILON);
+		
 		
 		// Ship collide with bullet
 		// ...

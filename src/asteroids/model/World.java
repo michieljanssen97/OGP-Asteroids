@@ -179,6 +179,7 @@ public class World implements ICollidable {
 		entities.addAll(this.bullets);
 		entities.addAll(this.ships);
 		return entities;
+		
 	}
 	
 	/**
@@ -296,7 +297,6 @@ public class World implements ICollidable {
 		Double collisionTime;
 		
 		for (Entity entity1 : this.getEntities()) {
-			
 			// Calculate time of collision with other entities
 			for (Entity entity2: this.getEntities()) {
 				try {
@@ -354,7 +354,7 @@ public class World implements ICollidable {
 			if (firstCollisionTime > duration) {
 				advanceEntities(duration);
 				return;
-			} else {				
+			} else {
 				advanceEntities(firstCollisionTime);
 
 				if (collidables[0] instanceof Entity && collidables[1] instanceof Entity) {
@@ -363,11 +363,11 @@ public class World implements ICollidable {
 					((Entity)collidables[1]).move(duration);
 				} else if (collidables[0] instanceof World && collidables[1] instanceof Entity) {
 					resolveCollision((Entity)collidables[0], (World)collidables[1]);
-					((Entity)collidables[1]).move(duration);
+					//((Entity)collidables[1]).move(duration);
 					
 				} else if (collidables[0] instanceof Entity && collidables[1] instanceof World) {
 					resolveCollision((Entity)collidables[0], (World)collidables[1]);
-					((Entity)collidables[0]).move(duration);
+					//((Entity)collidables[0]).move(duration);
 				}
 			
 				//  Subtract firstTimeCollision from delta t and go to step 1.
@@ -422,13 +422,13 @@ public class World implements ICollidable {
 	}
 	
 	private void resolveCollision(Entity entity, World world) {
+
 		double distanceToLeftWall = entity.getPositionX();
 		double distanceToRightWall = world.getWidth() - entity.getPositionX();
 		double distanceToUpperWall = world.getHeight() - entity.getPositionY();
 		double distanceToBottomWall = entity.getPositionY();
 		
 		double minDistance = Math.min(Math.min(distanceToUpperWall, distanceToBottomWall), Math.min(distanceToLeftWall, distanceToRightWall));
-		
 		if (minDistance == distanceToLeftWall || minDistance == distanceToRightWall) {
 			entity.setVelocity(-entity.getVelocityX(), entity.getVelocityY());
 		} else if (minDistance == distanceToUpperWall || minDistance == distanceToBottomWall) {
@@ -459,8 +459,8 @@ public class World implements ICollidable {
 			double radiusSum = entity1.getRadius() + entity2.getRadius();
 			double J = (2*entity1.getMass()*entity2.getMass()*deltaVR)/((entity1.getMass()+entity2.getMass())*radiusSum);
 			
-			double Jx = (J*deltaPosX)/radiusSum;	
-			double Jy = (J*deltaPosY)/radiusSum;
+			double Jx = (J*deltaPosX)/(radiusSum);	
+			double Jy = (J*deltaPosY)/(radiusSum);
 			
 			double newVelocityX1 = entity1.getVelocityX() + (Jx/entity1.getMass());
 			double newVelocityY1 = entity1.getVelocityY() + (Jy/entity1.getMass());

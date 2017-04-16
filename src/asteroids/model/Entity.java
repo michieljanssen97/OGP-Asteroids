@@ -278,7 +278,7 @@ public abstract class Entity implements ICollidable {
 		if (isValidRadius(radius)) {
 			this.radius = radius;
 		} else {
-			throw new IllegalArgumentException("Radius must be larger than 10 Km.");
+			throw new IllegalArgumentException("Radius must be larger than the minimum given radius.");
 		}
 	}
 	
@@ -535,27 +535,72 @@ public abstract class Entity implements ICollidable {
 		
 		double distanceToHorizontalWall = 0;
 		double distanceToVerticalWall = 0;
+		double verticalCollisionTime = 0;
+		double horizontalCollisionTime = 0;
 		
 		if (!withinBoundaries(world)) {
 			return 0.0;
 		} 
 		
-		if (getVelocityX() > 0 && getVelocityY() > 0){
+		if (getVelocityX() >= 0 && getVelocityY() >= 0){
 			distanceToHorizontalWall = world.getHeight();
 			distanceToVerticalWall = world.getWidth();
-		} else if (getVelocityX() < 0 && getVelocityY() > 0){
+			if (getVelocityX() >= 0 && getVelocityY() == 0){
+				verticalCollisionTime = Math.abs(distanceToVerticalWall -(getPositionX()+getRadius()))/Math.abs(getVelocityX());
+				horizontalCollisionTime = Double.POSITIVE_INFINITY;
+			} else if(getVelocityX() == 0 && getVelocityY() >= 0){
+				verticalCollisionTime = Double.POSITIVE_INFINITY;
+				horizontalCollisionTime = Math.abs(distanceToHorizontalWall -(getPositionY()+getRadius()))/Math.abs(getVelocityY());
+			} else if (getVelocityX() >= 0 && getVelocityY() >= 0){
+				verticalCollisionTime = Math.abs(distanceToVerticalWall -(getPositionX()+getRadius()))/Math.abs(getVelocityX());
+				horizontalCollisionTime =  Math.abs(distanceToHorizontalWall -(getPositionY()+getRadius()))/Math.abs(getVelocityY());
+			}
+			
+		} else if (getVelocityX() <= 0 && getVelocityY() >= 0){
 			distanceToVerticalWall = 0;
 			distanceToHorizontalWall = world.getHeight();
-		} else if (getVelocityX() < 0 && getVelocityY() < 0){
+			if (getVelocityX() <= 0 && getVelocityY() == 0){
+				verticalCollisionTime = Math.abs(distanceToVerticalWall -(getPositionX()-getRadius()))/Math.abs(getVelocityX());
+				horizontalCollisionTime = Double.POSITIVE_INFINITY;
+			} else if(getVelocityX() == 0 && getVelocityY() >= 0){
+				verticalCollisionTime = Double.POSITIVE_INFINITY;
+				horizontalCollisionTime = Math.abs(distanceToHorizontalWall -(getPositionY()+getRadius()))/Math.abs(getVelocityY());
+			} else if (getVelocityX() <= 0 && getVelocityY() >= 0){
+				verticalCollisionTime = Math.abs(distanceToVerticalWall -(getPositionX()-getRadius()))/Math.abs(getVelocityX());
+				horizontalCollisionTime =  Math.abs(distanceToHorizontalWall -(getPositionY()+getRadius()))/Math.abs(getVelocityY());
+			}
+			
+		} else if (getVelocityX() <= 0 && getVelocityY() <= 0){
 			distanceToVerticalWall = 0;
 			distanceToHorizontalWall = 0;
-		} else if (getVelocityX() > 0 && getVelocityY() < 0){
+			if (getVelocityX() <= 0 && getVelocityY() == 0){
+				verticalCollisionTime = Math.abs(distanceToVerticalWall -(getPositionX()-getRadius()))/Math.abs(getVelocityX());
+				horizontalCollisionTime = Double.POSITIVE_INFINITY;
+			} else if(getVelocityX() == 0 && getVelocityY() <= 0){
+				verticalCollisionTime = Double.POSITIVE_INFINITY;
+				horizontalCollisionTime = Math.abs(distanceToHorizontalWall -(getPositionY()-getRadius()))/Math.abs(getVelocityY());
+			} else if (getVelocityX() <= 0 && getVelocityY() <= 0){
+				verticalCollisionTime = Math.abs(distanceToVerticalWall -(getPositionX()-getRadius()))/Math.abs(getVelocityX());
+				horizontalCollisionTime =  Math.abs(distanceToHorizontalWall -(getPositionY()-getRadius()))/Math.abs(getVelocityY());
+			}
+			
+		} else if (getVelocityX() >= 0 && getVelocityY() <= 0){
 			distanceToVerticalWall = world.getWidth();
 			distanceToHorizontalWall = 0;
+			
+			if (getVelocityX() >= 0 && getVelocityY() == 0){
+				verticalCollisionTime = Math.abs(distanceToVerticalWall -(getPositionX()+getRadius()))/Math.abs(getVelocityX());
+				horizontalCollisionTime = Double.POSITIVE_INFINITY;
+			} else if(getVelocityX() == 0 && getVelocityY() <= 0){
+				verticalCollisionTime = Double.POSITIVE_INFINITY;
+				horizontalCollisionTime = Math.abs(distanceToHorizontalWall -(getPositionY()-getRadius()))/Math.abs(getVelocityY());
+			} else if (getVelocityX() >= 0 && getVelocityY() <= 0){
+				verticalCollisionTime = Math.abs(distanceToVerticalWall -(getPositionX()+getRadius()))/Math.abs(getVelocityX());
+				horizontalCollisionTime =  Math.abs(distanceToHorizontalWall -(getPositionY()-getRadius()))/Math.abs(getVelocityY());
+			}
 		}
 		
-		double verticalCollisionTime = Math.abs(distanceToVerticalWall - (getPositionX()+getRadius()))/Math.abs(getVelocityX());
-		double horizontalCollisionTime = Math.abs(distanceToHorizontalWall - (getPositionY()+getRadius()))/Math.abs(getVelocityY());
+		
 		return Math.min(verticalCollisionTime, horizontalCollisionTime);
 	}
 	

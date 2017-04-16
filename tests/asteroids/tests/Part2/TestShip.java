@@ -12,7 +12,7 @@ import asteroids.util.ModelException;
 
 public class TestShip {
 
-	private static final double EPSILON = 0.0001;
+	private static double EPSILON = 0.0001;
 	private Bullet bullet;
 	private Ship ship;
 	private World world;
@@ -24,7 +24,7 @@ public class TestShip {
 	
 	@Test(expected = IllegalArgumentException.class)
 	public void testCreateShip() throws IllegalArgumentException {
-		Ship ship = new Ship(25, 75, 1, 2, 9, 0, 1.0E20);
+		ship = new Ship(25, 75, 1, 2, 9, 0, 1.0E20);
 	}
 		
 	@Test
@@ -34,6 +34,8 @@ public class TestShip {
 		Bullet bullet2 = new Bullet(130, 110, 10, 5, 30);
 		ship.loadBullets(bullet1);
 		ship.loadBullets(bullet2);
+		assertTrue(ship.getBullets().contains(bullet1));
+		assertTrue(ship.getBullets().contains(bullet2));
 		assertEquals(2, ship.getNbBulletsOnShip());
 	}
 	
@@ -92,10 +94,12 @@ public class TestShip {
 	
 	@Test
 	public void testBullets() throws NullPointerException {
-		ship = new Ship(0, 0, 10, 0, 50, Math.PI, 1.1E18);
+		world = new World(1000, 1000);
+		ship = new Ship(100, 100, 10, 0, 50, Math.PI, 1.1E18);
 		ship.makePartOfWorld(world);
-		Bullet bullet1 = new Bullet(0, 0, 2, 2, 3);
-		Bullet bullet2 = new Bullet(0, 1, 2, 2, 3);
+		assertTrue(ship.isPartOfWorld());
+		Bullet bullet1 = new Bullet(100, 100, 2, 2, 3);
+		Bullet bullet2 = new Bullet(100, 101, 2, 2, 3);
 		ship.loadBullets(bullet1);
 		ship.loadBullets(bullet2);
 		assertEquals(ship.getNbBulletsOnShip(), 2);
@@ -109,11 +113,42 @@ public class TestShip {
 	}
 	
 	@Test
+	public void testBulletsEffectOnShipMass() throws NullPointerException {
+		EPSILON = 1E6;
+		world = new World(1000, 1000);
+		ship = new Ship(100, 100, 10, 0, 50, Math.PI, 1.1E18);
+		ship.makePartOfWorld(world);
+		Bullet bullet1 = new Bullet(100, 100, 2, 2, 3);
+		Bullet bullet2 = new Bullet(100, 101, 2, 2, 5);
+		ship.loadBullets(bullet1);
+		ship.loadBullets(bullet2);
+		assertEquals(ship.getMass(),1.1E18+8.821592171E14+4.08407045E15,EPSILON);
+		ship.removeBullet(bullet1);
+		assertEquals(ship.getMass(),1.1E18+4.08407045E15,EPSILON);
+	}
+	
+	@Test
 	public void testLoadBullets() throws NullPointerException {
 		ship = new Ship(0, 0, 10, 0, 50, Math.PI, 1.1E18);
 		bullet = new Bullet(0, 0, 2, 2, 3);
 		ship.loadBullets(bullet);
 		assertTrue(ship.getBullets().contains(bullet));
 	}
+	
+	@Test
+	public void testLoadBulletsCollection() throws NullPointerException {
+		ship = new Ship(100, 100, 10, 0, 50, Math.PI, 1.1E18);
+		Bullet bullet1 = new Bullet(100, 100, 2, 2, 3);
+		Bullet bullet2 = new Bullet(100, 101, 2, 2, 5);
+		Bullet bullet3 = new Bullet(100, 102, 2, 2, 3);
+		Bullet bullet4 = new Bullet(100, 103, 2, 2, 4);
+		Bullet bullet5 = new Bullet(100, 104, 2, 2, 3);
+		Bullet bullet6 = new Bullet(100, 105, 2, 2, 2);
+		ship.loadBullets(bullet1,bullet2,bullet3,bullet4,bullet5,bullet6);
+		assertEquals(ship.getNbBulletsOnShip(), 6);
+		
+		
+	}
+
 
 }
