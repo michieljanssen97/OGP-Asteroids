@@ -542,64 +542,20 @@ public abstract class Entity implements ICollidable {
 			return 0.0;
 		} 
 		
-		if (getVelocityX() >= 0 && getVelocityY() >= 0){
-			distanceToHorizontalWall = world.getHeight();
-			distanceToVerticalWall = world.getWidth();
-			if (getVelocityX() >= 0 && getVelocityY() == 0){
-				verticalCollisionTime = Math.abs(distanceToVerticalWall -(getPositionX()+getRadius()))/Math.abs(getVelocityX());
-				horizontalCollisionTime = Double.POSITIVE_INFINITY;
-			} else if(getVelocityX() == 0 && getVelocityY() >= 0){
-				verticalCollisionTime = Double.POSITIVE_INFINITY;
-				horizontalCollisionTime = Math.abs(distanceToHorizontalWall -(getPositionY()+getRadius()))/Math.abs(getVelocityY());
-			} else if (getVelocityX() >= 0 && getVelocityY() >= 0){
-				verticalCollisionTime = Math.abs(distanceToVerticalWall -(getPositionX()+getRadius()))/Math.abs(getVelocityX());
-				horizontalCollisionTime =  Math.abs(distanceToHorizontalWall -(getPositionY()+getRadius()))/Math.abs(getVelocityY());
-			}
-			
-		} else if (getVelocityX() <= 0 && getVelocityY() >= 0){
-			distanceToVerticalWall = 0;
-			distanceToHorizontalWall = world.getHeight();
-			if (getVelocityX() <= 0 && getVelocityY() == 0){
-				verticalCollisionTime = Math.abs(distanceToVerticalWall -(getPositionX()-getRadius()))/Math.abs(getVelocityX());
-				horizontalCollisionTime = Double.POSITIVE_INFINITY;
-			} else if(getVelocityX() == 0 && getVelocityY() >= 0){
-				verticalCollisionTime = Double.POSITIVE_INFINITY;
-				horizontalCollisionTime = Math.abs(distanceToHorizontalWall -(getPositionY()+getRadius()))/Math.abs(getVelocityY());
-			} else if (getVelocityX() <= 0 && getVelocityY() >= 0){
-				verticalCollisionTime = Math.abs(distanceToVerticalWall -(getPositionX()-getRadius()))/Math.abs(getVelocityX());
-				horizontalCollisionTime =  Math.abs(distanceToHorizontalWall -(getPositionY()+getRadius()))/Math.abs(getVelocityY());
-			}
-			
-		} else if (getVelocityX() <= 0 && getVelocityY() <= 0){
-			distanceToVerticalWall = 0;
-			distanceToHorizontalWall = 0;
-			if (getVelocityX() <= 0 && getVelocityY() == 0){
-				verticalCollisionTime = Math.abs(distanceToVerticalWall -(getPositionX()-getRadius()))/Math.abs(getVelocityX());
-				horizontalCollisionTime = Double.POSITIVE_INFINITY;
-			} else if(getVelocityX() == 0 && getVelocityY() <= 0){
-				verticalCollisionTime = Double.POSITIVE_INFINITY;
-				horizontalCollisionTime = Math.abs(distanceToHorizontalWall -(getPositionY()-getRadius()))/Math.abs(getVelocityY());
-			} else if (getVelocityX() <= 0 && getVelocityY() <= 0){
-				verticalCollisionTime = Math.abs(distanceToVerticalWall -(getPositionX()-getRadius()))/Math.abs(getVelocityX());
-				horizontalCollisionTime =  Math.abs(distanceToHorizontalWall -(getPositionY()-getRadius()))/Math.abs(getVelocityY());
-			}
-			
-		} else if (getVelocityX() >= 0 && getVelocityY() <= 0){
-			distanceToVerticalWall = world.getWidth();
-			distanceToHorizontalWall = 0;
-			
-			if (getVelocityX() >= 0 && getVelocityY() == 0){
-				verticalCollisionTime = Math.abs(distanceToVerticalWall -(getPositionX()+getRadius()))/Math.abs(getVelocityX());
-				horizontalCollisionTime = Double.POSITIVE_INFINITY;
-			} else if(getVelocityX() == 0 && getVelocityY() <= 0){
-				verticalCollisionTime = Double.POSITIVE_INFINITY;
-				horizontalCollisionTime = Math.abs(distanceToHorizontalWall -(getPositionY()-getRadius()))/Math.abs(getVelocityY());
-			} else if (getVelocityX() >= 0 && getVelocityY() <= 0){
-				verticalCollisionTime = Math.abs(distanceToVerticalWall -(getPositionX()+getRadius()))/Math.abs(getVelocityX());
-				horizontalCollisionTime =  Math.abs(distanceToHorizontalWall -(getPositionY()-getRadius()))/Math.abs(getVelocityY());
-			}
+		if (getVelocityX() >= 0) {
+			distanceToVerticalWall = world.getWidth()-(getPositionX()+getRadius());
+		} else if (getVelocityX() < 0) {
+			distanceToVerticalWall = getPositionX()-getRadius();
 		}
 		
+		if (getVelocityY() >= 0) {
+			distanceToHorizontalWall = world.getHeight()-(getPositionY()+getRadius());
+		} else if (getVelocityY() < 0) {
+			distanceToHorizontalWall = getPositionY()-getRadius();
+		}
+		
+		verticalCollisionTime = Math.abs(distanceToVerticalWall)/Math.abs(getVelocityX());
+		horizontalCollisionTime = Math.abs(distanceToHorizontalWall)/Math.abs(getVelocityY());
 		
 		return Math.min(verticalCollisionTime, horizontalCollisionTime);
 	}
@@ -700,13 +656,13 @@ public abstract class Entity implements ICollidable {
 					posY =thisposY+this.getRadius()*Math.sin(angle);
 					
 					
-				}else if (thisposX>=otherposX && thisposY>=otherposY){
+				} else if (thisposX>=otherposX && thisposY>=otherposY){
 					double angle = Math.atan2(Math.abs(otherposY-thisposY),Math.abs(otherposX-thisposX));
 					posX= thisposX-this.getRadius()*Math.cos(angle);
 					posY = thisposY-this.getRadius()*Math.sin(angle);
 					
 					
-				}else if (thisposX<=otherposX && thisposY>=otherposY){
+				} else if (thisposX<=otherposX && thisposY>=otherposY){
 					double angle = Math.atan2(Math.abs(otherposY-thisposY),Math.abs(otherposX-thisposX));
 					posX = thisposX+this.getRadius()*Math.cos(angle);
 					posY = thisposY-this.getRadius()*Math.sin(angle);
