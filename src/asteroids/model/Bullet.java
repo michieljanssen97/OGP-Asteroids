@@ -21,6 +21,7 @@ public class Bullet extends Entity {
 
 	/**
 	 * Initialize this new bullet with a given position, velocity, radius.
+	 * 
 	 * @see superclass constructor
 	 */
 	public Bullet(double x, double y, double xVelocity, double yVelocity, double radius) {
