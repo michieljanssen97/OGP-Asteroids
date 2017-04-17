@@ -62,6 +62,15 @@ public class World implements ICollidable {
 	}
 
 	/**
+	 * Destroys a world.
+	 */
+	public void destoryWorld(World world){
+		ships.clear();
+		bullets.clear();
+		world.terminate();
+	}
+	
+	/**
 	 * Returns the width of this world
 	 * @see implementation
 	 */
@@ -359,15 +368,12 @@ public class World implements ICollidable {
 
 				if (collidables[0] instanceof Entity && collidables[1] instanceof Entity) {
 					resolveCollision((Entity)collidables[0], (Entity)collidables[1]);
-					//((Entity)collidables[0]).move(duration);
-					//((Entity)collidables[1]).move(duration);
+					
 				} else if (collidables[0] instanceof World && collidables[1] instanceof Entity) {
 					resolveCollision((Entity)collidables[0], (World)collidables[1]);
-					//((Entity)collidables[1]).move(duration);
 					
 				} else if (collidables[0] instanceof Entity && collidables[1] instanceof World) {
 					resolveCollision((Entity)collidables[0], (World)collidables[1]);
-					//((Entity)collidables[0]).move(duration);
 				}
 			
 				//  Subtract firstTimeCollision from delta t and go to step 1.
@@ -482,6 +488,9 @@ public class World implements ICollidable {
 			} else {
 				this.removeEntity(entity1);
 				this.removeEntity(entity2);
+				entity1.terminate();
+				entity2.terminate();
+
 			}
 			
 		} else if ((entity2 instanceof Ship && entity1 instanceof Bullet)) {
@@ -495,11 +504,15 @@ public class World implements ICollidable {
 			} else {
 				this.removeEntity(entity2);
 				this.removeEntity(entity1);
+				entity1.terminate();
+				entity2.terminate();
 			}
 			
 		} else if ((entity2 instanceof Bullet && entity1 instanceof Bullet)) {
 			this.removeEntity(entity2);
 			this.removeEntity(entity1);
+			entity1.terminate();
+			entity2.terminate();
 		}
 	}
 

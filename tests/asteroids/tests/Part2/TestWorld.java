@@ -136,6 +136,25 @@ public class TestWorld {
 	}
 	
 	@Test
+	public void testDestroyWorld() throws Exception {
+		world = new World(100, 100);
+		Ship ship = new Ship(75, 75, -1, 0, 20, 0, 1.0E20);
+		Bullet bullet1 = new Bullet(10, 5, 1, 0, 2);
+		world.addEntity(ship);
+		world.addEntity(bullet1);
+		world.destoryWorld(world);
+		assertFalse(world.getEntities().contains(ship));
+		assertFalse(world.getEntities().contains(bullet1));
+		assertFalse(ship.isTerminated());
+		assertFalse(bullet1.isTerminated());
+		assertTrue(world.isTerminated());
+		ship.move(1.0);
+		bullet1.move(1.0);
+		assertEquals(74, ship.getPositionX(),EPSILON);
+		assertEquals(11, bullet1.getPositionX(),EPSILON);
+	}
+	
+	@Test
 	public void testEvolve() throws Exception {
 		
 		// Entity collide with wall
@@ -163,8 +182,19 @@ public class TestWorld {
 		assertEquals(78, ship2.getPositionX(), EPSILON);
 		
 		// Ship collide with bullet
-		// ...
+		world = new World(100, 100);
+		Ship ship3 = new Ship(21, 75, 1, 0, 20, 0, 1.0E20);
+		Bullet bullet1 = new Bullet(80, 75, -1, 0, 2);
+		world.addEntity(ship3);
+		world.addEntity(bullet1);
+		assertEquals(18.5, ship3.getTimeToCollision(bullet1), EPSILON);
+		world.evolve(18.5);
+		assertTrue(ship3.isTerminated());
+		assertTrue(bullet1.isTerminated());
+
 	}
+	
+	
 	
 
 
