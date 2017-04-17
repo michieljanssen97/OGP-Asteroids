@@ -142,7 +142,7 @@ public class TestWorld {
 		Bullet bullet1 = new Bullet(10, 5, 1, 0, 2);
 		world.addEntity(ship);
 		world.addEntity(bullet1);
-		world.destoryWorld(world);
+		world.destroyWorld();
 		assertFalse(world.getEntities().contains(ship));
 		assertFalse(world.getEntities().contains(bullet1));
 		assertFalse(ship.isTerminated());

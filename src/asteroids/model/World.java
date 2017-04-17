@@ -64,10 +64,10 @@ public class World implements ICollidable {
 	/**
 	 * Destroys a world.
 	 */
-	public void destoryWorld(World world){
+	public void destroyWorld(){
 		ships.clear();
 		bullets.clear();
-		world.terminate();
+		this.terminate();
 	}
 	
 	/**
