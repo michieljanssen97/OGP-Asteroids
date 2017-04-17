@@ -31,12 +31,21 @@ public class Ship extends Entity {
 	
 	private boolean thrusterActive = false;
 	
+	/**
+	 * Return the maximum speed for a ship.
+	 */
 	@Override
 	public double getMaxSpeed() {return MAX_SPEED;}
-
+	
+	/**
+	 * Return the minimum radius for a ship.
+	 */
 	@Override
 	public double getMinRadius() {return MIN_RADIUS;}
-
+	
+	/**
+	 * Return the minimum density for a ship.
+	 */
 	@Override
 	public double getMinDensity() {return MIN_DENSITY;}
 	

@@ -66,7 +66,6 @@ public class TestEntity {
 		Entity entity1 = new Bullet(8, 10, 1, 0, 2);
 		Entity entity2 = new Bullet(11.98, 10, -1, 0, 2);
 		assertTrue(entity1.apparentlyCollide(entity2));
-		//??
 	}
 	
 	@Test
