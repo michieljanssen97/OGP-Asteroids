@@ -296,7 +296,9 @@ public class World implements ICollidable {
 	/**
 	 * Returns the two objects that will collide first, null if no collisions
 	 * 
-	 * ???
+	 * @post This function executes in such a manner that ensures that, at the end of the function:
+	 *  		* The two collidables that will collide first are returned
+	 *  		* If no collision will occur null is returned
 	 * 
 	 * @return An ICollidable array containing the two colliding objects, or null if no collisions occur 
 	 */
@@ -338,12 +340,7 @@ public class World implements ICollidable {
 	
 	
 	/**
-	 * A function for advancing the game
-	 * 
-	 * @effect 
-	 * 
-	 * @param duration
-	 * @throws Exception
+	 * A function for advancing the game. No specification should be worked out according to the task explanation.
 	 */
 	public void evolve(double duration) throws Exception {
 		while (duration > 0) {
@@ -386,9 +383,8 @@ public class World implements ICollidable {
 	 * Advances all entities in this world
 	 * 
 	 * @param duration
-	 * @post All entities in this world are advanced for the given duration
-	 * 		 | for entity in this.GetEntities()
-	 * 		 | 		entity.move(duration)
+	 * @post This function executes in such a manner that ensures that, at the end of the function:
+	 * 		 	* All entities have moved for the given duration
 	 */
 	public void advanceEntities(double duration) {
 		for (Entity entity : this.getEntities()) {
@@ -416,7 +412,8 @@ public class World implements ICollidable {
 	 * Returns a boolean indicating whether there is significant overlap between this entity and other entities
 	 * 
 	 * @param entity
-	 * @see implementation
+	 * @return this functions returns true if and only if the entity significantly overlaps with 
+	 * 		   at least one other entity in this world and that entity is not equal to the given entity
 	 */
 	public boolean significantOverlap(Entity entity) {
 		for (Entity other : this.getEntities()) {
@@ -427,6 +424,16 @@ public class World implements ICollidable {
 		return false;
 	}
 	
+	/**
+	 * A function that resolves a collision event between an entity and a boundary of a world
+	 * 
+	 * @param entity
+	 * @param world
+	 * @post This function executes in such a manner that ensures that, at the end of the function:
+	 *			* In the case that the entity is a ship or bullet, its velocity in the direction of the collision is reversed
+	 *			* In the case that the entity is a bullet that has already collided with a boundary two times, the entity is
+	 *			  removed from the world
+	 */
 	private void resolveCollision(Entity entity, World world) {
 
 		double distanceToLeftWall = entity.getPositionX();
@@ -448,9 +455,20 @@ public class World implements ICollidable {
 		}
 	}
 		
-
-	
-	
+	/**
+	 * A function that resolves a collision event between two entities
+	 * 
+	 * @param entity1
+	 * @param entity2
+	 * @post This function executes in such a manner that ensures that, at the end of the function:
+	 * 			* In the case that both entities are Ships, both their velocities are changed according to the
+	 * 			  formula as found in the task specification
+	 * 			* In the case that one entity is a ship and another is a bullet:
+	 * 					* If the bullet originates from the ship it is loaded by the ship
+	 * 					* If the bullet does not originate from the ship both the ship and the bullet are removed
+	 * 					  from the world
+	 * 			* In the case that both entities are bullets, both bullets are removed form the world
+	 */
 	private void resolveCollision(Entity entity1, Entity entity2) {
 		if (entity1 instanceof Ship && entity2 instanceof Ship) {
 			
@@ -516,6 +534,13 @@ public class World implements ICollidable {
 		}
 	}
 
+	/**
+	 * A function that returns the position of a collision between this world and a collidable
+	 * 
+	 * @post This function executes in such a manner that ensures that, at the end of the function:
+	 * 			* If the collidable is not a world, collidable.getCollisionPosition(this) is returned
+	 * 			* If the collidable is a world, 0.0 is returned
+	 */
 	@Override
 	public double[] getCollisionPosition(ICollidable collidable) {
 		if (!(collidable instanceof World)) {
@@ -525,6 +550,13 @@ public class World implements ICollidable {
 		}
 	}
 
+	/**
+	 * A function that returns the time to collision between this world and a collidable
+	 * 
+	 * @post This function executes in such a manner that ensures that, at the end of the function:
+	 * 			* If the collidable is not a world, collidable.getTimeToCollision(this) is returned
+	 * 			* If the collidable is a world, 0.0 is returned
+	 */
 	@Override
 	public double getTimeToCollision(ICollidable collidable) {
 		if (!(collidable instanceof World)) {
