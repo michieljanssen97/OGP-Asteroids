@@ -489,7 +489,6 @@ public abstract class Entity implements ICollidable {
 	 * 				* If the two entities are on a collision course a positive number is returned indicating the time to collision
 	 * 				* If the two entities overlap a negative number is returned indicating the time until the two entities do not overlap anymore
 	 * 				* If the two entities are not on a collision course positive infinity is returned
-	 * 
 	 * @throws NullPointerException
 	 *         The other entity does not exist.
 	 *         | other == null
@@ -524,7 +523,22 @@ public abstract class Entity implements ICollidable {
 		}
 	}
 	
-	
+	/**
+	 * This method calculates when, if ever, an entity will collide with a barrier
+	 * 
+	 * Implement defensively.
+	 * 
+	 * @param world
+	 *        The world within which the entity lies
+	 * @return This function returns a number indicating the time to collision between an entity and the boundaries of a world,
+	 * 		   such that: 
+	 * 				* If the entity is on a collision course with a boundary a positive number is returned indicating the time to collision
+	 * 				* If the entity is not on a collision course with a boundary (e.g. its velocity in both directions is zero) 
+	 * 				  positive infinity is returned
+	 * @throws NullPointerException
+	 *         The other entity does not exist.
+	 *         | other == null
+	 */
 	public double getTimeToCollision(World world) throws NullPointerException, IllegalArgumentException {
 		
 		double distanceToHorizontalWall = 0;
