@@ -359,8 +359,8 @@ public class World implements ICollidable {
 
 				if (collidables[0] instanceof Entity && collidables[1] instanceof Entity) {
 					resolveCollision((Entity)collidables[0], (Entity)collidables[1]);
-					((Entity)collidables[0]).move(duration);
-					((Entity)collidables[1]).move(duration);
+					//((Entity)collidables[0]).move(duration);
+					//((Entity)collidables[1]).move(duration);
 				} else if (collidables[0] instanceof World && collidables[1] instanceof Entity) {
 					resolveCollision((Entity)collidables[0], (World)collidables[1]);
 					//((Entity)collidables[1]).move(duration);

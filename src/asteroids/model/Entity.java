@@ -542,16 +542,20 @@ public abstract class Entity implements ICollidable {
 			return 0.0;
 		} 
 		
-		if (getVelocityX() >= 0) {
+		if (getVelocityX() > 0) {
 			distanceToVerticalWall = world.getWidth()-(getPositionX()+getRadius());
 		} else if (getVelocityX() < 0) {
 			distanceToVerticalWall = getPositionX()-getRadius();
+		} else if(getVelocityX() == 0){
+			distanceToVerticalWall = Double.POSITIVE_INFINITY;
 		}
 		
 		if (getVelocityY() >= 0) {
 			distanceToHorizontalWall = world.getHeight()-(getPositionY()+getRadius());
 		} else if (getVelocityY() < 0) {
 			distanceToHorizontalWall = getPositionY()-getRadius();
+		} else if (getVelocityY() == 0) {
+			distanceToHorizontalWall = Double.POSITIVE_INFINITY;
 		}
 		
 		verticalCollisionTime = Math.abs(distanceToVerticalWall)/Math.abs(getVelocityX());
