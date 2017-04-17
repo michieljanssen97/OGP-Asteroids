@@ -7,18 +7,14 @@ import java.util.Arrays;
 import org.junit.Before;
 import org.junit.Test;
 
-import asteroids.facade.Facade;
 import asteroids.model.Bullet;
 import asteroids.model.Ship;
 import asteroids.model.World;
-import asteroids.part2.facade.IFacade;
 import asteroids.util.ModelException;
 
 public class TestWorld {
 	
 	private static final double EPSILON = 0.0001;
-	private Bullet bullet;
-	private Ship ship;
 	private World world;
 
 	@Before
@@ -112,6 +108,7 @@ public class TestWorld {
 		assertTrue(Arrays.asList(world.getNextCollisionObjects()).contains(bullet2));
 	}
 	
+	@SuppressWarnings("deprecation")
 	@Test
 	public void testNoNextCollisionNull() {
 		assertEquals(null, world.getNextCollisionTime());
@@ -161,7 +158,7 @@ public class TestWorld {
 		assertEquals(28, ship1.getPositionX(), EPSILON);
 		assertEquals(68, ship2.getPositionX(), EPSILON);
 		world.evolve(10.0);
-		assertEquals(18, ship1.getPositionX(), EPSILON);
+		assertEquals(22, ship1.getPositionX(), EPSILON);
 		assertEquals(78, ship2.getPositionX(), EPSILON);
 		
 		// Ship collide with bullet

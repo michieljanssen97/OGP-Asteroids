@@ -5,12 +5,9 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import asteroids.facade.Facade;
 import asteroids.model.Bullet;
 import asteroids.model.Ship;
 import asteroids.model.World;
-import asteroids.part2.facade.IFacade;
-import asteroids.util.ModelException;
 
 public class TestBullet {
 
@@ -26,7 +23,7 @@ public class TestBullet {
 	
 	@Test(expected = IllegalArgumentException.class)
 	public void testCreateBullet() throws IllegalArgumentException {
-		Bullet bullet = new Bullet(10, 10, 4, 3, -1);
+		bullet = new Bullet(10, 10, 4, 3, -1);
 	}
 	
 	@Test
