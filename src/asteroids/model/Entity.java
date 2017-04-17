@@ -483,25 +483,13 @@ public abstract class Entity implements ICollidable {
 	 * Implement defensively.
 	 * 
 	 * @return The time to collision specifies the amount of time in which two entities will collide, if they are
-	 * 		   not already overlapping. 
-	 * 		 | 
+	 * 		   not already overlapping.  
 	 * 
-	 * Declarative specification for the case where the method returns a finite value:
+	 * Declarative specification: 
 	 * 
-	 *		In order to get the time to a possible collision we will first have to check if the two entities are not
-	 *		one and the same. In that case the time to collision is null and an error is thrown.
-	 *
-	 * 		After we have verified that the two entities are different entities we need to perform another check to
-	 * 		see if the two entities are not currently colliding. In that case the collision time is zero, since the
-	 * 		entity already collided. 
-	 * 
-	 * 		If the entities are not one and the same and they are not currently colliding then we have to check if
-	 * 		the two entities are on a collision course by using the formula given in the project specification.
-	 * 
-	 * 		If deltaVR (The dot product of the vector containing the difference in velocity between the entities 
-	 * 		and the vector containing the difference in position between the entities) is not bigger or equal to 
-	 * 		zero and the "d value" (given in the specification of the project) is not smaller or equal to zero 
-	 * 		then the function will return a positive real collision time. 
+	 * By the time this method returns a double time (finite value) some variables has been checked and satisfied. 
+	 * The variable deltaVR (= dot product of the velocity(v) and the position(r)) is less than zero.
+	 * The variable d (=(v·r)^2-(v·v)(r·r-σ^2)) is greater than zero.
 	 * 
 	 * @param other
 	 *        The second (other) entity. We use this entity to determine the time to collision.
