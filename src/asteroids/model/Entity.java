@@ -482,17 +482,14 @@ public abstract class Entity implements ICollidable {
 	 * 
 	 * Implement defensively.
 	 * 
-	 * @return The time to collision specifies the amount of time in which two entities will collide, if they are
-	 * 		   not already overlapping.  
-	 * 
-	 * Declarative specification: 
-	 * 
-	 * By the time this method returns a double time (finite value) some variables has been checked and satisfied. 
-	 * The variable deltaVR (= dot product of the velocity(v) and the position(r)) is less than zero.
-	 * The variable d (=(v·r)^2-(v·v)(r·r-σ^2)) is greater than zero.
-	 * 
 	 * @param other
 	 *        The second (other) entity. We use this entity to determine the time to collision.
+	 * @return This function returns a number indicating the time to collision between two entities,
+	 * 		   such that: 
+	 * 				* If the two entities are on a collision course a positive number is returned indicating the time to collision
+	 * 				* If the two entities overlap a negative number is returned indicating the time until the two entities do not overlap anymore
+	 * 				* If the two entities are not on a collision course positive infinity is returned
+	 * 
 	 * @throws NullPointerException
 	 *         The other entity does not exist.
 	 *         | other == null
