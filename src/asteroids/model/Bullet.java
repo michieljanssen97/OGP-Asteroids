@@ -28,18 +28,26 @@ public class Bullet extends Entity {
 		super(x, y, xVelocity, yVelocity, radius);
 	}
 	
+	/**
+	 * Returns the maximum speed of a bullet
+	 */
 	@Override
 	public double getMaxSpeed() {return MAX_SPEED;}
 
+	/**
+	 * Returns the minimum speed of a bullet
+	 */
 	@Override
 	public double getMinRadius() {return MIN_RADIUS;}
 
+	/**
+	 * Returns the minimum density of a bullet
+	 */
 	@Override
 	public double getMinDensity() {return MIN_DENSITY;}
 	
     /**
      * Checks when a bullet is about to hit a wall for the third time.
-     * 
      * @see implementation
      */
 	public boolean Counter(){
@@ -76,7 +84,6 @@ public class Bullet extends Entity {
 	
 	/**
 	 * Returns the mass of the bullet.
-	 * 
 	 * @see implementation
 	 */
 	@Basic
@@ -96,13 +103,15 @@ public class Bullet extends Entity {
 	 * 
 	 * Implemented defensively.
 	 * 
+	 * @param  duration
+	 * @invar The given duration must be valid
+	 * 		  | isValidDuration(duration) == true
 	 * @post The new xPosition of this bullet is the current xPosition plus the current xVelocity*duration.
 	 *       | new.getPositionX() == this.getPositionX() + this.getVelocityX()*duration
 	 * @post The new yPosition of this bullet is the current yPosition plus the current yVelocity*duration.
 	 *       | new.getPositionY() == this.getPositionY() + this.getVelocityY()*duration
-	 *       
-	 * @param  duration
 	 * @throws IllegalArgumentException
+	 * 		   The given duration was invalid
 	 *         | ! isValidDuration(duration)
 	 */
 	public void move(double duration) throws IllegalArgumentException {
@@ -118,7 +127,6 @@ public class Bullet extends Entity {
 	
 	/**
 	 * Check whether a bullet can be part of a world.
-	 * 
 	 * @see implementation
 	 */
 	public boolean canBePartOfWorld() {
@@ -130,7 +138,6 @@ public class Bullet extends Entity {
 	
 	/**
 	 * Check whether a bullet can be part of a ship.
-	 * 
 	 * @see implementation
 	 */
 	public boolean canBePartOfShip(){
@@ -142,7 +149,6 @@ public class Bullet extends Entity {
 	
 	/**
 	 * Make a bullet part of a ship.
-	 * 
 	 * @see implementation
 	 */
 	public void makePartOfShip(Ship ship) {
