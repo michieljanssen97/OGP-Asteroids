@@ -515,18 +515,14 @@ public abstract class Entity implements ICollidable {
 			double d = Math.pow(deltaVR, 2) - ((deltaVV)*(deltaRR - Math.pow(this.getRadius()+other.getRadius(), 2)));
 			
 			
-			if (this.apparentlyCollide(other) || this.significantOverlap(other)) {
-				return 0.0;
-			} 
-			else {
-				if (deltaVR >= 0){
-					return Double.POSITIVE_INFINITY;
-				} else if (d <=0){
-					return Double.POSITIVE_INFINITY;
-				} else {
-					return - ((deltaVR + Math.sqrt(d))/(deltaVV));
-				}
+			if (deltaVR >= 0){
+				return Double.POSITIVE_INFINITY;
+			} else if (d <=0){
+				return Double.POSITIVE_INFINITY;
+			} else {
+				return - ((deltaVR + Math.sqrt(d))/(deltaVV));
 			}
+
 		}
 	}
 	
