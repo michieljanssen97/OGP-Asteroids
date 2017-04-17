@@ -642,36 +642,31 @@ public abstract class Entity implements ICollidable {
 		else {
 			
 			if (getTimeToCollision(other) != Double.POSITIVE_INFINITY ){
+				
 				double thisposX = this.getPositionX() + this.getTimeToCollision(other)*this.getVelocityX();
 				double thisposY = this.getPositionY() + this.getTimeToCollision(other)*this.getVelocityY();
 				double otherposX = other.getPositionX() + other.getTimeToCollision(this)*other.getVelocityX();
 				double otherposY = other.getPositionY() + other.getTimeToCollision(this)*other.getVelocityY();
+				
 				double posX =0;
 				double posY=0;
 				
+				double angle = Math.atan2(Math.abs(otherposY-thisposY),Math.abs(otherposX-thisposX));
+				
 				if (thisposX<=otherposX && thisposY<=otherposY){
-					double angle = Math.atan2(Math.abs(otherposY-thisposY),Math.abs(otherposX-thisposX));
 					posX = thisposX+this.getRadius()*Math.cos(angle);
 					posY = thisposY+this.getRadius()*Math.sin(angle);
-					
 				} else if (thisposX>=otherposX && thisposY<=otherposY){
-					double angle = Math.atan2(Math.abs(otherposY-thisposY),Math.abs(otherposX-thisposX));
 					posX = thisposX-this.getRadius()*Math.cos(angle);
 					posY =thisposY+this.getRadius()*Math.sin(angle);
-					
-					
 				} else if (thisposX>=otherposX && thisposY>=otherposY){
-					double angle = Math.atan2(Math.abs(otherposY-thisposY),Math.abs(otherposX-thisposX));
 					posX= thisposX-this.getRadius()*Math.cos(angle);
 					posY = thisposY-this.getRadius()*Math.sin(angle);
-					
-					
 				} else if (thisposX<=otherposX && thisposY>=otherposY){
-					double angle = Math.atan2(Math.abs(otherposY-thisposY),Math.abs(otherposX-thisposX));
 					posX = thisposX+this.getRadius()*Math.cos(angle);
 					posY = thisposY-this.getRadius()*Math.sin(angle);
-					
 				}
+				
 				double[] pos = {posX,posY};
 				return pos;
 				
