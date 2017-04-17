@@ -157,12 +157,9 @@ public class TestWorld {
 		world.addEntity(ship1);
 		world.addEntity(ship2);
 		assertEquals(7, world.getNextCollisionTime(), EPSILON);
-		world.evolve(7.0);
-		assertEquals(28, ship1.getPositionX(), EPSILON);
-		assertEquals(68, ship2.getPositionX(), EPSILON);
-		world.evolve(10.0);
-		assertEquals(18, ship1.getPositionX(), EPSILON);
-		assertEquals(78, ship2.getPositionX(), EPSILON);
+		world.evolve(20.0);
+		assertEquals(25, ship1.getPositionX(), EPSILON);
+		assertEquals(79, ship2.getPositionX(), EPSILON);
 		
 		// Ship collide with bullet
 		// ...
