@@ -263,8 +263,11 @@ public class World implements ICollidable {
 	}
 	
 	/**
-	 * Returns the next collision time, null if no collisions
-	 * @see implementation
+	 * A function that returns the next collision time
+	 * 
+	 * @post This function executes in such a manner that ensures that, at the end of the function:
+	 *  		* The time to collision of the first collision is returned
+	 *  		* If no collision will occur null is returned
 	 */
 	public Double getNextCollisionTime() {
 		Double collisionTime = null;
@@ -279,8 +282,11 @@ public class World implements ICollidable {
 	}
 
 	/**
-	 * Returns the next collision position, null if no collisions
-	 * @see implementation 
+	 * A function that returns the next collision position
+	 * 
+	 * @post This function executes in such a manner that ensures that, at the end of the function:
+	 *  		* The position of the first collision is returned
+	 *  		* If no collision will occur null is returned
 	 */
 	public double[] getNextCollisionPosition() {
 		double[] collisionPosition = null;
@@ -300,7 +306,7 @@ public class World implements ICollidable {
 	 *  		* The two collidables that will collide first are returned
 	 *  		* If no collision will occur null is returned
 	 * 
-	 * @return An ICollidable array containing the two colliding objects, or null if no collisions occur 
+	 * @return An ICollidable array containing the two colliding objects
 	 */
 	public ICollidable[] getNextCollisionObjects() {
 
