@@ -60,12 +60,21 @@ public abstract class Entity implements ICollidable {
 		setRadius(radius);
 	}
 	
+	/**
+	 * Returns a boolean indicating whether the entity is terminated
+	 * @see implementation
+	 */
+	@Basic @Immutable
 	public boolean isTerminated() {
 		return this.isTerminated;
 	}
 	
+	/**
+	 * Terminates the entity
+	 * @post ...
+	 * 		 | new.isTerminated() == true
+	 */
 	public void terminate() {
-		// To be completed.
 		this.isTerminated = true;
 	}
 	
@@ -76,7 +85,7 @@ public abstract class Entity implements ICollidable {
 	 *        The x-coordinate for this new entity.
 	 * @param y
 	 * 		  The y-coordinate for this new entity.
-	 * @invar Both x and y parameters must be a number
+	 * @invar Both x and y parameters must be a valid number
 	 * 		  | Double.isNaN(x) != true
 	 * 		  | Double.isNaN(y) != true
 	 * @return result == !(Double.isNaN(x) || Double.isNaN(y))
@@ -109,11 +118,13 @@ public abstract class Entity implements ICollidable {
 	 * @invar x and y are real numbers. 
 	 * 		  | Double.isNaN(x) != true
 	 * 		  | Double.isNaN(y) != true
+	 * @invar The given coordinate values x and y must be valid
+	 * 		  | isValidPosition(x, y) == true
 	 * @post  The position of the entity is equal to the given x- and y-coordinate.
 	 *        | new.getPositionX() == x
 	 *        | new.getPositionY() == y
-	 *        
 	 * @throws IllegalArgumentException
+	 * 		   The given coordinate values are not valid
 	 *         | ! isValidPosition(x,y)
 	 */
 	@Raw
@@ -131,7 +142,7 @@ public abstract class Entity implements ICollidable {
 	 * 
 	 * @param  duration
 	 * 		   The duration of this ship.
-	 * @invar ...
+	 * @invar The given duration must be a valid number
 	 * 		| Double.isNaN(duration) != true
 	 * @return result == duration >= 0
 	 */
@@ -147,7 +158,7 @@ public abstract class Entity implements ICollidable {
 	 *        The x-velocity of this entity.
 	 * @param y
 	 *        The y-velocity of this entity.
-	 * @invar x and y are real numbers. 
+	 * @invar x and y are valid numbers. 
 	 * 		  | Double.isNaN(x) != true
 	 * 		  | Double.isNaN(y) != true
 	 * @return True if and only if the speed is greater then zero 
@@ -252,7 +263,7 @@ public abstract class Entity implements ICollidable {
 	 * 
 	 * @param radius
 	 * @invar radius is a real number
-	 * 		| Double.isNaN(radius)
+	 * 		| Double.isNaN(radius) == false
 	 * @see implementation
 	 */
 	protected boolean isValidRadius(double radius) {
@@ -265,8 +276,8 @@ public abstract class Entity implements ICollidable {
 	 * Implement defensively.
 	 * 
 	 * @param radius
-	 * @invar radius must be larger than 10
-	 * 		  | 10 < radius
+	 * @invar radius must be valid
+	 * 		  | isValidRadius(radius) == true
 	 * @post  The radius of the entity is equal to the given radius.
 	 *        | new.getRadius() == radius
 	 * @throws IllegalArgumentException
@@ -297,7 +308,7 @@ public abstract class Entity implements ICollidable {
 	 * 
 	 * @pre The angle must be between 0 and 2*pi.
 	 * 		| 0 <= angle < 2*pi
-	 * @post The orientation of the ship is equal to the given angle.
+	 * @post The orientation of the entity is equal to the given angle.
 	 *       | new.getOrientation() == angle
 	 * @param angle
 	 */
@@ -346,34 +357,29 @@ public abstract class Entity implements ICollidable {
 	
 	/**
 	 * Returns a boolean indicating whether an entity belongs to a world
-	 * @return ...
-	 * 		 | if (this.getWorld() == null)
-	 * 		 | 		result == false
-	 * 		 | else 
-	 * 		 | 		result == true
+	 * @see implementation
 	 */
 	public boolean isPartOfWorld() {
-		if (this.getWorld() != null) {
-			return true;
-		}
-		return false;
+		return this.getWorld() != null;
 	}
 	
+	/**
+	 * Returns a boolean indicating whether an entity can be part of a world
+	 * @see implementation
+	 */
 	public boolean canBePartOfWorld() {
-		if (isPartOfWorld()) {
-			return false;
-		}
-		return true;
+		return !isPartOfWorld();
 	}
 
 	/**
 	 * Associates this entity with a particular world
 	 * @param world
+	 * @invar The given world must be a valid World
+	 * 		  | !(world == null) == true
 	 * @post The entity is associated with the given world
 	 * 		| if (!isPartOfWorld())
 	 * 		|		new.world == world
 	 */		
-		 	
 	public void makePartOfWorld(World world) {
 		if (canBePartOfWorld()) {
 			this.world = world;
@@ -395,8 +401,14 @@ public abstract class Entity implements ICollidable {
 	 * 
 	 * @param  other
 	 * 		   The second (other) entity. We use this entity to measure the distance.
-	 * @return A distance if and only if the other entity is not null and
-	 *         this entity is not the same as the other entity ((other != entity) && (other != null)).
+	 * @invar Other must be a valid entity
+	 * 		  | !(other = null) == true
+	 * @return The distance between two given entities
+	 *         | if (other == this)
+	 *         |	result = 0.0 
+	 *         | else
+	 *         |	result = Math.sqrt(Math.pow((other.getPositionX()-this.getPositionX()), 2)
+	 *         |						+ Math.pow((other.getPositionY()-this.getPositionY()), 2))
 	 * @throws NullPointerException
 	 *         The other entity does not exist.
 	 *         | other == null
@@ -420,15 +432,16 @@ public abstract class Entity implements ICollidable {
 	 *  
 	 * @param  other
 	 *         The second (other) entity. We use this entity to determine the possibility of overlap.
+	 * @invar Other must be a valid entity
+	 * 		  | !(other = null) == true
 	 * @return True if and only if two entities overlap.
-	 *         This means that the other entity musn't be null.
+	 *         This means that the other entity must not be null.
 	 *         Two entities will overlap (return true) if the sum of their radii is 
 	 *         greater then the distance between these entities.
 	 *          -> r1+r2 >= sqrt( (x2-x1)**2 + (y2-y1)**2 )    
-	 *         | result =
+	 *         | result ==
 	 *         |       (getRadius()+ other.getRadius) >=
-	 *         |       (getDistanceBetween(other))
-	 *         
+	 *         |       (getDistanceBetween(other))   
 	 * @throws NullPointerException
 	 *         The other entity does not exist.
 	 *         | other == null
@@ -443,12 +456,12 @@ public abstract class Entity implements ICollidable {
 		}
 	}
 	
-
-
 	/**
 	 * Helper function to use the correct getTimeToCollision function
 	 * 
 	 * @param collidable
+	 * @invar collidable must be a valid ICollidable
+	 * 		  | !(collidable == null) == true
 	 * @post Returns the getTimeToCollision function associated with the given ICollidable
 	 * 		 | if (ICollidable instanceof Entity)
 	 * 		 | 		result == getTimeToCollision((Entity) collidable)
@@ -564,6 +577,8 @@ public abstract class Entity implements ICollidable {
 	 * Helper function to use the correct getCollisionPosition function
 	 * 
 	 * @param collidable
+	 * @invar Collidable must be a valid ICollidable
+	 * 		  | !(collidable == null) == true
 	 * @post Returns the getCollisionPosition function associated with the given ICollidable
 	 * 		 | if (ICollidable instanceof Entity)
 	 * 		 | 		result == getCollisionPosition((Entity) collidable)
@@ -767,6 +782,10 @@ public abstract class Entity implements ICollidable {
 		return true;
 	}
 	
+	/**
+	 * A function that moves the entity. Implemented only in subclasses.
+	 * @param duration
+	 */
 	public abstract void move(double duration);
 	
 }

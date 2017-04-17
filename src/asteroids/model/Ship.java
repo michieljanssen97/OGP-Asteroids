@@ -57,6 +57,8 @@ public class Ship extends Entity {
 	/**
 	 * Initialize this new ship with a given position, velocity, radius and orientation.
 	 * @see superclass constructor
+	 * @effect The parameters of the superclass are set using the given parameters for position, velocity and radius
+	 * 		 | super(x, y, xVelocity, yVelocity, radius)
 	 * @post  The orientation of this new ship is equal to the given orientation.
 	 *        | new.getOrientation() == orientation 
 	 * @post  The mass of this new ship is equal to the given orientation.
@@ -79,13 +81,15 @@ public class Ship extends Entity {
 	 * 
 	 * Implemented defensively.
 	 * 
+	 * @param  duration
+	 * @invar The duration must be valid
+	 * 		  | isValidDuration(duration) == true
 	 * @post The new xPosition of this ship is the current xPosition plus the current xVelocity*duration.
 	 *       | new.getPositionX() == this.getPositionX() + this.getVelocityX()*duration
 	 * @post The new yPosition of this ship is the current yPosition plus the current yVelocity*duration.
 	 *       | new.getPositionY() == this.getPositionY() + this.getVelocityY()*duration
-	 *       
-	 * @param  duration
 	 * @throws IllegalArgumentException
+	 * 		   The duration is invalid
 	 *         | ! isValidDuration(duration)
 	 */
 	public void move(double duration) throws IllegalArgumentException {
@@ -101,11 +105,9 @@ public class Ship extends Entity {
 				}
 				this.thrust(amount*duration);
 			}
-			
 		} else {
 			throw new IllegalArgumentException();
 		}
-		
 	}
 	
 	/**
@@ -138,8 +140,6 @@ public class Ship extends Entity {
 	 *         | if (amount > 0)
 	 *         |     new.getVelocityX() = this.getVelocityX() + amount*Math.cos(this.getOrientation())
 	 *         |     new.getVelocityY() = this.getVelocityY() + amount*Math.cos(this.getOrientation())    
-	 * @effect The velocity is set to to new velocity.
-	 *         | setVelocity(new.getVelocityX(),new.getVelocityY())
 	 */
 	public void thrust(double amount) {
 		if (amount < 0) {
@@ -153,6 +153,7 @@ public class Ship extends Entity {
 	
 	/**
 	 * This method toggles the thruster of a ship.
+	 * 
 	 *@post If the thruster is active the thruster is set to non active.
 	 * 	    | if (thrusterActive) 
 	 *      |    then thrusterActive == false
@@ -196,26 +197,25 @@ public class Ship extends Entity {
 	 * 
 	 * @param bullets
 	 *        The collection of bullets that needs to be added onto a ship.
+	 * @invar The bullets must be part of the ship and must lie within the ship's bounds
+	 * 		  | (bullet.canbePartOfShip(this) && bullet.withinBoundaries(this)) == true
 	 * @post  The bullet(s) are added to a ship's set of bullets and the bullet(s) are also associated with that ship.
-	 *        | bullet.makePartOfShip(this)
-	 *        | this.bullets.add(bullet)
-	 *        | bullet.isPartOfShip() == true
+	 * 		  | for (bullet in bullets)
+	 *        | 	bullet.makePartOfShip(this)
+	 *        | 	this.bullets.add(bullet)
+	 *        | 	bullet.isPartOfShip() == true
 	 * @throws NullPointerException
 	 *         | bullet == null
 	 * @throws AssertionError
-	 *        | (!bullet.makePartOfShip(this)) || (!bullet.withinBoundaries(this))
+	 *        | (!bullet.canBePartOfShip(this)) || (!bullet.withinBoundaries(this))
 	 */
 	public void loadBullets(Bullet... bullets) throws AssertionError {
 		for(Bullet bullet: bullets) {
-			if (bullet != null) {
-				if (bullet.withinBoundaries(this) && bullet.canBePartOfShip()){
-					bullet.makePartOfShip(this);
-					this.bullets.add(bullet);
-				} else {
-					throw new AssertionError("Either the bullet cannot be part of the ship or the bullet doesn't lie within the ship's boundaries");
-				}
+			if (bullet.withinBoundaries(this) && bullet.canBePartOfShip()){
+				bullet.makePartOfShip(this);
+				this.bullets.add(bullet);
 			} else {
-				throw new NullPointerException("Bullet was null");
+				throw new AssertionError("Either the bullet cannot be part of the ship or the bullet doesn't lie within the ship's boundaries");
 			}
 		}
 	}
@@ -223,6 +223,7 @@ public class Ship extends Entity {
     /**
      * Removes a bullet from the set of bullets and removes the association with it's ship.
      * @param bullet
+     * @see implementation
      */
 	public void removeBullet(Bullet bullet) {
 		bullet.removeFromShip();
