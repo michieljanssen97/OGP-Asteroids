@@ -234,9 +234,9 @@ public class Ship extends Entity {
      * This method makes it possible to fire a bullet from a ship.
      * @effect This function executes in a way that ensures that at the end of this function:
      * 		 * A bullet is only shot if getNbBulletsOnShip() > 0
-     * 	     * The bullet is part of the world (and not of the ship) if it is fired from within the boundaries of the world
-     * 		 * The bullet is positioned in front of the ship (depending on the ships orientation)
-     *       * The bullets speed is equal to 250 km/s
+     * 	     * The fired bullet is part of the world (and not of the ship) if it is fired from within the boundaries of the world
+     * 		 * The fired bullet is positioned in front of the ship (depending on the ships orientation)
+     *       * The fired bullets speed is equal to 250 km/s
      */
 	public void fireBullet() {
 		if (this.isPartOfWorld() && (getNbBulletsOnShip() > 0)) {

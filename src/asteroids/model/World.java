@@ -24,6 +24,7 @@ public class World implements ICollidable {
 	
 	private Set<Ship> ships = new HashSet<Ship>();
 	private Set<Bullet> bullets = new HashSet<Bullet>();
+	private Set<MinorPlanet> minorPlanets = new HashSet<MinorPlanet>();
 	
 	private boolean isTerminated;
 	
@@ -176,6 +177,14 @@ public class World implements ICollidable {
 	 */
 	public Set<Bullet> getBullets(){
 		return this.bullets;
+	}
+	
+	/**
+	 * Returns the bullets in this world
+	 * @see implementation
+	 */
+	public Set<MinorPlanet> getMinorPlanets(){
+		return this.minorPlanets;
 	}
 	
 	/**
