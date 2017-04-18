@@ -22,9 +22,7 @@ public class World implements ICollidable {
 	private static final double DEFAULT_WIDTH = 1000;
 	private static final double DEFAULT_HEIGHT = 1000;
 	
-	private Set<Ship> ships = new HashSet<Ship>();
-	private Set<Bullet> bullets = new HashSet<Bullet>();
-	private Set<MinorPlanet> minorPlanets = new HashSet<MinorPlanet>();
+	private Set<Entity> entities = new HashSet<Entity>();
 	
 	private boolean isTerminated;
 	
@@ -66,8 +64,7 @@ public class World implements ICollidable {
 	 * Destroys a world.
 	 */
 	public void destroyWorld(){
-		ships.clear();
-		bullets.clear();
+		entities.clear();
 		this.terminate();
 	}
 	
@@ -164,40 +161,17 @@ public class World implements ICollidable {
 	}
 	
 	/**
-	 * Returns the ships in this world
-	 * @see implementation
-	 */
-	public Set<Ship> getShips(){
-		return this.ships;
-	}
-	
-	/**
-	 * Returns the bullets in this world
-	 * @see implementation
-	 */
-	public Set<Bullet> getBullets(){
-		return this.bullets;
-	}
-	
-	/**
-	 * Returns the bullets in this world
-	 * @see implementation
-	 */
-	public Set<MinorPlanet> getMinorPlanets(){
-		return this.minorPlanets;
-	}
-	
-	/**
 	 * Returns the entities in this world
 	 * @return All ships and bullets in the world are returned
 	 *         | this.bullets + this.ships
 	 */
 	public Set<Entity> getEntities(){
-		Set<Entity> entities = new HashSet<Entity>();
-		entities.addAll(this.bullets);
-		entities.addAll(this.ships);
+		return this.entities;
+	}
+	
+	public Set<Entity> getEntities(String type) {
 		return entities;
-		
+		// TODO
 	}
 	
 	/**
@@ -234,11 +208,7 @@ public class World implements ICollidable {
 		} else {
 			if (entity.canBePartOfWorld()) {
 				entity.makePartOfWorld(this);
-				if (entity instanceof Ship) {
-					ships.add((Ship) entity);
-				} else if (entity instanceof Bullet) {
-					bullets.add((Bullet) entity);
-				}
+				entities.add(entity);
 			}
 		}
 	}
@@ -263,11 +233,7 @@ public class World implements ICollidable {
 			throw new NullPointerException();
 		} else {
 			entity.removeFromWorld();
-			if (entity instanceof Ship) {
-				ships.remove(entity);
-			} else if (entity instanceof Bullet) {
-				bullets.remove(entity);
-			}
+			entities.remove(entity);
 		}
 	}
 	
