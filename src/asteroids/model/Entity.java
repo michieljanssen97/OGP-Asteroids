@@ -787,6 +787,5 @@ public abstract class Entity implements ICollidable {
 	 */
 	public abstract void move(double duration);
 	
-	public abstract void collide();
 	
 }
