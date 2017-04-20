@@ -2,8 +2,8 @@ package asteroids.model;
 
 public class Asteroid extends MinorPlanet {
 
-	public Asteroid(double x, double y, double xVelocity, double yVelocity, double radius, String type) {
-		super(x, y, xVelocity, yVelocity, radius, type);
+	public Asteroid(double x, double y, double xVelocity, double yVelocity, double radius) {
+		super(x, y, xVelocity, yVelocity, radius);
 		// TODO Auto-generated constructor stub
 	}
 
@@ -27,12 +27,6 @@ public class Asteroid extends MinorPlanet {
 
 	@Override
 	public void move(double duration) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void collide() {
 		// TODO Auto-generated method stub
 		
 	}

@@ -15,9 +15,9 @@ public class MinorPlanet extends Entity implements ICollidable {
 	static final double MIN_RADIUS = 5;
 	
 	String type;
-	double distanceTravelled = 0;
+	double totalTraveledDistance = 0;
 	
-	public MinorPlanet(double x, double y, double xVelocity, double yVelocity, double radius, String type) {
+	public MinorPlanet(double x, double y, double xVelocity, double yVelocity, double radius) {
 		super(x, y, xVelocity, yVelocity, radius);
 		// TODO Auto-generated constructor stub
 	}
@@ -25,7 +25,7 @@ public class MinorPlanet extends Entity implements ICollidable {
 	@Override
 	public double getRadius() {
 		if (this.type == "asteroid") {
-			return this.radius - (0.0001*distanceTravelled);
+			return this.radius - (0.0001*totalTraveledDistance);
 		}
 		return super.getRadius();
 		

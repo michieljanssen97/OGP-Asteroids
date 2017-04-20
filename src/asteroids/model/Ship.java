@@ -1,6 +1,7 @@
 package asteroids.model;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import be.kuleuven.cs.som.annotate.*;
@@ -304,6 +305,20 @@ public class Ship extends Entity {
 		}
 		
 		return bullet_mass + this.mass;
+		
+	}
+
+	public Program getProgram() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public List<Object> executeProgram(double dt) {
+		return null;
+	}
+
+	public void loadProgram(Program program) {
+		// TODO Auto-generated method stub
 		
 	}
 	
