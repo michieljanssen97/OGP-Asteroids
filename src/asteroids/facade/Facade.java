@@ -11,7 +11,7 @@ import asteroids.model.Planetoid;
 import asteroids.model.Ship;
 import asteroids.model.World;
 import asteroids.part2.CollisionListener;
-import asteroids.part3.facade.Program;
+import asteroids.model.Program;
 import asteroids.part3.programs.IProgramFactory;
 import asteroids.util.ModelException;
 
@@ -326,7 +326,7 @@ public class Facade implements asteroids.part3.facade.IFacade {
 	@Override
 	public void evolve(World world, double dt, CollisionListener collisionListener) throws ModelException {
 			try {
-				world.evolve(dt);
+				world.evolve(dt, collisionListener);
 			} catch (Exception e) {
 				throw new ModelException("");
 			}
@@ -366,7 +366,7 @@ public class Facade implements asteroids.part3.facade.IFacade {
 
 	@Override
 	public Set<? extends Planetoid> getWorldPlanetoids(World world) throws ModelException {
-		return world.getEntities("planetoid")
+		return world.getEntities("planetoid");
 	}
 
 	@Override
@@ -382,7 +382,7 @@ public class Facade implements asteroids.part3.facade.IFacade {
 	@Override
 	public Asteroid createAsteroid(double x, double y, double xVelocity, double yVelocity, double radius)
 			throws ModelException {
-		return new Asteroid(x, y, xVelocity, yVelocity, radius, null);
+		return new Asteroid(x, y, xVelocity, yVelocity, radius);
 	}
 
 	@Override
@@ -430,7 +430,7 @@ public class Facade implements asteroids.part3.facade.IFacade {
 
 	@Override
 	public void terminatePlanetoid(Planetoid planetoid) throws ModelException {
-		return planetoid.terminate();
+		planetoid.terminate();
 		
 	}
 
@@ -441,7 +441,7 @@ public class Facade implements asteroids.part3.facade.IFacade {
 
 	@Override
 	public double[] getPlanetoidPosition(Planetoid planetoid) throws ModelException {
-		double[] position = {planetoid.getPositionX()(), planetoid.getPositionY()};
+		double[] position = {planetoid.getPositionX(), planetoid.getPositionY()};
 		return position;
 	}
 
@@ -478,14 +478,12 @@ public class Facade implements asteroids.part3.facade.IFacade {
 
 	@Override
 	public void loadProgramOnShip(Ship ship, Program program) throws ModelException {
-		// TODO Auto-generated method stub
-		
+		ship.loadProgram(program);
 	}
 
 	@Override
 	public List<Object> executeProgram(Ship ship, double dt) throws ModelException {
-		// TODO Auto-generated method stub
-		return null;
+		return ship.executeProgram(dt);
 	}
 
 	@Override
@@ -493,5 +491,6 @@ public class Facade implements asteroids.part3.facade.IFacade {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
 
 }
