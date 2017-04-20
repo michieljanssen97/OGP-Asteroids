@@ -259,6 +259,7 @@ public class World implements ICollidable {
 	/**
 	 * A function that returns the next collision position
 	 * 
+	 * 
 	 * @post This function executes in such a manner that ensures that, at the end of the function:
 	 *  		* The position of the first collision is returned
 	 *  		* If no collision will occur null is returned
