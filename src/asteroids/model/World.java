@@ -348,17 +348,17 @@ public class World implements ICollidable {
 				advanceEntities(firstCollisionTime);
 
 				if (collidables[0] instanceof Entity && collidables[1] instanceof Entity) {
-					collidables[0].collide((Entity)collidables[1]);
+					collidables[0].collide(collidables[1]);
 					double[] result = collidables[0].getCollisionPosition(collidables[1]);
 					collisionlistener.objectCollision(collidables[0],collidables[1], result[0],result[1]);
 					
 				} else if (collidables[0] instanceof World && collidables[1] instanceof Entity) {
-					resolveCollision((Entity)collidables[1], (World)collidables[0]);
+					collidables[1].collide(collidables[0]);
 					double[] result = collidables[1].getCollisionPosition(collidables[0]);
 					collisionlistener.boundaryCollision(collidables[1], result[0],result[1]);
 					
 				} else if (collidables[0] instanceof Entity && collidables[1] instanceof World) {
-					resolveCollision((Entity)collidables[0], (World)collidables[1]);
+					collidables[0].collide(collidables[1]);
 					double[] result = collidables[0].getCollisionPosition(collidables[1]);
 					collisionlistener.boundaryCollision(collidables[0], result[0],result[1]);
 					
@@ -445,4 +445,6 @@ public class World implements ICollidable {
 		}
 		return 0.0;
 	}
+	
+	
 }

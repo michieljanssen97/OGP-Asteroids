@@ -12,6 +12,6 @@ public interface ICollidable {
 
 	public double[] getCollisionPosition(ICollidable collidable);
 	public double getTimeToCollision(ICollidable collidable);
-	public void collide(ICollidable collidable1, ICollidable collidable2);
+	public void collide(ICollidable collidable);
 	
 }
