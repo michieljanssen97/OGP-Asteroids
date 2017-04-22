@@ -167,13 +167,20 @@ public class World implements ICollidable {
 	 * @return All ships and bullets in the world are returned
 	 *         | this.bullets + this.ships
 	 */
-	public Set<Entity> getEntities(){
+	public Set<Entity> getEntities() {
 		return this.entities;
 	}
 	
-	public Set<Entity> getEntities(String type) {
-		return entities;
-		// TODO
+	public Set<Entity> getEntities(Class<Entity> type) {
+		
+		Set<type.getClass()> class_entities = new HashSet<Entity>();
+		for (Entity entity : this.getEntities()) {
+			if (type.isInstance(entity)) {
+				class_entities.add(type.cast(entity));
+				type.
+			}
+		}
+		return class_entities;
 	}
 	
 	/**
