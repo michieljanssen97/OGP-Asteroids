@@ -355,17 +355,17 @@ public class World implements ICollidable {
 				advanceEntities(firstCollisionTime);
 
 				if (collidables[0] instanceof Entity && collidables[1] instanceof Entity) {
-					resolveCollision((Entity)collidables[0], (Entity)collidables[1]);
+					collidables[0].collide(collidables[1]);
 					double[] result = collidables[0].getCollisionPosition(collidables[1]);
 					collisionlistener.objectCollision(collidables[0],collidables[1], result[0],result[1]);
 					
 				} else if (collidables[0] instanceof World && collidables[1] instanceof Entity) {
-					resolveCollision((Entity)collidables[1], (World)collidables[0]);
+					collidables[1].collide(collidables[0]);
 					double[] result = collidables[1].getCollisionPosition(collidables[0]);
 					collisionlistener.boundaryCollision(collidables[1], result[0],result[1]);
 					
 				} else if (collidables[0] instanceof Entity && collidables[1] instanceof World) {
-					resolveCollision((Entity)collidables[0], (World)collidables[1]);
+					collidables[0].collide(collidables[1]);
 					double[] result = collidables[0].getCollisionPosition(collidables[1]);
 					collisionlistener.boundaryCollision(collidables[0], result[0],result[1]);
 					
@@ -421,118 +421,6 @@ public class World implements ICollidable {
 		} 
 		return false;
 	}
-	
-	/**
-	 * A function that resolves a collision event between an entity and a boundary of a world
-	 * 
-	 * @param entity
-	 * @param world
-	 * @post This function executes in such a manner that ensures that, at the end of the function:
-	 *			* In the case that the entity is a ship or bullet, its velocity in the direction of the collision is reversed
-	 *			* In the case that the entity is a bullet that has already collided with a boundary two times, the entity is
-	 *			  removed from the world
-	 */
-	private void resolveCollision(Entity entity, World world) {
-
-		double distanceToLeftWall = entity.getPositionX();
-		double distanceToRightWall = world.getWidth() - entity.getPositionX();
-		double distanceToUpperWall = world.getHeight() - entity.getPositionY();
-		double distanceToBottomWall = entity.getPositionY();
-		
-		double minDistance = Math.min(Math.min(distanceToUpperWall, distanceToBottomWall), Math.min(distanceToLeftWall, distanceToRightWall));
-		if (minDistance == distanceToLeftWall || minDistance == distanceToRightWall) {
-			entity.setVelocity(-entity.getVelocityX(), entity.getVelocityY());
-		} else if (minDistance == distanceToUpperWall || minDistance == distanceToBottomWall) {
-			entity.setVelocity(entity.getVelocityX(), -entity.getVelocityY());
-		}
-		
-		if (entity instanceof Bullet){
-			if (((Bullet) entity).Counter() == true){
-				this.removeEntity(((Bullet) entity));
-			}
-		}
-	}
-		
-	/**
-	 * A function that resolves a collision event between two entities
-	 * 
-	 * @param entity1
-	 * @param entity2
-	 * @post This function executes in such a manner that ensures that, at the end of the function:
-	 * 			* In the case that both entities are Ships, both their velocities are changed according to the
-	 * 			  formula as found in the task specification
-	 * 			* In the case that one entity is a ship and another is a bullet:
-	 * 					* If the bullet originates from the ship it is loaded by the ship
-	 * 					* If the bullet does not originate from the ship both the ship and the bullet are removed
-	 * 					  from the world
-	 * 			* In the case that both entities are bullets, both bullets are removed form the world
-	 */
-	private void resolveCollision(Entity entity1, Entity entity2) {
-		
-		if (entity1 instanceof Ship && entity2 instanceof Ship) {
-			
-			double deltaPosX = entity2.getPositionX()-entity1.getPositionX();
-			double deltaPosY = entity2.getPositionY()-entity1.getPositionY();
-
-			double deltaVelX = entity2.getVelocityX()-entity1.getVelocityX();
-			double deltaVelY = entity2.getVelocityY()-entity1.getVelocityY();
-			
-			double deltaVR = (deltaVelX*deltaPosX)  + (deltaVelY*deltaPosY);
-			
-			double radiusSum = entity1.getRadius() + entity2.getRadius();
-			double J = (2*entity1.getMass()*entity2.getMass()*deltaVR)/((entity1.getMass()+entity2.getMass())*radiusSum);
-			
-			double Jx = (J*deltaPosX)/(radiusSum);	
-			double Jy = (J*deltaPosY)/(radiusSum);
-			
-			double newVelocityX1 = entity1.getVelocityX() + (Jx/entity1.getMass());
-			double newVelocityY1 = entity1.getVelocityY() + (Jy/entity1.getMass());
-			
-			double newVelocityX2 = entity2.getVelocityX() - (Jx/entity2.getMass());
-			double newVelocityY2 = entity2.getVelocityY() - (Jy/entity2.getMass());
-			
-			entity1.setVelocity(newVelocityX1, newVelocityY1);
-			entity2.setVelocity(newVelocityX2, newVelocityY2);
-			
-		} else if ((entity1 instanceof Ship && entity2 instanceof Bullet)) {
-			
-			if (((Bullet) entity2).getSource() == entity1) {
-				((Bullet) entity2).setCounter(0);
-				entity2.removeFromWorld();
-				entity2.setPosition(entity1.getPositionX(), entity1.getPositionY());
-				((Ship) entity1).loadBullets((Bullet) entity2);
-				this.removeEntity(entity2);
-			} else {
-				this.removeEntity(entity1);
-				this.removeEntity(entity2);
-				entity1.terminate();
-				entity2.terminate();
-				
-
-			}
-			
-		} else if ((entity2 instanceof Ship && entity1 instanceof Bullet)) {
-			
-			if (((Bullet) entity1).getSource() == entity2) {
-				((Bullet) entity1).setCounter(0);
-				entity1.removeFromWorld();
-				entity1.setPosition(entity2.getPositionX(), entity2.getPositionY());
-				((Ship) entity2).loadBullets((Bullet) entity1);
-				this.removeEntity(entity1);
-			} else {
-				this.removeEntity(entity2);
-				this.removeEntity(entity1);
-				entity1.terminate();
-				entity2.terminate();
-			}
-			
-		} else if ((entity2 instanceof Bullet && entity1 instanceof Bullet)) {
-			this.removeEntity(entity2);
-			this.removeEntity(entity1);
-			entity1.terminate();
-			entity2.terminate();
-		}
-	}
 
 	/**
 	 * A function that returns the position of a collision between this world and a collidable
@@ -564,4 +452,6 @@ public class World implements ICollidable {
 		}
 		return 0.0;
 	}
+	
+	
 }

@@ -787,5 +787,149 @@ public abstract class Entity implements ICollidable {
 	 */
 	public abstract void move(double duration);
 	
+
+	/**
+	 * A function that resolves a collision event between an entity and a boundary of a world
+	 * 
+	 * @param this
+	 * @param world
+	 * @post This function executes in such a manner that ensures that, at the end of the function:
+	 *			* In the case that the entity is a ship or bullet, its velocity in the direction of the collision is reversed
+	 *			* In the case that the entity is a bullet that has already collided with a boundary two times, the entity is
+	 *			  removed from the world
+	 */
+	private void boundaryCollide(World world) {
+
+		double distanceToLeftWall = this.getPositionX();
+		double distanceToRightWall = world.getWidth() - this.getPositionX();
+		double distanceToUpperWall = world.getHeight() - this.getPositionY();
+		double distanceToBottomWall = this.getPositionY();
+		
+		double minDistance = Math.min(Math.min(distanceToUpperWall, distanceToBottomWall), Math.min(distanceToLeftWall, distanceToRightWall));
+		if (minDistance == distanceToLeftWall || minDistance == distanceToRightWall) {
+			this.setVelocity(-this.getVelocityX(), this.getVelocityY());
+		} else if (minDistance == distanceToUpperWall || minDistance == distanceToBottomWall) {
+			this.setVelocity(this.getVelocityX(), -this.getVelocityY());
+		}
+		
+		if (this instanceof Bullet){
+			if (((Bullet) this).Counter() == true){
+				world.removeEntity(((Bullet) this));
+			}
+		}
+	}
+	
+	/**
+	 * A function that resolves a collision event between two entities
+	 * 
+	 * @param this
+	 * @param other
+	 * @post This function executes in such a manner that ensures that, at the end of the function:
+	 * 			* In the case that both entities are Ships, both their velocities are changed according to the
+	 * 			  formula as found in the task specification
+	 * 			* In the case that one entity is a ship and another is a bullet:
+	 * 					* If the bullet originates from the ship it is loaded by the ship
+	 * 					* If the bullet does not originate from the ship both the ship and the bullet are removed
+	 * 					  from the world
+	 * 			* In the case that both entities are bullets, both bullets are removed form the world
+	 */
+	private void objectCollide(Entity other) {
+		if ((this instanceof Ship && other instanceof Ship) || (this instanceof MinorPlanet && other instanceof MinorPlanet) ) {
+			
+			double deltaPosX = other.getPositionX()-this.getPositionX();
+			double deltaPosY = other.getPositionY()-this.getPositionY();
+
+			double deltaVelX = other.getVelocityX()-this.getVelocityX();
+			double deltaVelY = other.getVelocityY()-this.getVelocityY();
+			
+			double deltaVR = (deltaVelX*deltaPosX)  + (deltaVelY*deltaPosY);
+			
+			double radiusSum = this.getRadius() + other.getRadius();
+			double J = (2*this.getMass()*other.getMass()*deltaVR)/((this.getMass()+other.getMass())*radiusSum);
+			
+			double Jx = (J*deltaPosX)/(radiusSum);	
+			double Jy = (J*deltaPosY)/(radiusSum);
+			
+			double newVelocityX1 = this.getVelocityX() + (Jx/this.getMass());
+			double newVelocityY1 = this.getVelocityY() + (Jy/this.getMass());
+			
+			double newVelocityX2 = other.getVelocityX() - (Jx/other.getMass());
+			double newVelocityY2 = other.getVelocityY() - (Jy/other.getMass());
+			
+			this.setVelocity(newVelocityX1, newVelocityY1);
+			other.setVelocity(newVelocityX2, newVelocityY2);
+			
+		} else if ((this instanceof Ship && other instanceof Bullet)) {
+			
+			if (((Bullet) other).getSource() == this) {
+				((Bullet) other).setCounter(0);
+				other.removeFromWorld();
+				other.setPosition(this.getPositionX(), this.getPositionY());
+				((Ship) this).loadBullets((Bullet) other);
+				world.removeEntity(other);
+			} else {
+				world.removeEntity(this);
+				world.removeEntity(other);
+				this.terminate();
+				other.terminate();
+		  } 
+		} else if ((other instanceof Ship && this instanceof Bullet)) {
+			
+			if (((Bullet) this).getSource() == other) {
+				((Bullet) this).setCounter(0);
+				this.removeFromWorld();
+				this.setPosition(other.getPositionX(), other.getPositionY());
+				((Ship) other).loadBullets((Bullet) this);
+				world.removeEntity(this);
+			} else {
+				world.removeEntity(other);
+				world.removeEntity(this);
+				this.terminate();
+				other.terminate();
+			}
+			
+		} else if (this instanceof MinorPlanet && other instanceof Bullet){
+			world.removeEntity(this);
+			world.removeEntity(other);
+			this.terminate();
+			other.terminate();
+		} else if (other instanceof MinorPlanet && this instanceof Bullet){
+			world.removeEntity(this);
+			world.removeEntity(other);
+			this.terminate();
+			other.terminate();
+		} else if ((other instanceof Bullet && this instanceof Bullet)) {
+		    world.removeEntity(other);
+			world.removeEntity(this);
+			this.terminate();
+			other.terminate();
+		} else if (other instanceof Ship && this instanceof Asteroid) {
+			world.removeEntity(other);
+			
+		} else if (this instanceof Ship && other instanceof Asteroid) {
+			world.removeEntity(this);
+			
+		} else if (this instanceof Ship && other instanceof Planetoid) {
+			double[] randomPosition = {(Math.random())*(world.getWidth()-this.getRadius()),(Math.random())*(world.getHeight()-this.getRadius())};
+			this.setPosition(randomPosition[0], randomPosition[1]);
+			if (world.significantOverlap(this))
+				world.removeEntity(this);
+		} else if (other instanceof Ship && this instanceof Planetoid) {
+			double[] randomPosition = {(Math.random())*(world.getWidth()-this.getRadius()),(Math.random())*(world.getHeight()-this.getRadius())};
+			other.setPosition(randomPosition[0], randomPosition[1]);
+			if (world.significantOverlap(other))
+				world.removeEntity(other);
+			
+		}
+	}
+	
+	@Override 
+	public void collide(ICollidable collidable){
+		if (collidable instanceof Entity){this.objectCollide((Entity)collidable);}
+		else if (collidable instanceof World){this.boundaryCollide((World)collidable);}
+		
+	}
+	
+	
 	
 }

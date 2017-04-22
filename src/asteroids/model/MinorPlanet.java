@@ -14,23 +14,10 @@ public class MinorPlanet extends Entity implements ICollidable {
 	static double MAX_SPEED =  300000;
 	static final double MIN_RADIUS = 5;
 	
-	String type;
-	double totalTraveledDistance = 0;
-	
 	public MinorPlanet(double x, double y, double xVelocity, double yVelocity, double radius) {
 		super(x, y, xVelocity, yVelocity, radius);
-		// TODO Auto-generated constructor stub
 	}
 
-	@Override
-	public double getRadius() {
-		if (this.type == "asteroid") {
-			return this.radius - (0.0001*totalTraveledDistance);
-		}
-		return super.getRadius();
-		
-		
-	}
 	
 	@Override
 	public double getMaxSpeed() {
@@ -44,7 +31,6 @@ public class MinorPlanet extends Entity implements ICollidable {
 
 	@Override
 	public double getMinDensity() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
@@ -69,10 +55,7 @@ public class MinorPlanet extends Entity implements ICollidable {
 		if (isValidDuration(duration)) {
 			double newPosX = getPositionX() + (getVelocityX()*duration);
 			double newPosY = getPositionY() + (getVelocityY()*duration);
-			double distance = Math.sqrt(Math.pow((newPosX-getPositionX()), 2)+Math.pow((newPosY-getPositionY()), 2));
-			
 			setPosition(newPosX, newPosY);
-			this.distanceTravelled += distance;
 		} else {
 			throw new IllegalArgumentException();
 		}
