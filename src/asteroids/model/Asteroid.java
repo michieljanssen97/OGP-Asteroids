@@ -2,28 +2,23 @@ package asteroids.model;
 
 public class Asteroid extends MinorPlanet {
 
+	static double MAX_DENSITY =2.65E12;
+
 	public Asteroid(double x, double y, double xVelocity, double yVelocity, double radius) {
 		super(x, y, xVelocity, yVelocity, radius);
-		// TODO Auto-generated constructor stub
 	}
-
-	@Override
-	public double getMaxSpeed() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public double getMinRadius() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+	
 
 	@Override
 	public double getMinDensity() {
-		// TODO Auto-generated method stub
-		return 0;
+		return MAX_DENSITY;
 	}
+	
+	@Override
+	public double getMass() {
+		return (4/3)*Math.PI*Math.pow(getRadius(), 3)*MAX_DENSITY;
+	}
+	
 
 	@Override
 	public void move(double duration) {

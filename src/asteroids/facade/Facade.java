@@ -1,6 +1,7 @@
 package asteroids.facade;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -14,6 +15,7 @@ import asteroids.part2.CollisionListener;
 import asteroids.model.Program;
 import asteroids.part3.programs.IProgramFactory;
 import asteroids.util.ModelException;
+
 
 /**
  * 
@@ -211,12 +213,23 @@ public class Facade implements asteroids.part3.facade.IFacade {
 
 	@Override
 	public Set<? extends Ship> getWorldShips(World world) throws ModelException {
-		return world.getEntities("ship");
+		Set<Ship> shipEntities = new HashSet<Ship>();
+		for (Entity currentShip : world.getEntities()){
+			if (currentShip instanceof Ship)
+				shipEntities.add((Ship)currentShip);
+		}
+		return shipEntities;
 	}
+	
 
 	@Override
 	public Set<? extends Bullet> getWorldBullets(World world) throws ModelException {
-		return world.getEntities("bullet");
+		Set<Bullet> bulletEntities = new HashSet<Bullet>();
+		for (Entity currentBullet : world.getEntities()){
+			if (currentBullet instanceof Bullet)
+				bulletEntities.add((Bullet)currentBullet);
+		}
+		return bulletEntities;
 	}
 
 	@Override
@@ -349,7 +362,12 @@ public class Facade implements asteroids.part3.facade.IFacade {
 
 	@Override
 	public Set<? extends Asteroid> getWorldAsteroids(World world) throws ModelException {
-		return world.getEntities("asteroid");
+		Set<Asteroid> asteroidEntities = new HashSet<Asteroid>();
+		for (Entity currentAsteroid : world.getEntities()){
+			if (currentAsteroid instanceof Asteroid)
+				asteroidEntities.add((Asteroid)currentAsteroid);
+		}
+		return asteroidEntities;
 	}
 
 	@Override
@@ -366,8 +384,13 @@ public class Facade implements asteroids.part3.facade.IFacade {
 
 	@Override
 	public Set<? extends Planetoid> getWorldPlanetoids(World world) throws ModelException {
-		return world.getEntities("planetoid");
-	}
+		Set<Planetoid> planetoidEntities = new HashSet<Planetoid>();
+		for (Entity currentPlanetoid : world.getEntities()){
+			if (currentPlanetoid instanceof Planetoid)
+				planetoidEntities.add((Planetoid)currentPlanetoid);
+		}
+		return planetoidEntities;
+	}	
 
 	@Override
 	public void addPlanetoidToWorld(World world, Planetoid planetoid) throws ModelException {
