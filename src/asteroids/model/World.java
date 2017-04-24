@@ -331,7 +331,7 @@ public class World implements ICollidable {
 	/**
 	 * A function for advancing the game. No specification should be worked out according to the task explanation.
 	 */
-	public void evolve(double duration, CollisionListener collisionlistener) throws Exception {
+	public void evolve(double duration, CollisionListener collisionListener) throws Exception {
 		while (duration > 0) {
 		
 			// 1. Get first collision, if any
@@ -352,22 +352,23 @@ public class World implements ICollidable {
 			} else {
 				advanceEntities(firstCollisionTime);
 
-				if (collidables[0] instanceof Entity && collidables[1] instanceof Entity) {
-					collidables[0].collide(collidables[1]);
-					double[] result = collidables[0].getCollisionPosition(collidables[1]);
-					collisionlistener.objectCollision(collidables[0],collidables[1], result[0],result[1]);
-					
-				} else if (collidables[0] instanceof World && collidables[1] instanceof Entity) {
-					collidables[1].collide(collidables[0]);
-					double[] result = collidables[1].getCollisionPosition(collidables[0]);
-					collisionlistener.boundaryCollision(collidables[1], result[0],result[1]);
-					
-				} else if (collidables[0] instanceof Entity && collidables[1] instanceof World) {
-					collidables[0].collide(collidables[1]);
-					double[] result = collidables[0].getCollisionPosition(collidables[1]);
-					collisionlistener.boundaryCollision(collidables[0], result[0],result[1]);
-					
-				}
+				collidables[0].collide(collidables[1], collisionListener);
+				
+//				if (collidables[0] instanceof Entity && collidables[1] instanceof Entity) {
+//					collidables[0].collide(collidables[1]);
+//					double[] result = collidables[0].getCollisionPosition(collidables[1]);
+//					collisionlistener.objectCollision(collidables[0],collidables[1], result[0],result[1]);
+//					
+//				} else if (collidables[0] instanceof World && collidables[1] instanceof Entity) {
+//					collidables[1].collide(collidables[0]);
+//					double[] result = collidables[1].getCollisionPosition(collidables[0]);
+//					collisionlistener.boundaryCollision(collidables[1], result[0],result[1]);
+//					
+//				} else if (collidables[0] instanceof Entity && collidables[1] instanceof World) {
+//					collidables[0].collide(collidables[1]);
+//					double[] result = collidables[0].getCollisionPosition(collidables[1]);
+//					collisionlistener.boundaryCollision(collidables[0], result[0],result[1]);
+//				}
 			
 				//  Subtract firstTimeCollision from delta t and go to step 1.
 				duration -= firstCollisionTime;
@@ -452,7 +453,7 @@ public class World implements ICollidable {
 	}
 
 	@Override
-	public void collide(ICollidable collidable) {
+	public void collide(ICollidable collidable, CollisionListener collisionListener) {
 		// TODO Auto-generated method stub
 		
 	}

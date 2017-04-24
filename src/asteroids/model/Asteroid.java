@@ -18,12 +18,5 @@ public class Asteroid extends MinorPlanet {
 	public double getMass() {
 		return (4/3)*Math.PI*Math.pow(getRadius(), 3)*MAX_DENSITY;
 	}
-	
-
-	@Override
-	public void move(double duration) {
-		// TODO Auto-generated method stub
-		
-	}
 
 }

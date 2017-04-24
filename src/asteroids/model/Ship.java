@@ -27,6 +27,7 @@ public class Ship extends Entity {
 	private static double MIN_DENSITY = 1.42E12;
 	private static final double THRUSTER_FORCE = 1.1E18;
 	
+	
 	private Set<Bullet> bullets = new HashSet<Bullet>();
 	
 	private boolean thrusterActive = false;

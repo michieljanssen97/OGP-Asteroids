@@ -1,5 +1,6 @@
 package asteroids.model;
 
+import asteroids.part2.CollisionListener;
 import be.kuleuven.cs.som.annotate.Basic;
 import be.kuleuven.cs.som.annotate.Immutable;
 import be.kuleuven.cs.som.annotate.Raw;
@@ -853,37 +854,36 @@ public abstract class Entity implements ICollidable {
 	 * 					  from the world
 	 * 			* In the case that both entities are bullets, both bullets are removed form the world
 	 */
-	private void objectCollide(Entity other) {
-		if ((this instanceof Ship && other instanceof Ship) || (this instanceof MinorPlanet && other instanceof MinorPlanet) ) {
+	private void entityCollide(Entity other) {
+		if ((this instanceof Ship && other instanceof Ship) || (this instanceof MinorPlanet && other instanceof MinorPlanet)) {
 			
-			double deltaPosX = other.getPositionX()-this.getPositionX();
-			double deltaPosY = other.getPositionY()-this.getPositionY();
+				double deltaPosX = other.getPositionX()-this.getPositionX();
+				double deltaPosY = other.getPositionY()-this.getPositionY();
 
-			double deltaVelX = other.getVelocityX()-this.getVelocityX();
-			double deltaVelY = other.getVelocityY()-this.getVelocityY();
+				double deltaVelX = other.getVelocityX()-this.getVelocityX();
+				double deltaVelY = other.getVelocityY()-this.getVelocityY();
+				
+				double deltaVR = (deltaVelX*deltaPosX)  + (deltaVelY*deltaPosY);
+				
+				double radiusSum = this.getRadius() + other.getRadius();
+				double J = (2*this.getMass()*other.getMass()*deltaVR)/((this.getMass()+other.getMass())*radiusSum);
+				
+				double Jx = (J*deltaPosX)/(radiusSum);	
+				double Jy = (J*deltaPosY)/(radiusSum);
+				
+				double newVelocityX1 = this.getVelocityX() + (Jx/this.getMass());
+				double newVelocityY1 = this.getVelocityY() + (Jy/this.getMass());
+				
+				double newVelocityX2 = other.getVelocityX() - (Jx/other.getMass());
+				double newVelocityY2 = other.getVelocityY() - (Jy/other.getMass());
+				
+				this.setVelocity(newVelocityX1, newVelocityY1);
+				other.setVelocity(newVelocityX2, newVelocityY2);
 			
-			double deltaVR = (deltaVelX*deltaPosX)  + (deltaVelY*deltaPosY);
+		} else if ((this instanceof Entity && other instanceof Bullet)) {
 			
-			double radiusSum = this.getRadius() + other.getRadius();
-			double J = (2*this.getMass()*other.getMass()*deltaVR)/((this.getMass()+other.getMass())*radiusSum);
-			
-			double Jx = (J*deltaPosX)/(radiusSum);	
-			double Jy = (J*deltaPosY)/(radiusSum);
-			
-			double newVelocityX1 = this.getVelocityX() + (Jx/this.getMass());
-			double newVelocityY1 = this.getVelocityY() + (Jy/this.getMass());
-			
-			double newVelocityX2 = other.getVelocityX() - (Jx/other.getMass());
-			double newVelocityY2 = other.getVelocityY() - (Jy/other.getMass());
-			
-			this.setVelocity(newVelocityX1, newVelocityY1);
-			other.setVelocity(newVelocityX2, newVelocityY2);
-			
-		} else if ((this instanceof Ship && other instanceof Bullet)) {
-			
-			if (((Bullet) other).getSource() == this) {
+			if (((Bullet) other).getSource() == this) { // this == ship
 				((Bullet) other).setCounter(0);
-				other.removeFromWorld();
 				other.setPosition(this.getPositionX(), this.getPositionY());
 				((Ship) this).loadBullets((Bullet) other);
 				world.removeEntity(other);
@@ -893,11 +893,10 @@ public abstract class Entity implements ICollidable {
 				this.terminate();
 				other.terminate();
 		  } 
-		} else if ((other instanceof Ship && this instanceof Bullet)) {
+		} else if ((other instanceof Entity && this instanceof Bullet)) {
 			
-			if (((Bullet) this).getSource() == other) {
+			if (((Bullet) this).getSource() == other) { // this == ship
 				((Bullet) this).setCounter(0);
-				this.removeFromWorld();
 				this.setPosition(other.getPositionX(), other.getPositionY());
 				((Ship) other).loadBullets((Bullet) this);
 				world.removeEntity(this);
@@ -908,21 +907,6 @@ public abstract class Entity implements ICollidable {
 				other.terminate();
 			}
 			
-		} else if (this instanceof MinorPlanet && other instanceof Bullet){
-			world.removeEntity(this);
-			world.removeEntity(other);
-			this.terminate();
-			other.terminate();
-		} else if (other instanceof MinorPlanet && this instanceof Bullet){
-			world.removeEntity(this);
-			world.removeEntity(other);
-			this.terminate();
-			other.terminate();
-		} else if ((other instanceof Bullet && this instanceof Bullet)) {
-		    world.removeEntity(other);
-			world.removeEntity(this);
-			this.terminate();
-			other.terminate();
 		} else if (other instanceof Ship && this instanceof Asteroid) {
 			world.removeEntity(other);
 			
@@ -930,6 +914,7 @@ public abstract class Entity implements ICollidable {
 			world.removeEntity(this);
 			
 		} else if (this instanceof Ship && other instanceof Planetoid) {
+			
 			double[] randomPosition = {(Math.random())*(world.getWidth()-this.getRadius()),(Math.random())*(world.getHeight()-this.getRadius())};
 			this.setPosition(randomPosition[0], randomPosition[1]);
 			if (world.significantOverlap(this))
@@ -944,8 +929,8 @@ public abstract class Entity implements ICollidable {
 	}
 	
 	@Override 
-	public void collide(ICollidable collidable){
-		if (collidable instanceof Entity){this.objectCollide((Entity)collidable);}
+	public void collide(ICollidable collidable, CollisionListener collisionListener){
+		if (collidable instanceof Entity){this.entityCollide((Entity)collidable);}
 		else if (collidable instanceof World){this.boundaryCollide((World)collidable);}
 		
 	}
