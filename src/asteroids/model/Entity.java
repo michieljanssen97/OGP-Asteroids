@@ -903,10 +903,10 @@ public abstract class Entity implements ICollidable {
 	 */
 	public void boundaryCollide(World world) {
 
-		double distanceToLeftWall = this.getPositionX()-this.getRadius();
-		double distanceToRightWall = world.getWidth() - this.getPositionX()-this.getRadius();
-		double distanceToUpperWall = world.getHeight() - this.getPositionY()-this.getRadius();
-		double distanceToBottomWall = this.getPositionY()-this.getRadius();
+		double distanceToLeftWall = this.getPositionX();
+		double distanceToRightWall = world.getWidth() - this.getPositionX();
+		double distanceToUpperWall = world.getHeight() - this.getPositionY();
+		double distanceToBottomWall = this.getPositionY();
 		
 		double minDistance = Math.min(Math.min(distanceToUpperWall, distanceToBottomWall), Math.min(distanceToLeftWall, distanceToRightWall));
 		if (minDistance == distanceToLeftWall || minDistance == distanceToRightWall) {
@@ -962,7 +962,7 @@ public abstract class Entity implements ICollidable {
 			this.setVelocity(newVelocityX1, newVelocityY1);
 			other.setVelocity(newVelocityX2, newVelocityY2);
 			
-		} else if ((this instanceof Entity && other instanceof Bullet)) {
+		} else if ((this instanceof Ship && other instanceof Bullet)) {
 			
 			if (((Bullet) other).getSource() == this) {
 				System.out.println("botsing met mijn schip");
@@ -978,7 +978,7 @@ public abstract class Entity implements ICollidable {
 				this.terminate();
 				other.terminate();
 		  } 
-		} else if ((other instanceof Entity && this instanceof Bullet)) {
+		} else if ((other instanceof Ship && this instanceof Bullet)) {
 			
 			if (((Bullet) this).getSource() == other) {
 				System.out.println("botsing met mijn schip other");
@@ -995,6 +995,22 @@ public abstract class Entity implements ICollidable {
 				this.terminate();
 				other.terminate();
 			}
+			
+		} else if (this instanceof MinorPlanet && other instanceof Bullet){
+			world.removeEntity(this);
+			world.removeEntity(other);
+			this.terminate();
+			other.terminate();
+		} else if (other instanceof MinorPlanet && this instanceof Bullet){
+			world.removeEntity(this);
+			world.removeEntity(other);
+			this.terminate();
+			other.terminate();
+		} else if ((other instanceof Bullet && this instanceof Bullet)) {
+		    world.removeEntity(other);
+			world.removeEntity(this);
+			this.terminate();
+			other.terminate();
 		} else if (other instanceof Ship && this instanceof Asteroid) {
 			world.removeEntity(other);
 			
@@ -1007,7 +1023,7 @@ public abstract class Entity implements ICollidable {
 			if (world.significantOverlap(this))
 				world.removeEntity(this);
 		} else if (other instanceof Ship && this instanceof Planetoid) {
-			double[] randomPosition = {(Math.random())*(world.getWidth()-other.getRadius()),(Math.random())*(world.getHeight()-other.getRadius())};
+			double[] randomPosition = {(Math.random())*(world.getWidth()-this.getRadius()),(Math.random())*(world.getHeight()-this.getRadius())};
 			other.setPosition(randomPosition[0], randomPosition[1]);
 			if (world.significantOverlap(other))
 				world.removeEntity(other);
