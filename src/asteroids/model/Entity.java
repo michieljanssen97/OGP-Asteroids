@@ -782,10 +782,30 @@ public abstract class Entity implements ICollidable {
 	}
 	
 	/**
-	 * A function that moves the entity. Implemented only in subclasses.
-	 * @param duration
+	 * This method moves the entity with a given valid duration.
+	 * 
+	 * Implemented defensively.
+	 * 
+	 * @param  duration
+	 * @invar The given duration must be valid
+	 * 		  | isValidDuration(duration) == true
+	 * @post The new xPosition of this entity is the current xPosition plus the current xVelocity*duration.
+	 *       | new.getPositionX() == this.getPositionX() + this.getVelocityX()*duration
+	 * @post The new yPosition of this entity is the current yPosition plus the current yVelocity*duration.
+	 *       | new.getPositionY() == this.getPositionY() + this.getVelocityY()*duration
+	 * @throws IllegalArgumentException
+	 * 		   The given duration was invalid
+	 *         | ! isValidDuration(duration)
 	 */
-	public abstract void move(double duration);
+	public void move(double duration){
+		if (isValidDuration(duration)) {
+			double deltaX = getVelocityX()*duration;
+			double deltaY = getVelocityY()*duration;
+			setPosition(getPositionX()+deltaX, getPositionY()+deltaY);
+		} else {
+			throw new IllegalArgumentException();
+		}
+	}
 	
 
 	/**
@@ -800,10 +820,10 @@ public abstract class Entity implements ICollidable {
 	 */
 	private void boundaryCollide(World world) {
 
-		double distanceToLeftWall = this.getPositionX();
-		double distanceToRightWall = world.getWidth() - this.getPositionX();
-		double distanceToUpperWall = world.getHeight() - this.getPositionY();
-		double distanceToBottomWall = this.getPositionY();
+		double distanceToLeftWall = this.getPositionX()-this.getRadius();
+		double distanceToRightWall = world.getWidth() - this.getPositionX()-this.getRadius();
+		double distanceToUpperWall = world.getHeight() - this.getPositionY()-this.getRadius();
+		double distanceToBottomWall = this.getPositionY()-this.getRadius();
 		
 		double minDistance = Math.min(Math.min(distanceToUpperWall, distanceToBottomWall), Math.min(distanceToLeftWall, distanceToRightWall));
 		if (minDistance == distanceToLeftWall || minDistance == distanceToRightWall) {
@@ -929,6 +949,7 @@ public abstract class Entity implements ICollidable {
 		else if (collidable instanceof World){this.boundaryCollide((World)collidable);}
 		
 	}
+
 	
 	
 	
