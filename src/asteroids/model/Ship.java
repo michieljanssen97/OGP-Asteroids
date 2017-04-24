@@ -93,7 +93,6 @@ public class Ship extends Entity {
 	 * 		   The duration is invalid
 	 *         | ! isValidDuration(duration)
 	 */
-	@Override
 	public void move(double duration) throws IllegalArgumentException {
 		if (isValidDuration(duration)) {			
 			double deltaX = getVelocityX()*duration;

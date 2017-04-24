@@ -785,16 +785,7 @@ public abstract class Entity implements ICollidable {
 	 * A function that moves the entity. Implemented only in subclasses.
 	 * @param duration
 	 */
-	
-	public void move(double duration){
-		if (isValidDuration(duration)) {
-			double deltaX = getVelocityX()*duration;
-			double deltaY = getVelocityY()*duration;
-			setPosition(getPositionX()+deltaX, getPositionY()+deltaY);
-		} else {
-			throw new IllegalArgumentException();
-		}
-	}
+	public abstract void move(double duration);
 	
 
 	/**

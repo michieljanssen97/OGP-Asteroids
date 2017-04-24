@@ -98,32 +98,32 @@ public class Bullet extends Entity {
 	@Basic
 	public Ship getSource(){return this.source;}
 	
-//	/**
-//	 * This method moves the bullet with a given valid duration.
-//	 * 
-//	 * Implemented defensively.
-//	 * 
-//	 * @param  duration
-//	 * @invar The given duration must be valid
-//	 * 		  | isValidDuration(duration) == true
-//	 * @post The new xPosition of this bullet is the current xPosition plus the current xVelocity*duration.
-//	 *       | new.getPositionX() == this.getPositionX() + this.getVelocityX()*duration
-//	 * @post The new yPosition of this bullet is the current yPosition plus the current yVelocity*duration.
-//	 *       | new.getPositionY() == this.getPositionY() + this.getVelocityY()*duration
-//	 * @throws IllegalArgumentException
-//	 * 		   The given duration was invalid
-//	 *         | ! isValidDuration(duration)
-//	 */
-//	public void move(double duration) throws IllegalArgumentException {
-//		if (isValidDuration(duration)) {
-//			double deltaX = getVelocityX()*duration;
-//			double deltaY = getVelocityY()*duration;
-//			setPosition(getPositionX()+deltaX, getPositionY()+deltaY);
-//		} else {
-//			throw new IllegalArgumentException();
-//		}
-//		
-//	}
+	/**
+	 * This method moves the bullet with a given valid duration.
+	 * 
+	 * Implemented defensively.
+	 * 
+	 * @param  duration
+	 * @invar The given duration must be valid
+	 * 		  | isValidDuration(duration) == true
+	 * @post The new xPosition of this bullet is the current xPosition plus the current xVelocity*duration.
+	 *       | new.getPositionX() == this.getPositionX() + this.getVelocityX()*duration
+	 * @post The new yPosition of this bullet is the current yPosition plus the current yVelocity*duration.
+	 *       | new.getPositionY() == this.getPositionY() + this.getVelocityY()*duration
+	 * @throws IllegalArgumentException
+	 * 		   The given duration was invalid
+	 *         | ! isValidDuration(duration)
+	 */
+	public void move(double duration) throws IllegalArgumentException {
+		if (isValidDuration(duration)) {
+			double deltaX = getVelocityX()*duration;
+			double deltaY = getVelocityY()*duration;
+			setPosition(getPositionX()+deltaX, getPositionY()+deltaY);
+		} else {
+			throw new IllegalArgumentException();
+		}
+		
+	}
 	
 	/**
 	 * Check whether a bullet can be part of a world.
