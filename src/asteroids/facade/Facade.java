@@ -248,11 +248,7 @@ public class Facade implements asteroids.part3.facade.IFacade {
 
 	@Override
 	public void removeBulletFromWorld(World world, Bullet bullet) throws ModelException {
-		try {
-			world.removeEntity(bullet);
-		} catch (Exception e) {
-			throw new ModelException("bullet not removed from world");
-		}
+		world.removeEntity(bullet);
 	}
 
 	@Override
@@ -285,11 +281,7 @@ public class Facade implements asteroids.part3.facade.IFacade {
 
 	@Override
 	public void removeBulletFromShip(Ship ship, Bullet bullet) throws ModelException {
-		try {
-			ship.removeBullet(bullet);
-		} catch (Exception e) {
-			throw new ModelException("bullet not removed from ship");
-		}
+		ship.removeBullet(bullet);
 	}
 
 	@Override

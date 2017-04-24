@@ -351,27 +351,18 @@ public class World implements ICollidable {
 				return;
 			} else {
 				advanceEntities(firstCollisionTime);
+
 				if (collidables[0] instanceof Entity && collidables[1] instanceof Entity) {
-					//((Entity)collidables[0]).objectCollide((Entity)collidables[1]);
-					//((Entity)collidables[0]).objectCollide((Entity)collidables[1], (Entity)collidables[0]);
-//					System.out.println("First:" + collidables[0]);
-//					System.out.println("Second:" + collidables[1]);
 					collidables[0].collide(collidables[1]);
 					double[] result = collidables[0].getCollisionPosition(collidables[1]);
 					collisionlistener.objectCollision(collidables[0],collidables[1], result[0],result[1]);
 					
 				} else if (collidables[0] instanceof World && collidables[1] instanceof Entity) {
-					//((Entity)collidables[1]).boundaryCollide((World)collidables[0]);
-					//boundaryCollide((Entity)collidables[1], (World)collidables[0]);
-					//((Entity)collidables[1]).boundaryCollide((Entity)collidables[1], (World)collidables[0]);
 					collidables[1].collide(collidables[0]);
 					double[] result = collidables[1].getCollisionPosition(collidables[0]);
 					collisionlistener.boundaryCollision(collidables[1], result[0],result[1]);
 					
 				} else if (collidables[0] instanceof Entity && collidables[1] instanceof World) {
-					//((Entity)collidables[0]).boundaryCollide((World)collidables[1]);
-					//boundaryCollide((Entity)collidables[0], (World)collidables[1]);
-					//((Entity)collidables[0]).boundaryCollide((Entity)collidables[0], (World)collidables[1]);
 					collidables[0].collide(collidables[1]);
 					double[] result = collidables[0].getCollisionPosition(collidables[1]);
 					collisionlistener.boundaryCollision(collidables[0], result[0],result[1]);
@@ -384,100 +375,6 @@ public class World implements ICollidable {
 		} 
 	}
 	
-//	private void boundaryCollide(Entity entity1, World world) {
-//
-//		double distanceToLeftWall = entity1.getPositionX()-entity1.getRadius();
-//		double distanceToRightWall = world.getWidth() - entity1.getPositionX()-entity1.getRadius();
-//		double distanceToUpperWall = world.getHeight() - entity1.getPositionY()-entity1.getRadius();
-//		double distanceToBottomWall = entity1.getPositionY()-entity1.getRadius();
-//		
-//		double minDistance = Math.min(Math.min(distanceToUpperWall, distanceToBottomWall), Math.min(distanceToLeftWall, distanceToRightWall));
-//		if (minDistance == distanceToLeftWall || minDistance == distanceToRightWall) {
-//			entity1.setVelocity(-entity1.getVelocityX(), entity1.getVelocityY());
-//		} else if (minDistance == distanceToUpperWall || minDistance == distanceToBottomWall) {
-//			entity1.setVelocity(entity1.getVelocityX(), -entity1.getVelocityY());
-//		}
-//		
-//		if (entity1 instanceof Bullet){
-//			if (((Bullet) entity1).Counter() == true){
-//				world.removeEntity(((Bullet) entity1));
-//			}
-//		}
-//	}
-//	
-//	private void objectCollide(Entity entity1, Entity entity2) {
-//		if ((entity1 instanceof Ship && entity2 instanceof Ship) || (entity1 instanceof MinorPlanet && entity2 instanceof MinorPlanet) ) {
-//			
-//			double deltaPosX = entity2.getPositionX()-entity1.getPositionX();
-//			double deltaPosY = entity2.getPositionY()-entity1.getPositionY();
-//
-//			double deltaVelX = entity2.getVelocityX()-entity1.getVelocityX();
-//			double deltaVelY = entity2.getVelocityY()-entity1.getVelocityY();
-//			
-//			double deltaVR = (deltaVelX*deltaPosX)  + (deltaVelY*deltaPosY);
-//			
-//			double radiusSum = entity1.getRadius() + entity2.getRadius();
-//			double J = (2*entity1.getMass()*entity2.getMass()*deltaVR)/((entity1.getMass()+entity2.getMass())*radiusSum);
-//			
-//			double Jx = (J*deltaPosX)/(radiusSum);	
-//			double Jy = (J*deltaPosY)/(radiusSum);
-//			
-//			double newVelocityX1 = entity1.getVelocityX() + (Jx/entity1.getMass());
-//			double newVelocityY1 = entity1.getVelocityY() + (Jy/entity1.getMass());
-//			
-//			double newVelocityX2 = entity2.getVelocityX() - (Jx/entity2.getMass());
-//			double newVelocityY2 = entity2.getVelocityY() - (Jy/entity2.getMass());
-//			
-//			entity1.setVelocity(newVelocityX1, newVelocityY1);
-//			entity2.setVelocity(newVelocityX2, newVelocityY2);
-//			
-//		} else if ((entity1 instanceof Entity && entity2 instanceof Bullet)) {
-//			
-//			if (((Bullet) entity2).getSource() == entity1) {
-//				((Bullet) entity2).setCounter(0);
-//				entity2.removeFromWorld();
-//				entity2.setPosition(entity1.getPositionX(), entity1.getPositionY());
-//				((Ship) entity1).loadBullets((Bullet) entity2);
-//				this.removeEntity(entity2);
-//			} else {
-//				this.removeEntity(entity1);
-//				this.removeEntity(entity2);
-//				entity1.terminate();
-//				entity2.terminate();
-//		  } 
-//		} else if ((entity2 instanceof Entity && entity1 instanceof Bullet)) {
-//			
-//			if (((Bullet) entity1).getSource() == entity2) {
-//				((Bullet) entity1).setCounter(0);
-//				entity1.removeFromWorld();
-//				entity1.setPosition(entity2.getPositionX(), entity2.getPositionY());
-//				((Ship) entity2).loadBullets((Bullet) entity1);
-//				this.removeEntity(entity1);
-//			} else {
-//				this.removeEntity(entity2);
-//				this.removeEntity(entity1);
-//				entity1.terminate();
-//				entity2.terminate();
-//			}
-//		} else if (entity2 instanceof Ship && entity1 instanceof Asteroid) {
-//			this.removeEntity(entity2);
-//			
-//		} else if (entity1 instanceof Ship && entity2 instanceof Asteroid) {
-//			this.removeEntity(entity1);
-//			
-//		} else if (entity1 instanceof Ship && entity2 instanceof Planetoid) {
-//			double[] randomPosition = {(Math.random())*(this.getWidth()-entity1.getRadius()),(Math.random())*(this.getHeight()-entity1.getRadius())};
-//			entity1.setPosition(randomPosition[0], randomPosition[1]);
-//			if (this.significantOverlap(entity1))
-//				this.removeEntity(entity1);
-//		} else if (entity2 instanceof Ship && entity1 instanceof Planetoid) {
-//			double[] randomPosition = {(Math.random())*(this.getWidth()-entity2.getRadius()),(Math.random())*(this.getHeight()-entity2.getRadius())};
-//			entity2.setPosition(randomPosition[0], randomPosition[1]);
-//			if (this.significantOverlap(entity2))
-//				this.removeEntity(entity2);
-//			
-//		}
-//	}
 	/**
 	 * Advances all entities in this world
 	 * 
@@ -486,7 +383,6 @@ public class World implements ICollidable {
 	 * 		 	* All entities have moved for the given duration
 	 */
 	public void advanceEntities(double duration) {
-		//System.out.println("entities in world: "+		getEntities().toString().toString());
 		for (Entity entity : this.getEntities()) {
 			entity.move(duration);
 		}
@@ -555,8 +451,10 @@ public class World implements ICollidable {
 		return 0.0;
 	}
 
-	
-	public void collide(ICollidable collidable) {		
+	@Override
+	public void collide(ICollidable collidable) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	
