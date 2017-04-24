@@ -171,11 +171,13 @@ public class World implements ICollidable {
 		return this.entities;
 	}
 	
-	public <T> Set<T> getEntities(Class<T> type) {
-		Set<T> class_entities = new HashSet<T>();
+	public Set<Entity> getEntities(Class<Entity> type) {
+		
+		Set<type.getClass()> class_entities = new HashSet<Entity>();
 		for (Entity entity : this.getEntities()) {
 			if (type.isInstance(entity)) {
 				class_entities.add(type.cast(entity));
+				type.
 			}
 		}
 		return class_entities;
@@ -554,10 +556,13 @@ public class World implements ICollidable {
 		}
 		return 0.0;
 	}
+<<<<<<< HEAD
 
 	
 	public void collide(ICollidable collidable) {		
 	}
+=======
+>>>>>>> parent of d7b52ad... Commit
 	
 	
 }
