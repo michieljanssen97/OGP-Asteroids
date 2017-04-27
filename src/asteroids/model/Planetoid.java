@@ -4,7 +4,7 @@ public class Planetoid extends MinorPlanet {
 	
 	
 	static double MAX_DENSITY = 0.917E12;
-	double totalTraveledDistance = 0;
+	double totalTraveledDistance=0;
 
 	public Planetoid(double x, double y, double xVelocity, double yVelocity, double radius, double totalTraveledDistance) {
 		super(x, y, xVelocity, yVelocity, radius);
@@ -14,7 +14,15 @@ public class Planetoid extends MinorPlanet {
 	
  	@Override
  	public double getRadius() {
-			return this.radius - (0.0001*totalTraveledDistance);
+ 		return this.radius- (0.000001*getTotalTraveledDistance());
+ 	}
+ 	
+ 	
+ 	public boolean dimishPlanetoid(){
+ 		if (this.getRadius()< 5){
+ 			return true;
+ 		}
+ 		return false;
  	}
 
 	@Override
@@ -27,9 +35,14 @@ public class Planetoid extends MinorPlanet {
 		return (4/3)*Math.PI*Math.pow(getRadius(), 3)*MAX_DENSITY;
 	}
 	
-
-	public double getTotalTraveledDistance() {
+	public double getTotalTraveledDistance(){
 		return this.totalTraveledDistance;
 	}
+	public double setTotalTraveledDistance(double amount) {
+		totalTraveledDistance+=amount;
+		return totalTraveledDistance;
+	}
+	
+	
 	
 }

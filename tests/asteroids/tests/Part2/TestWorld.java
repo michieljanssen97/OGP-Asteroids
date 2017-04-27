@@ -162,9 +162,9 @@ public class TestWorld {
 		Ship ship = new Ship(21, 75, -1, 0, 20, 0, 1.0E20);
 		world.addEntity(ship);
 		assertEquals(1, world.getNextCollisionTime(), EPSILON);
-		//world.evolve(23.0, null);
-		//assertEquals(ship.getPositionX(), 42, EPSILON);
-		//assertEquals(ship.getPositionY(), 75, EPSILON);
+		world.evolve(23.0, null);
+		assertEquals(ship.getPositionX(), 42, EPSILON);
+		assertEquals(ship.getPositionY(), 75, EPSILON);
 		
 		// Ship Collide with ship
 		world = new World(100, 100);

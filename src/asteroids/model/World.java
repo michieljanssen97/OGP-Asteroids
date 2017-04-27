@@ -333,6 +333,19 @@ public class World implements ICollidable {
 	 */
 	public void evolve(double duration, CollisionListener collisionlistener) throws Exception {
 		while (duration > 0) {
+			
+			for (Entity entity : this.entities){
+				if (entity instanceof Planetoid){
+					double distanceX = ((Planetoid)entity).getVelocityX()*duration;
+					double distanceY = ((Planetoid)entity).getVelocityY()*duration;
+					double result = Math.sqrt(Math.pow(distanceX, 2)+Math.pow(distanceY, 2));
+					((Planetoid) entity).setTotalTraveledDistance(result);
+					if (((Planetoid) entity).dimishPlanetoid()== true){
+						((Planetoid) entity).getWorld().removeEntity(((Planetoid)entity));
+						((Planetoid) entity).terminate();
+					}
+				}
+			}
 		
 			// 1. Get first collision, if any
 			// Calculate all collisions, immediately continue if an apparent Collision is found
