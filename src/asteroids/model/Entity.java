@@ -877,63 +877,57 @@ public abstract class Entity implements ICollidable {
 			entity.setVelocity(newVelocityX1, newVelocityY1);
 			this.setVelocity(newVelocityX2, newVelocityY2);
 			
-		} else if ((entity instanceof Ship && this instanceof Bullet)) {
-			
-			if (((Bullet) this).getSource() == (Ship)entity) {
-				((Bullet) this).setCounter(0);
-				((Bullet) this).getWorld().removeEntity(((Bullet) this));
-				((Bullet) this).setPosition(((Ship)entity).getPositionX(), ((Ship)entity).getPositionY());
-				((Ship) entity).loadBullets((Bullet) this);
+		} else if ((entity instanceof Entity && this instanceof Bullet)) {
+			if (entity instanceof Ship){
+				if (((Bullet) this).getSource() == (Ship)entity) {
+					((Bullet) this).setCounter(0);
+					((Bullet) this).getWorld().removeEntity(((Bullet) this));
+					((Bullet) this).setPosition(((Ship)entity).getPositionX(), ((Ship)entity).getPositionY());
+					((Ship) entity).loadBullets((Bullet) this);
+					}
+				else {
+					((Bullet) this).getWorld().removeEntity(((Bullet) this));
+					((Ship)entity).getWorld().removeEntity((Ship)entity);
+					((Ship)entity).terminate();
+					((Bullet) this).terminate();
+					((Bullet) this).setEntityDestroyed(true);
+					((Ship)entity).setEntityDestroyed(true);
+				}
 			} else {			
 				((Bullet) this).getWorld().removeEntity(((Bullet) this));
-				((Ship)entity).getWorld().removeEntity((Ship)entity);
-				((Ship)entity).terminate();
+				((Entity)entity).getWorld().removeEntity((Entity)entity);
+				((Entity)entity).terminate();
 				((Bullet) this).terminate();
 				((Bullet) this).setEntityDestroyed(true);
-				((Ship)entity).setEntityDestroyed(true);
+				((Entity)entity).setEntityDestroyed(true);
 			}
 			
-		} else if ((this instanceof Ship && entity instanceof Bullet)) {
-			
-			if (((Bullet) entity).getSource() == (Ship)this) {
-				((Bullet) entity).setCounter(0);				
-				((Bullet) entity).getWorld().removeEntity((Bullet) entity);
-				((Bullet) entity).setPosition(((Ship) this).getPositionX(), ((Ship) this).getPositionY());
-				((Ship) this).loadBullets((Bullet) entity);
-			} else {
+		} else if ((this instanceof Entity && entity instanceof Bullet)) {
+			if (this instanceof Ship){
+				if (((Bullet) entity).getSource() == (Ship)this) {
+					((Bullet) entity).setCounter(0);				
+					((Bullet) entity).getWorld().removeEntity((Bullet) entity);
+					((Bullet) entity).setPosition(((Ship) this).getPositionX(), ((Ship) this).getPositionY());
+					((Ship) this).loadBullets((Bullet) entity);
+				}
+				else {
+					((Bullet) entity).getWorld().removeEntity(((Bullet) entity));
+					((Ship)this).getWorld().removeEntity((Ship)this);
+					((Ship)this).terminate();
+					((Bullet) entity).terminate();
+					((Bullet) entity).setEntityDestroyed(true);
+					((Ship)this).setEntityDestroyed(true);
+				}
+			}
+			else {
 				((Bullet) entity).getWorld().removeEntity(((Bullet) entity));
-				((Ship) this).getWorld().removeEntity(((Ship) this));
+				((Entity) this).getWorld().removeEntity(((Entity) this));
 				((Bullet) entity).terminate();
-				((Ship) this).terminate();
-				((Ship) this).setEntityDestroyed(true);
+				((Entity) this).terminate();
+				((Entity) this).setEntityDestroyed(true);
 				((Bullet) entity).setEntityDestroyed(true);
 
-			}
-			
-		} else if ((this instanceof Bullet && entity instanceof Bullet)) {
-			((Bullet) entity).getWorld().removeEntity(((Bullet) entity));
-			((Bullet) this).getWorld().removeEntity(((Bullet) this));
-			((Bullet) entity).terminate();
-			((Bullet) this).terminate();
-			((Bullet) this).setEntityDestroyed(true);
-			((Bullet) entity).setEntityDestroyed(true);
-
-		} else if ((this instanceof MinorPlanet && entity instanceof Bullet)){
-			((MinorPlanet)this).getWorld().removeEntity((MinorPlanet)this);
-			((Bullet)entity).getWorld().removeEntity((Bullet)entity);
-			((MinorPlanet) this).terminate();
-			((Bullet)entity).terminate();
-			((MinorPlanet) this).setEntityDestroyed(true);
-			((Bullet) entity).setEntityDestroyed(true);
-			
-		} else if ((entity instanceof MinorPlanet && this instanceof Bullet)){
-			((MinorPlanet)entity).getWorld().removeEntity((MinorPlanet)entity);
-			((Bullet)this).getWorld().removeEntity((Bullet)this);
-			((MinorPlanet) entity).terminate();
-			((Bullet)this).terminate();
-			((MinorPlanet) entity).setEntityDestroyed(true);
-			((Bullet) this).setEntityDestroyed(true);
-			
+			}	
 		} else if (entity instanceof Ship && this instanceof Asteroid) {
 			((Ship)entity).getWorld().removeEntity((Ship)entity);
 			((Ship) entity).setEntityDestroyed(true);

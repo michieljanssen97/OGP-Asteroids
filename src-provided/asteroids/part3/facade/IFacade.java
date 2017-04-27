@@ -252,6 +252,10 @@ public interface IFacade extends asteroids.part2.facade.IFacade {
 	 * time. The ship is positioned in some world. Returns null if the program
 	 * is not completely executed. Otherwise, returns the objects that have been
 	 * printed.
+	 * 
+	 * This method is only used in the tests. The GUI never calls this method,
+	 * only the
+	 * {@link #evolve(World, double, asteroids.part2.CollisionListener)} method.
 	 */
 	public List<Object> executeProgram(Ship ship, double dt) throws ModelException;
 
