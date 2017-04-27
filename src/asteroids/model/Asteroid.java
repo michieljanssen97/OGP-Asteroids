@@ -20,10 +20,4 @@ public class Asteroid extends MinorPlanet {
 	}
 	
 
-	@Override
-	public void move(double duration) {
-		// TODO Auto-generated method stub
-		
-	}
-
 }

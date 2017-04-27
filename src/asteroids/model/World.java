@@ -351,24 +351,25 @@ public class World implements ICollidable {
 				return;
 			} else {
 				advanceEntities(firstCollisionTime);
-
-				if (collidables[0] instanceof Entity && collidables[1] instanceof Entity) {
-					collidables[0].collide(collidables[1]);
-					double[] result = collidables[0].getCollisionPosition(collidables[1]);
-					collisionlistener.objectCollision(collidables[0],collidables[1], result[0],result[1]);
-					
+				if (collidables[0] instanceof Entity && collidables[1] instanceof Entity){
+					((Entity)collidables[0]).collide(collidables[1]);
+					if (((Entity)collidables[0]).getEntityDestroyed() == true && ((Entity)collidables[1]).getEntityDestroyed() == true) {
+						double [] result = ((Entity)collidables[0]).explosionPosition((Entity)collidables[1]);
+						collisionlistener.objectCollision((Entity)collidables[0],(Entity)collidables[1],result[0], result[1]);
+					}
 				} else if (collidables[0] instanceof World && collidables[1] instanceof Entity) {
-					collidables[1].collide(collidables[0]);
-					double[] result = collidables[1].getCollisionPosition(collidables[0]);
-					collisionlistener.boundaryCollision(collidables[1], result[0],result[1]);
+					((World)collidables[0]).collide((Entity)collidables[1]);
+					double [] result = collidables[1].getCollisionPosition(collidables[0]);
+					collisionlistener.boundaryCollision(collidables[1], result[0], result[1]);
 					
 				} else if (collidables[0] instanceof Entity && collidables[1] instanceof World) {
-					collidables[0].collide(collidables[1]);
-					double[] result = collidables[0].getCollisionPosition(collidables[1]);
-					collisionlistener.boundaryCollision(collidables[0], result[0],result[1]);
+					((World)collidables[1]).collide((Entity)collidables[0]);
+					double [] result = collidables[0].getCollisionPosition(collidables[1]);
+					collisionlistener.boundaryCollision(collidables[0], result[0], result[1]);
 					
 				}
-			
+				
+				
 				//  Subtract firstTimeCollision from delta t and go to step 1.
 				duration -= firstCollisionTime;
 			}
@@ -419,6 +420,37 @@ public class World implements ICollidable {
 		} 
 		return false;
 	}
+	
+	/**
+	 * A function that resolves a collision event between an entity and a boundary of a world
+	 * 
+	 * @param entity
+	 * @param this
+	 * @post This function executes in such a manner that ensures that, at the end of the function:
+	 *			* In the case that the entity is a ship or bullet, its velocity in the direction of the collision is reversed
+	 *			* In the case that the entity is a bullet that has already collided with a boundary two times, the entity is
+	 *			  removed from the world
+	 */
+	private void resolveCollision(Entity entity) {
+
+		double distanceToLeftWall = entity.getPositionX()-entity.getRadius();
+		double distanceToRightWall = this.getWidth() - entity.getPositionX()-entity.getRadius();
+		double distanceToUpperWall = this.getHeight() - entity.getPositionY()-entity.getRadius();
+		double distanceToBottomWall = entity.getPositionY()-entity.getRadius();
+		
+		double minDistance = Math.min(Math.min(distanceToUpperWall, distanceToBottomWall), Math.min(distanceToLeftWall, distanceToRightWall));
+		if (minDistance == distanceToLeftWall || minDistance == distanceToRightWall) {
+			entity.setVelocity(-entity.getVelocityX(), entity.getVelocityY());
+		} else if (minDistance == distanceToUpperWall || minDistance == distanceToBottomWall) {
+			entity.setVelocity(entity.getVelocityX(), -entity.getVelocityY());
+		}
+		
+		if (entity instanceof Bullet){
+			if (((Bullet) entity).Counter() == true){
+				this.removeEntity(((Bullet) entity));
+			}
+		}
+	}
 
 	/**
 	 * A function that returns the position of a collision between this world and a collidable
@@ -453,8 +485,7 @@ public class World implements ICollidable {
 
 	@Override
 	public void collide(ICollidable collidable) {
-		// TODO Auto-generated method stub
-		
+			((World)this).resolveCollision((Entity)collidable);
 	}
 	
 	
