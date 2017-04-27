@@ -63,10 +63,10 @@ public class TestShip {
 		world = new World(5000, 5000);
 		world.addEntity(ship);
 		ship.toggleThruster();
-		assertEquals(1000.0, ship.getAcceleration(), EPSILON);
+		assertEquals(1, ship.getAcceleration(), EPSILON);
 		assertTrue(ship.IsThrusterActive());
-		world.evolve(1);
-		assertEquals(-990, ship.getVelocityX(), EPSILON);
+		world.evolve(1,null);
+		assertEquals(9, ship.getVelocityX(), EPSILON);
 		assertEquals(0, ship.getVelocityY(), EPSILON);
 	}
 	

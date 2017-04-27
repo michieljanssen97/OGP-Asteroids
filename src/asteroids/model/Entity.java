@@ -851,7 +851,7 @@ public abstract class Entity implements ICollidable {
 	 * 					  from the world
 	 * 			* In the case that both entities are bullets, both bullets are removed form the world
 	 */
-	private void resolveCollision(Entity entity) {
+	public void resolveCollision(Entity entity) {
 		if ((this instanceof Ship && entity instanceof Ship) || (this instanceof MinorPlanet && entity instanceof MinorPlanet) ) {
 			
 			double deltaPosX = this.getPositionX()-entity.getPositionX();
@@ -886,22 +886,11 @@ public abstract class Entity implements ICollidable {
 					((Ship) entity).loadBullets((Bullet) this);
 					}
 				else {
-					((Bullet) this).getWorld().removeEntity(((Bullet) this));
-					((Ship)entity).getWorld().removeEntity((Ship)entity);
-					((Ship)entity).terminate();
-					((Bullet) this).terminate();
-					((Bullet) this).setEntityDestroyed(true);
-					((Ship)entity).setEntityDestroyed(true);
+					destroyEntities(this,entity);
 				}
 			} else {			
-				((Bullet) this).getWorld().removeEntity(((Bullet) this));
-				((Entity)entity).getWorld().removeEntity((Entity)entity);
-				((Entity)entity).terminate();
-				((Bullet) this).terminate();
-				((Bullet) this).setEntityDestroyed(true);
-				((Entity)entity).setEntityDestroyed(true);
+				destroyEntities(this,entity);
 			}
-			
 		} else if ((this instanceof Entity && entity instanceof Bullet)) {
 			if (this instanceof Ship){
 				if (((Bullet) entity).getSource() == (Ship)this) {
@@ -911,22 +900,11 @@ public abstract class Entity implements ICollidable {
 					((Ship) this).loadBullets((Bullet) entity);
 				}
 				else {
-					((Bullet) entity).getWorld().removeEntity(((Bullet) entity));
-					((Ship)this).getWorld().removeEntity((Ship)this);
-					((Ship)this).terminate();
-					((Bullet) entity).terminate();
-					((Bullet) entity).setEntityDestroyed(true);
-					((Ship)this).setEntityDestroyed(true);
+					destroyEntities(this,entity);
 				}
 			}
 			else {
-				((Bullet) entity).getWorld().removeEntity(((Bullet) entity));
-				((Entity) this).getWorld().removeEntity(((Entity) this));
-				((Bullet) entity).terminate();
-				((Entity) this).terminate();
-				((Entity) this).setEntityDestroyed(true);
-				((Bullet) entity).setEntityDestroyed(true);
-
+				destroyEntities(this,entity);
 			}	
 		} else if (entity instanceof Ship && this instanceof Asteroid) {
 			((Ship)entity).getWorld().removeEntity((Ship)entity);
@@ -953,7 +931,19 @@ public abstract class Entity implements ICollidable {
 		}
 		
 	}
-
+	
+	/**
+	 * Helper function for resolving collisions.
+	 */
+	public void destroyEntities(Entity entity1,Entity entity2){
+		entity1.getWorld().removeEntity(entity1);
+		entity2.getWorld().removeEntity(entity2);
+		entity1.terminate();
+		entity2.terminate();
+		entity1.setEntityDestroyed(true);
+		entity2.setEntityDestroyed(true);
+		
+	}
 	public boolean getEntityDestroyed(){
 		return this.entityDestroyed;
 	}
