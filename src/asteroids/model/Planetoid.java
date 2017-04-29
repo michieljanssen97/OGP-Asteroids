@@ -14,7 +14,7 @@ public class Planetoid extends MinorPlanet {
 	
  	@Override
  	public double getRadius() {
- 		return this.radius- (0.000001*getTotalTraveledDistance());
+ 		return this.radius- (0.05*getTotalTraveledDistance());
  	}
  	
  	
