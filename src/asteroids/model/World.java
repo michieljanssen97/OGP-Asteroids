@@ -245,6 +245,7 @@ public class World implements ICollidable {
 	}
 	
 	/**
+	 * 
 	 * A function that returns the next collision time
 	 * 
 	 * @post This function executes in such a manner that ensures that, at the end of the function:
