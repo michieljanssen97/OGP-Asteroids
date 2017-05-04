@@ -888,7 +888,8 @@ public abstract class Entity implements ICollidable {
 				else {
 					destroyEntities(this,entity);
 				}
-			} else {			
+			} 
+			else {			
 				destroyEntities(this,entity);
 			}
 		} else if ((this instanceof Entity && entity instanceof Bullet)) {
@@ -921,12 +922,19 @@ public abstract class Entity implements ICollidable {
 			((Ship)this).setPosition(randomPosition[0], randomPosition[1]);
 			if (((Ship)this).getWorld().significantOverlap(((Ship)this)))
 				((Ship)this).getWorld().removeEntity(((Ship)this));
+				((Ship) this).setEntityDestroyed(true);
+				((Planetoid) entity).setEntityDestroyed(true);
+
+
 			
 		} else if (entity instanceof Ship && this instanceof Planetoid) {
 			double[] randomPosition = {(Math.random())*(((Ship)entity).getWorld().getWidth()-((Ship)entity).getRadius()),(Math.random())*(((Ship)entity).getWorld().getHeight()-((Ship)entity).getRadius())};
 			((Ship)entity).setPosition(randomPosition[0], randomPosition[1]);
 			if (((Ship)entity).getWorld().significantOverlap((Ship)entity))
 				((Ship)entity).getWorld().removeEntity(((Ship)entity));
+				((Ship) entity).setEntityDestroyed(true);
+				((Planetoid) this).setEntityDestroyed(true);
+
 			
 		}
 		

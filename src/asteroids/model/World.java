@@ -328,24 +328,37 @@ public class World implements ICollidable {
 		
 	}
 	
-	
 	/**
 	 * A function for advancing the game. No specification should be worked out according to the task explanation.
 	 */
 	public void evolve(double duration, CollisionListener collisionlistener) throws Exception {
 		while (duration > 0) {
+			
 			for (Entity entity : this.entities){
 				if (entity instanceof Planetoid){
-					double distanceX = ((Planetoid)entity).getVelocityX()*duration;
-					double distanceY = ((Planetoid)entity).getVelocityY()*duration;
-					double result = Math.sqrt(Math.pow(distanceX, 2)+Math.pow(distanceY, 2));
-					((Planetoid) entity).setTotalTraveledDistance(result);
-					if (((Planetoid)entity).dimishPlanetoid()== true){
-						System.out.println("Waarom raar geluid...");
-						((Planetoid)entity).getWorld().removeEntity(((Planetoid)entity));
+					if (((Planetoid)entity).getRadius() >= 5){
+						double distanceX = ((Planetoid)entity).getVelocityX()*duration;
+						double distanceY = ((Planetoid)entity).getVelocityY()*duration;
+						double result = Math.sqrt(Math.pow(distanceX, 2)+Math.pow(distanceY, 2));
+						((Planetoid) entity).setTotalTraveledDistance(result);
+						System.out.println(((Planetoid)entity).getRadius());
+					}
+					else if (((Planetoid)entity).getRadius() < 5) {
+						if (((Planetoid)entity).getRadiusUponCreation() >= 30 && ((Planetoid)entity).isPartOfWorld() == true){
+							System.out.println("groter dan 30");
+							((Planetoid)entity).spawnAsteroids();
+				 			
+				 		 }
+				 		 else {
+							System.out.println("kleiner dan 30");
+				 			this.removeEntity(((Planetoid)entity));
+				 			((Planetoid)entity).terminate();
 					}
 				}
+						
+				}
 			}
+			
 		
 			// 1. Get first collision, if any
 			// Calculate all collisions, immediately continue if an apparent Collision is found
