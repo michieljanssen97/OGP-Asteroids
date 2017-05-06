@@ -259,7 +259,7 @@ public class Ship extends Entity {
 					try {
 						this.world.addEntity(bullet);
 					} catch (Exception e) {
-						System.out.println(e.getMessage());
+						// Bullet outside of world
 					}	
 				} else {
 					bullet.terminate();
@@ -319,7 +319,16 @@ public class Ship extends Entity {
 
 	public void loadProgram(Program program) {
 		// TODO Auto-generated method stub
-		
+	}
+	
+	public void collide(Entity entity) {
+		if (entity instanceof Ship) {defaultCollide(entity);}
+		else {entity.collide(this);}
+	}
+
+	@Override
+	public void collide(World world) {
+		world.defaultCollide(this);
 	}
 	
 }

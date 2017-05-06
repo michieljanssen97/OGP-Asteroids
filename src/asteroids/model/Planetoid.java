@@ -1,10 +1,12 @@
 package asteroids.model;
 
+import java.util.Random;
+
 public class Planetoid extends MinorPlanet {
 	
 	
 	static double MAX_DENSITY = 0.917E12;
-	double totalTraveledDistance=0;
+	double totalTraveledDistance = 0;
 	double radiusUponCreation = 0;
 	
 	public Planetoid(double x, double y, double xVelocity, double yVelocity, double radius, double totalTraveledDistance) {
@@ -16,11 +18,11 @@ public class Planetoid extends MinorPlanet {
 	
  	@Override
  	public double getRadius() {
- 		return this.radius- (0.01*getTotalTraveledDistance());
+ 		return getRadiusUponCreation() - (0.000001*getTotalTraveledDistance());
  	}
  	
  	
- 	public void spawnAsteroids(){
+ 	public void spawnAsteroids() {
  			double magnitude = (1.5)*(Math.pow(this.getVelocityX(), 2)+Math.pow(this.getVelocityY(), 2));
  			double velX = Math.sqrt((Math.random()*magnitude));
  			double velY = Math.sqrt(((1-Math.random())*magnitude));
@@ -46,8 +48,8 @@ public class Planetoid extends MinorPlanet {
 		return this.totalTraveledDistance;
 	}
 	
-	public double setTotalTraveledDistance(double amount) {
-		totalTraveledDistance+=amount;
+	public double setTotalTraveledDistance(double distance) {
+		totalTraveledDistance += distance;
 		return totalTraveledDistance;
 	}
 	
@@ -55,5 +57,39 @@ public class Planetoid extends MinorPlanet {
 		return this.radiusUponCreation;
 	}
 	
+	@Override
+	public void move(double duration) {
+		super.move(duration);
+		double distanceX = this.getVelocityX()*duration;
+		double distanceY = this.getVelocityY()*duration;
+		double distanceTraveled = Math.sqrt(Math.pow(distanceX, 2)+Math.pow(distanceY, 2));
+		this.setTotalTraveledDistance(distanceTraveled);
+		
+		if (this.getRadius() < 5) {
+			this.destroy();
+		}
+
+	}
 	
+	public void collide(Entity entity) {
+		if (entity instanceof Ship) {
+			Random rand = new Random();
+			double[] randomPosition = {rand.nextInt((int) getWorld().getHeight()), 
+								       rand.nextInt((int) getWorld().getWidth())};
+			entity.setPosition(randomPosition[0], randomPosition[1]);
+			if (getWorld().significantOverlap(entity)) {
+				entity.destroy();
+			}
+		}
+		else if (entity instanceof Asteroid) {defaultCollide(entity);} 
+		else if (entity instanceof Planetoid) {defaultCollide(entity);}
+		else {
+			entity.collide(this);
+		}
+	}
+	
+	public void collide (World world) {
+		world.defaultCollide(this);
+	}
+
 }

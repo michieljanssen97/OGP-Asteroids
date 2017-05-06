@@ -156,7 +156,31 @@ public class Bullet extends Entity {
 	 */
 	@Basic
 	public Ship getShip() {return this.ship;}
-
+		
+	public void collide(Entity entity) {
+		if (entity instanceof Ship) {
+			if (getSource() == ship) {
+				setCounter(0);
+				getWorld().removeEntity(this);
+				setPosition(ship.getPositionX(), ship.getPositionY());
+				((Ship) ship).loadBullets(this);
+			} else {
+				this.destroy();
+				ship.destroy();
+			}
+		} else {
+			this.destroy();
+			entity.destroy();
+		}
+	}
+	
+	public void collide(World world) {
+		world.defaultCollide(this);
+		if (Counter() == true){
+			world.removeEntity(this);
+		}
+	}
+	
 }
 
 

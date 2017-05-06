@@ -1,6 +1,6 @@
 package asteroids.model;
 
-public class Asteroid extends MinorPlanet {
+public class Asteroid extends MinorPlanet implements ICollidable {
 
 	static double MAX_DENSITY =2.65E12;
 
@@ -14,10 +14,25 @@ public class Asteroid extends MinorPlanet {
 		return MAX_DENSITY;
 	}
 	
+	
 	@Override
 	public double getMass() {
 		return (4/3)*Math.PI*Math.pow(getRadius(), 3)*MAX_DENSITY;
 	}
 	
+	public void collide(Entity entity) {
+		if (entity instanceof Ship) {
+			entity.destroy();
+		}
+		else if (entity instanceof Asteroid) {defaultCollide(entity);} 
+		else if (entity instanceof Planetoid) {defaultCollide(entity);}
+		else {
+			entity.collide(this);
+		}
+	}
+	
+	public void collide(World world) {
+		world.defaultCollide(this);
+	}
 
 }

@@ -1,7 +1,5 @@
 package asteroids.model;
 
-import be.kuleuven.cs.som.annotate.*;
-
 /**
  * A class that defines a bullet for the Asteroids game.
  * 
@@ -9,7 +7,7 @@ import be.kuleuven.cs.som.annotate.*;
  *
  */
 
-public class MinorPlanet extends Entity implements ICollidable {
+public abstract class MinorPlanet extends Entity implements ICollidable {
 
 	static double MAX_SPEED =  300000;
 	static final double MIN_RADIUS = 5;

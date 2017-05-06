@@ -333,33 +333,6 @@ public class World implements ICollidable {
 	 */
 	public void evolve(double duration, CollisionListener collisionlistener) throws Exception {
 		while (duration > 0) {
-			
-			for (Entity entity : this.entities){
-				if (entity instanceof Planetoid){
-					if (((Planetoid)entity).getRadius() >= 5){
-						double distanceX = ((Planetoid)entity).getVelocityX()*duration;
-						double distanceY = ((Planetoid)entity).getVelocityY()*duration;
-						double result = Math.sqrt(Math.pow(distanceX, 2)+Math.pow(distanceY, 2));
-						((Planetoid) entity).setTotalTraveledDistance(result);
-						System.out.println(((Planetoid)entity).getRadius());
-					}
-					else if (((Planetoid)entity).getRadius() < 5) {
-						if (((Planetoid)entity).getRadiusUponCreation() >= 30 && ((Planetoid)entity).isPartOfWorld() == true){
-							System.out.println("groter dan 30");
-							((Planetoid)entity).spawnAsteroids();
-				 			
-				 		 }
-				 		 else {
-							System.out.println("kleiner dan 30");
-				 			this.removeEntity(((Planetoid)entity));
-				 			((Planetoid)entity).terminate();
-					}
-				}
-						
-				}
-			}
-			
-		
 			// 1. Get first collision, if any
 			// Calculate all collisions, immediately continue if an apparent Collision is found
 			
@@ -377,19 +350,18 @@ public class World implements ICollidable {
 				return;
 			} else {
 				advanceEntities(firstCollisionTime);
+				collidables[0].collide(collidables[1]);
+				
 				if (collidables[0] instanceof Entity && collidables[1] instanceof Entity){
-					((Entity)collidables[0]).collide(collidables[1]);
-					if (((Entity)collidables[0]).getEntityDestroyed() == true && ((Entity)collidables[1]).getEntityDestroyed() == true) {
+					if (((Entity)collidables[0]).isDestroyed() == true && ((Entity)collidables[1]).isDestroyed() == true) {
 						double [] result = ((Entity)collidables[0]).explosionPosition((Entity)collidables[1]);
 						collisionlistener.objectCollision((Entity)collidables[0],(Entity)collidables[1],result[0], result[1]);
 					}
 				} else if (collidables[0] instanceof World && collidables[1] instanceof Entity) {
-					((World)collidables[0]).collide((Entity)collidables[1]);
 					double [] result = collidables[1].getCollisionPosition(collidables[0]);
 					collisionlistener.boundaryCollision(collidables[1], result[0], result[1]);
 					
 				} else if (collidables[0] instanceof Entity && collidables[1] instanceof World) {
-					((World)collidables[1]).collide((Entity)collidables[0]);
 					double [] result = collidables[0].getCollisionPosition(collidables[1]);
 					collisionlistener.boundaryCollision(collidables[0], result[0], result[1]);
 					
@@ -447,36 +419,6 @@ public class World implements ICollidable {
 		return false;
 	}
 	
-	/**
-	 * A function that resolves a collision event between an entity and a boundary of a world
-	 * 
-	 * @param entity
-	 * @param this
-	 * @post This function executes in such a manner that ensures that, at the end of the function:
-	 *			* In the case that the entity is a ship or bullet, its velocity in the direction of the collision is reversed
-	 *			* In the case that the entity is a bullet that has already collided with a boundary two times, the entity is
-	 *			  removed from the world
-	 */
-	private void resolveCollision(Entity entity) {
-
-		double distanceToLeftWall = entity.getPositionX()-entity.getRadius();
-		double distanceToRightWall = this.getWidth() - entity.getPositionX()-entity.getRadius();
-		double distanceToUpperWall = this.getHeight() - entity.getPositionY()-entity.getRadius();
-		double distanceToBottomWall = entity.getPositionY()-entity.getRadius();
-		
-		double minDistance = Math.min(Math.min(distanceToUpperWall, distanceToBottomWall), Math.min(distanceToLeftWall, distanceToRightWall));
-		if (minDistance == distanceToLeftWall || minDistance == distanceToRightWall) {
-			entity.setVelocity(-entity.getVelocityX(), entity.getVelocityY());
-		} else if (minDistance == distanceToUpperWall || minDistance == distanceToBottomWall) {
-			entity.setVelocity(entity.getVelocityX(), -entity.getVelocityY());
-		}
-		
-		if (entity instanceof Bullet){
-			if (((Bullet) entity).Counter() == true){
-				this.removeEntity(((Bullet) entity));
-			}
-		}
-	}
 
 	/**
 	 * A function that returns the position of a collision between this world and a collidable
@@ -508,11 +450,40 @@ public class World implements ICollidable {
 		}
 		return 0.0;
 	}
-
-	@Override
-	public void collide(ICollidable collidable) {
-			((World)this).resolveCollision((Entity)collidable);
+	
+	/**
+	 * A function that resolves a collision event between an entity and a boundary of a world
+	 * 
+	 * @param entity
+	 * @param this
+	 * @post This function executes in such a manner that ensures that, at the end of the function:
+	 *			* In the case that the entity is a ship or bullet, its velocity in the direction of the collision is reversed
+	 *			* In the case that the entity is a bullet that has already collided with a boundary two times, the entity is
+	 *			  removed from the world
+	 */
+	
+	public void collide(Entity entity) {
+		if (entity instanceof Bullet) {entity.collide(this);} 
+		else {defaultCollide(entity);}
 	}
 	
+	public void defaultCollide(Entity entity) {
+		double distanceToLeftWall = entity.getPositionX()-entity.getRadius();
+		double distanceToRightWall = getWidth() - entity.getPositionX()- entity.getRadius();
+		double distanceToUpperWall = getHeight() - entity.getPositionY()- entity.getRadius();
+		double distanceToBottomWall = entity.getPositionY() - entity.getRadius();
+		
+		double minDistance = Math.min(Math.min(distanceToUpperWall, distanceToBottomWall), Math.min(distanceToLeftWall, distanceToRightWall));
+		if (minDistance == distanceToLeftWall || minDistance == distanceToRightWall) {
+			entity.setVelocity(-entity.getVelocityX(), entity.getVelocityY());
+		} else if (minDistance == distanceToUpperWall || minDistance == distanceToBottomWall) {
+			entity.setVelocity(entity.getVelocityX(), -entity.getVelocityY());
+		}
+	}
+
+	@Override
+	public void collide(World world) {
+		// Shouldn't happen
+	}
 	
 }
