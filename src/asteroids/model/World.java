@@ -486,4 +486,9 @@ public class World implements ICollidable {
 		// Shouldn't happen
 	}
 	
+	public void destroy() {
+		getEntities().stream()
+			.forEach(entity->removeEntity(entity));
+	}
+	
 }

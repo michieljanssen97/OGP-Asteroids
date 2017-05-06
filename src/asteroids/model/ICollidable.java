@@ -21,9 +21,8 @@ public interface ICollidable {
 		}
 		else if (collidable instanceof World) {
 			collide((World) collidable);
-		} else {
-			System.out.print("Sheeeeit");
 		}
+		
 	}
 	public void collide(Entity entity);
 	public void collide(World world);

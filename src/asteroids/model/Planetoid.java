@@ -18,9 +18,8 @@ public class Planetoid extends MinorPlanet {
 	
  	@Override
  	public double getRadius() {
- 		return getRadiusUponCreation() - (0.000001*getTotalTraveledDistance());
+ 		return getRadiusUponCreation() - (0.01*getTotalTraveledDistance());
  	}
- 	
  	
  	public void spawnAsteroids() {
  			double magnitude = (1.5)*(Math.pow(this.getVelocityX(), 2)+Math.pow(this.getVelocityY(), 2));
@@ -30,8 +29,6 @@ public class Planetoid extends MinorPlanet {
  			Asteroid asteroid2 = new Asteroid(this.getPositionX()+this.radiusUponCreation/2,this.getPositionY(),-velX,-velY,this.radiusUponCreation/2);
  			this.getWorld().addEntity(asteroid1);
  			this.getWorld().addEntity(asteroid2);
- 			this.getWorld().removeEntity(this);
- 			this.terminate();
  	}
 
 	@Override
@@ -48,9 +45,8 @@ public class Planetoid extends MinorPlanet {
 		return this.totalTraveledDistance;
 	}
 	
-	public double setTotalTraveledDistance(double distance) {
-		totalTraveledDistance += distance;
-		return totalTraveledDistance;
+	public void increaseTotalTraveledDistance(double distance) {
+		totalTraveledDistance = getTotalTraveledDistance() + distance;
 	}
 	
 	public double getRadiusUponCreation(){
@@ -62,8 +58,8 @@ public class Planetoid extends MinorPlanet {
 		super.move(duration);
 		double distanceX = this.getVelocityX()*duration;
 		double distanceY = this.getVelocityY()*duration;
-		double distanceTraveled = Math.sqrt(Math.pow(distanceX, 2)+Math.pow(distanceY, 2));
-		this.setTotalTraveledDistance(distanceTraveled);
+		double distanceTraveled = Math.abs(Math.sqrt(Math.pow(distanceX, 2)+Math.pow(distanceY, 2)));
+		this.increaseTotalTraveledDistance(distanceTraveled);
 		
 		if (this.getRadius() < 5) {
 			this.destroy();
@@ -74,8 +70,8 @@ public class Planetoid extends MinorPlanet {
 	public void collide(Entity entity) {
 		if (entity instanceof Ship) {
 			Random rand = new Random();
-			double[] randomPosition = {rand.nextInt((int) getWorld().getHeight()), 
-								       rand.nextInt((int) getWorld().getWidth())};
+			double[] randomPosition = {rand.nextInt((int)((getRadius() + getWorld().getWidth()) - (2*getRadius()))), 
+								       rand.nextInt((int)((getRadius() + getWorld().getHeight()) - (2*getRadius())))};
 			entity.setPosition(randomPosition[0], randomPosition[1]);
 			if (getWorld().significantOverlap(entity)) {
 				entity.destroy();
@@ -90,6 +86,14 @@ public class Planetoid extends MinorPlanet {
 	
 	public void collide (World world) {
 		world.defaultCollide(this);
+	}
+	
+	@Override
+	public void destroy() {
+		if (isPartOfWorld() && getRadius() >= 30) {
+			spawnAsteroids();
+		}
+		super.destroy();
 	}
 
 }

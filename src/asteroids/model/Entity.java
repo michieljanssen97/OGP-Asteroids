@@ -85,6 +85,7 @@ public abstract class Entity implements ICollidable {
 	
 	public void destroy() {
 		getWorld().removeEntity(this);
+		removeFromWorld();
 		this.terminate();
 		this.isDestroyed = true;
 	}
