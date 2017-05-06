@@ -60,7 +60,6 @@ public class Planetoid extends MinorPlanet {
 		double distanceY = this.getVelocityY()*duration;
 		double distanceTraveled = Math.abs(Math.sqrt(Math.pow(distanceX, 2)+Math.pow(distanceY, 2)));
 		this.increaseTotalTraveledDistance(distanceTraveled);
-		
 		if (this.getRadius() < 5) {
 			this.destroy();
 		}
@@ -70,8 +69,8 @@ public class Planetoid extends MinorPlanet {
 	public void collide(Entity entity) {
 		if (entity instanceof Ship) {
 			Random rand = new Random();
-			double[] randomPosition = {rand.nextInt((int)((getRadius() + getWorld().getWidth()) - (2*getRadius()))), 
-								       rand.nextInt((int)((getRadius() + getWorld().getHeight()) - (2*getRadius())))};
+			double[] randomPosition = {rand.nextInt((int)((getWorld().getWidth()-getRadius()))), 
+								       rand.nextInt((int)((getWorld().getHeight()) - getRadius()))};
 			entity.setPosition(randomPosition[0], randomPosition[1]);
 			if (getWorld().significantOverlap(entity)) {
 				entity.destroy();
