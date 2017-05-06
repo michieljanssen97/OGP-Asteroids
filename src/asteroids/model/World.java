@@ -173,11 +173,9 @@ public class World implements ICollidable {
 	
 	public <T> Set<T> getEntities(Class<T> type) {
 		Set<T> class_entities = new HashSet<T>();
-		for (Entity entity : this.getEntities()) {
-			if (type.isInstance(entity)) {
-				class_entities.add(type.cast(entity));
-			}
-		}
+		getEntities().stream()
+                .filter(entity -> type.isInstance(entity))
+                .forEach(entity -> class_entities.add(type.cast(entity)));
 		return class_entities;
 	}
 	
@@ -296,7 +294,7 @@ public class World implements ICollidable {
 
 		Map<ICollidable[], Double> collisionMap = new HashMap<ICollidable[], Double>();
 		Double collisionTime;
-		
+
 		for (Entity entity1 : this.getEntities()) {
 			// Calculate time of collision with other entities
 			for (Entity entity2: this.getEntities()) {
@@ -382,9 +380,8 @@ public class World implements ICollidable {
 	 * 		 	* All entities have moved for the given duration
 	 */
 	public void advanceEntities(double duration) {
-		for (Entity entity : this.getEntities()) {
-			entity.move(duration);
-		}
+		getEntities().stream()
+			.forEach(entity -> entity.move(duration));
 	}
 	
 	/**
@@ -395,12 +392,10 @@ public class World implements ICollidable {
 	 * @return The entity at the given position, or null if there is none
 	 */
 	public Entity getEntityAtPosition(double x, double y) {
-		for (Entity entity : this.getEntities()) {
-		    if ((entity.getPositionX() == x) && (entity.getPositionY() == y)) {
-		    	return entity;
-		    }
-		} 
-		return null;
+		return getEntities().stream()
+			.filter(entity -> entity.getPositionX() == x && entity.getPositionY() == y)
+			.findFirst()
+			.orElse(null);
 	}
 	
 	/**
@@ -411,12 +406,10 @@ public class World implements ICollidable {
 	 * 		   at least one other entity in this world and that entity is not equal to the given entity
 	 */
 	public boolean significantOverlap(Entity entity) {
-		for (Entity other : this.getEntities()) {
-		    if (entity.significantOverlap(other) && (entity != other)) {
-		    	return true;
-		    }
-		} 
-		return false;
+		return getEntities().stream()
+				.filter(other -> entity.significantOverlap(other) && (entity != other))
+				.findFirst()
+				.isPresent();
 	}
 	
 
