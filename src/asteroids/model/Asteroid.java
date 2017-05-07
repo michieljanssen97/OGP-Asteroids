@@ -8,16 +8,13 @@ public class Asteroid extends MinorPlanet implements ICollidable {
 		super(x, y, xVelocity, yVelocity, radius);
 	}
 	
-
-	@Override
-	public double getMinDensity() {
+	public double getMaxDensity() {
 		return MAX_DENSITY;
 	}
 	
-	
 	@Override
 	public double getMass() {
-		return (4/3)*Math.PI*Math.pow(getRadius(), 3)*MAX_DENSITY;
+		return (4/3)*Math.PI*Math.pow(getRadius(), 3)*getMaxDensity();
 	}
 	
 	public void collide(Entity entity) {

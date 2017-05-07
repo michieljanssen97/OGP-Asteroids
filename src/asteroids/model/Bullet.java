@@ -159,14 +159,14 @@ public class Bullet extends Entity {
 		
 	public void collide(Entity entity) {
 		if (entity instanceof Ship) {
-			if (getSource() == ship) {
+			if (getSource() == entity) {
 				setCounter(0);
 				getWorld().removeEntity(this);
-				setPosition(ship.getPositionX(), ship.getPositionY());
-				((Ship) ship).loadBullets(this);
+				setPosition(entity.getPositionX(), entity.getPositionY());
+				((Ship) entity).loadBullets(this);
 			} else {
 				this.destroy();
-				ship.destroy();
+				entity.destroy();
 			}
 		} else {
 			this.destroy();

@@ -41,7 +41,7 @@ public class Planetoid extends MinorPlanet {
 		return (4/3)*Math.PI*Math.pow(getRadius(), 3)*MAX_DENSITY;
 	}
 	
-	public double getTotalTraveledDistance(){
+	public double getTotalTraveledDistance() {
 		return this.totalTraveledDistance;
 	}
 	

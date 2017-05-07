@@ -18,8 +18,7 @@ public interface ICollidable {
 	default void collide(ICollidable collidable) {
 		if (collidable instanceof Entity) {
 			collide((Entity) collidable);
-		}
-		else if (collidable instanceof World) {
+		} else if (collidable instanceof World) {
 			collide((World) collidable);
 		}
 		
