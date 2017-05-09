@@ -575,7 +575,7 @@ public class Part3TestFull {
     assertTrue(entities.contains(bullet1));
     Ship otherShip = facade.createShip(400, 420, 10, 5, 50, 0, 1.0E20);
     facade.addShipToWorld(filledWorld, otherShip);
-    assertEquals(3, entities.size());
+    assertEquals(4, entities.size());
     score += 6;
   }
 
@@ -806,23 +806,22 @@ public class Part3TestFull {
   public void testFireBulletOutOfBounds() throws ModelException {
     max_score += 8;
     World world = facade.createWorld(5000, 5000);
-    Ship ship = facade.createShip(550, 550, 0, 0, 500, 3 * Math.PI / 2, 1.0E20);
+    Ship ship = facade.createShip(550, 550, 0, 0, 547, 3 * Math.PI / 2, 1.0E20);
     facade.addShipToWorld(world, ship);
-    Bullet bullet1 = facade.createBullet(520, 170, 10, 5, 30);
-    Bullet bullet2 = facade.createBullet(480, 300, 10, 5, 30);
+    Bullet bullet1 = facade.createBullet(520, 170, 10, 5, 3);
+    Bullet bullet2 = facade.createBullet(480, 300, 10, 5, 3);
     facade.loadBulletOnShip(ship, bullet1);
     facade.loadBulletOnShip(ship, bullet2);
     facade.fireBullet(ship);
-    Bullet usedBullet;
-    if (nbStudentsInTeam <= 1)
-      usedBullet = facade.getWorldBullets(world).iterator().next();
-    else if (facade.getBulletsOnShip(ship).contains(bullet1))
-      usedBullet = bullet2;
-    else
-      usedBullet = bullet1;
+    Bullet usedBullet = null;
+    if (nbStudentsInTeam > 1)
+      if (facade.getBulletsOnShip(ship).contains(bullet1))
+        usedBullet = bullet2;
+      else
+        usedBullet = bullet1;
     assertTrue(facade.getWorldBullets(world).isEmpty());
     assertEquals(1, facade.getNbBulletsOnShip(ship));
-    assertTrue(facade.isTerminatedBullet(usedBullet));
+    assertTrue(nbStudentsInTeam <= 1 || facade.isTerminatedBullet(usedBullet));
     score += 8;
   }
 
@@ -1244,16 +1243,18 @@ public class Part3TestFull {
     Bullet bullet = facade.createBullet(1080, 130, -10, 0, 20);
     facade.loadBulletOnShip(ship, bullet);
     facade.fireBullet(ship);
-    // collision with own ship after 8 seconds
+    // collision with own ship after 8 seconds (a bit more for students working alone)
     facade.evolve(world, 9, null);
     assertEquals(0, facade.getWorldBullets(world).size());
     assertEquals(1, facade.getNbBulletsOnShip(ship));
-    assertTrue(facade.getBulletsOnShip(ship).contains(bullet));
-    assertTrue(facade.getBulletShip(bullet) == ship);
-    assertEquals(1090, facade.getBulletPosition(bullet)[0], EPSILON);
-    assertEquals(120, facade.getBulletPosition(bullet)[1], EPSILON);
-    assertTrue(facade.getBulletVelocity(bullet)[0] <= 250.0);
-    assertEquals(0, facade.getBulletVelocity(bullet)[1], EPSILON);
+    if (nbStudentsInTeam > 1) {
+      assertTrue(facade.getBulletsOnShip(ship).contains(bullet));
+      assertTrue(facade.getBulletShip(bullet) == ship);
+      assertEquals(1090, facade.getBulletPosition(bullet)[0], EPSILON);
+      assertEquals(120, facade.getBulletPosition(bullet)[1], EPSILON);
+      assertTrue(facade.getBulletVelocity(bullet)[0] <= 250.0);
+      assertEquals(0, facade.getBulletVelocity(bullet)[1], EPSILON);
+    }
     score += 12;
   }
 
@@ -1311,7 +1312,8 @@ public class Part3TestFull {
     facade.terminateBullet(bullet);
     assertTrue(facade.isTerminatedBullet(bullet));
     assertNull(facade.getBulletShip(bullet));
-    assertTrue(facade.getBulletsOnShip(ship).isEmpty());
+    if (nbStudentsInTeam > 1)
+      assertTrue(facade.getBulletsOnShip(ship).isEmpty());
     score += 5;
   }
 
@@ -2199,14 +2201,18 @@ public class Part3TestFull {
     max_score += 12;
     String code = "print bullet; ";
     Program program = ProgramParser.parseProgramFromString(code, programFactory);
-    Set<? extends Bullet> bulletsOnShip1 = facade.getBulletsOnShip(ship1);
+    Set<? extends Bullet> bulletsOnShip1 = null;
+    if (nbStudentsInTeam > 1)
+      bulletsOnShip1 = facade.getBulletsOnShip(ship1);
     facade.fireBullet(ship1);
     facade.fireBullet(ship1);
     facade.fireBullet(ship1);
     facade.loadProgramOnShip(ship1, program);
     List<Object> results = facade.executeProgram(ship1, 1.0);
     assertEquals(1, results.size());
-    assertTrue(bulletsOnShip1.contains(results.get(0)));
+    assertTrue(facade.getWorldBullets(filledWorld).contains(results.get(0)));
+    if (nbStudentsInTeam > 1)
+      assertTrue(bulletsOnShip1.contains(results.get(0)));
     score += 12;
   }
 
@@ -2484,7 +2490,7 @@ public class Part3TestFull {
   public void testFunctionCall_IllegalActualArgument() throws ModelException {
     try {
       max_score += 5;
-      String code = "def f { " + "  return $1; " + "}" + "print f(self+3.0); ";
+      String code = "def f { " + "  return $1; " + "}" + "print f(self + 3.0); ";
       Program program = ProgramParser.parseProgramFromString(code, programFactory);
       facade.loadProgramOnShip(ship1, program);
       facade.executeProgram(ship1, 0.3);

@@ -4,16 +4,15 @@ import java.util.Random;
 
 public class Planetoid extends MinorPlanet {
 	
-	
-	static double MAX_DENSITY = 0.917E12;
 	private double totalTraveledDistance = 0;
 	private double radiusUponCreation = 0;
 	
 	public Planetoid(double x, double y, double xVelocity, double yVelocity, double radius, double totalTraveledDistance) {
 		super(x, y, xVelocity, yVelocity, radius);
 		
-		this.totalTraveledDistance = totalTraveledDistance;
+		increaseTotalTraveledDistance(totalTraveledDistance);
 		this.radiusUponCreation = radius;
+		DENSITY = 0.917E12;
 	}
  	
  	public void spawnAsteroids() {
@@ -43,16 +42,6 @@ public class Planetoid extends MinorPlanet {
 		}
  		super.terminate();
  	}
- 	
-	@Override
-	public double getMinDensity() {
-		return MAX_DENSITY;
-	}
-	
-	@Override
-	public double getMass() {
-		return (4/3)*Math.PI*Math.pow(getRadius(), 3)*MAX_DENSITY;
-	}
 	
 	public double getTotalTraveledDistance() {
 		return this.totalTraveledDistance;
@@ -60,6 +49,14 @@ public class Planetoid extends MinorPlanet {
 	
 	public void increaseTotalTraveledDistance(double distance) {
 		totalTraveledDistance += distance;
+		
+		double newRadius = getRadius() - (0.000001*distance);
+
+		if (newRadius < 5) {
+			this.terminate();
+		} else {
+			setRadius(newRadius);
+		}
 	}
 	
 	public double getRadiusUponCreation(){
@@ -73,17 +70,6 @@ public class Planetoid extends MinorPlanet {
 		double distanceY = this.getVelocityY()*duration;
 		double distanceTraveled = Math.sqrt(Math.pow(distanceX, 2)+Math.pow(distanceY, 2));
 		increaseTotalTraveledDistance(distanceTraveled);
-		
-		double newRadius = getRadiusUponCreation() - (0.000001*getTotalTraveledDistance());
-
-		if (newRadius < 5) {
-			this.destroy();
-		} else {
-			setRadius(newRadius);
-		}
-		
-
-
 	}
 	
 	public void collide(Entity entity) {

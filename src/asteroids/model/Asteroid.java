@@ -2,19 +2,9 @@ package asteroids.model;
 
 public class Asteroid extends MinorPlanet implements ICollidable {
 
-	static double MAX_DENSITY =2.65E12;
-
 	public Asteroid(double x, double y, double xVelocity, double yVelocity, double radius) {
 		super(x, y, xVelocity, yVelocity, radius);
-	}
-	
-	public double getMaxDensity() {
-		return MAX_DENSITY;
-	}
-	
-	@Override
-	public double getMass() {
-		return (4/3)*Math.PI*Math.pow(getRadius(), 3)*getMaxDensity();
+		DENSITY =2.65E12;
 	}
 	
 	public void collide(Entity entity) {

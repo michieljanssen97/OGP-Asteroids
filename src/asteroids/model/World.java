@@ -355,7 +355,6 @@ public class World implements ICollidable {
 				advanceEntities(duration);
 				break;
 			} else {
-				System.out.println(firstCollisionTime);
 				advanceEntities(firstCollisionTime);
 				
 				double [] colPos = getNextCollisionPosition();
@@ -363,7 +362,6 @@ public class World implements ICollidable {
 				
 				collidables[0].collide(collidables[1]);
 				showCollision(collisionlistener, collidables, colPos);
-				advanceEntities(0);
 				
 				duration -= firstCollisionTime;
 			}

@@ -270,8 +270,8 @@ public class Facade implements asteroids.part3.facade.IFacade {
 	public void loadBulletOnShip(Ship ship, Bullet bullet) throws ModelException {
 		try {
 			ship.loadBullets(bullet);
-		} catch (Exception e) {
-			throw new ModelException("");
+		} catch (AssertionError e) {
+			throw new ModelException(e);
 		}
 	}
 

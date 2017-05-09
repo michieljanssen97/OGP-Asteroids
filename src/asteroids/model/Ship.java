@@ -183,7 +183,11 @@ public class Ship extends Entity {
      * @see implementation
      */
 	public double getAcceleration() {
-		return getThrusterForce()/(float)this.getMass();
+		if (IsThrusterActive()) {
+			return getThrusterForce()/(float)this.getMass();
+		} else {
+			return 0;
+		}
 	}
 
     /**
@@ -256,11 +260,15 @@ public class Ship extends Entity {
 				removeBullet(bullet);
 				if (bullet.withinBoundaries(world)) {
 					
-					try {
+					if (world.significantOverlap(bullet)) {
+						Entity collidee = world.getEntities().stream()
+							.filter(entity -> bullet.overlap(entity))
+							.findFirst()
+							.orElse(null);
+						bullet.collide(collidee);
+					} else {
 						this.world.addEntity(bullet);
-					} catch (Exception e) {
-						// Bullet outside of world
-					}	
+					}
 				} else {
 					bullet.terminate();
 				}
