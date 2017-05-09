@@ -1,6 +1,6 @@
 package asteroids.model.programs;
 
-public class DoubleExpression<E> {
+public class DoubleExpression<E,T> {
 	public DoubleExpression(E left,E right, String operator) {
 		this.left = left;
 		this.right = right;
@@ -12,11 +12,11 @@ public class DoubleExpression<E> {
 	private String operator;
 	public String getOperator() { return this.operator; }
 	
-	public Expression getLeftValue(){
-		return (Expression) this.left;
+	public Expression<T> getLeftValue(){
+		return ((Expression<T>) this.left);
 	}
-	public Expression getRightValue(){
-		return (Expression) this.right;
+	public Expression<T> getRightValue(){
+		return ((Expression<T>) this.right);
 	}
 	
 	public void setLeftValue(E newLeftValue){
