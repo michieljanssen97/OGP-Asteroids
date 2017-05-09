@@ -330,46 +330,49 @@ public class World implements ICollidable {
 	 * A function for advancing the game. No specification should be worked out according to the task explanation.
 	 */
 	public void evolve(double duration, CollisionListener collisionlistener) throws Exception {
-		while (duration > 0) {
-			// 1. Get first collision, if any
-			// Calculate all collisions, immediately continue if an apparent Collision is found
-			
-			Double firstCollisionTime;
-			ICollidable[] collidables = null;
-			try {
-				firstCollisionTime = getNextCollisionTime();
-				collidables = getNextCollisionObjects();
-			} catch (Exception e) {
-				firstCollisionTime = null;
-			}
-			
-			if (firstCollisionTime > duration) {
-				advanceEntities(duration);
-				return;
-			} else {
-				advanceEntities(firstCollisionTime);
-				collidables[0].collide(collidables[1]);
+		if (!(this.entities.isEmpty())){
+			while (duration > 0) {
+				// 1. Get first collision, if any
+				// Calculate all collisions, immediately continue if an apparent Collision is found
 				
-				if (collidables[0] instanceof Entity && collidables[1] instanceof Entity){
-					if (((Entity)collidables[0]).isDestroyed() == true && ((Entity)collidables[1]).isDestroyed() == true) {
-						double [] result = ((Entity)collidables[0]).explosionPosition((Entity)collidables[1]);
-						collisionlistener.objectCollision((Entity)collidables[0],(Entity)collidables[1],result[0], result[1]);
-					}
-				} else if (collidables[0] instanceof World && collidables[1] instanceof Entity) {
-					double [] result = collidables[1].getCollisionPosition(collidables[0]);
-					collisionlistener.boundaryCollision(collidables[1], result[0], result[1]);
-					
-				} else if (collidables[0] instanceof Entity && collidables[1] instanceof World) {
-					double [] result = collidables[0].getCollisionPosition(collidables[1]);
-					collisionlistener.boundaryCollision(collidables[0], result[0], result[1]);
-					
+				Double firstCollisionTime;
+				ICollidable[] collidables = null;
+				try {
+					firstCollisionTime = getNextCollisionTime();
+					collidables = getNextCollisionObjects();
+				} catch (Exception e) {
+					firstCollisionTime = null;
 				}
 				
-				
-				//  Subtract firstTimeCollision from delta t and go to step 1.
-				duration -= firstCollisionTime;
-			}
-		} 
+				if (firstCollisionTime > duration) {
+					advanceEntities(duration);
+					return;
+				} else {
+					advanceEntities(firstCollisionTime);
+					collidables[0].collide(collidables[1]);
+					
+					if (collidables[0] instanceof Entity && collidables[1] instanceof Entity){
+						if (((Entity)collidables[0]).isDestroyed() == true && ((Entity)collidables[1]).isDestroyed() == true) {
+							double [] result = ((Entity)collidables[0]).explosionPosition((Entity)collidables[1]);
+							collisionlistener.objectCollision((Entity)collidables[0],(Entity)collidables[1],result[0], result[1]);
+						}
+					} else if (collidables[0] instanceof World && collidables[1] instanceof Entity) {
+						double [] result = collidables[1].getCollisionPosition(collidables[0]);
+						collisionlistener.boundaryCollision(collidables[1], result[0], result[1]);
+						
+					} else if (collidables[0] instanceof Entity && collidables[1] instanceof World) {
+						double [] result = collidables[0].getCollisionPosition(collidables[1]);
+						collisionlistener.boundaryCollision(collidables[0], result[0], result[1]);
+						
+					}
+					
+					
+					//  Subtract firstTimeCollision from delta t and go to step 1.
+					duration -= firstCollisionTime;
+				}
+			} 
+		}
+		
 	}
 	
 	/**

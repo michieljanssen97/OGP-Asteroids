@@ -18,7 +18,7 @@ public class Planetoid extends MinorPlanet {
 	
  	@Override
  	public double getRadius() {
- 		return getRadiusUponCreation() - (0.01*getTotalTraveledDistance());
+ 		return getRadiusUponCreation() - (0.000001*getTotalTraveledDistance());
  	}
  	
  	public void spawnAsteroids() {

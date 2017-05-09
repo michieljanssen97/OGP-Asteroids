@@ -28,7 +28,12 @@ public class Facade implements asteroids.part3.facade.IFacade {
 	@Override
 	public Ship createShip(double x, double y, double xVelocity, double yVelocity, double radius, double direction,
 			double mass) throws ModelException {
-		return new Ship(x, y, xVelocity, yVelocity, radius, direction, mass);
+		try{
+			return new Ship(x, y, xVelocity, yVelocity, radius, direction, mass);
+		}catch(Exception e){
+			throw new ModelException("Either the position,velocity,radius,orientation or the mass is wrong.");
+		}
+		
 	}
 	
 	@Override
