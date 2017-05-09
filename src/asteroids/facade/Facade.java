@@ -238,7 +238,7 @@ public class Facade implements asteroids.part3.facade.IFacade {
 		try {
 			world.removeEntity(ship);
 		} catch (Exception e) {
-			throw new ModelException("");
+			throw new ModelException(e);
 		}
 	}
 
@@ -247,7 +247,7 @@ public class Facade implements asteroids.part3.facade.IFacade {
 		try {
 			world.addEntity(bullet);
 		} catch (Exception e) {
-			throw new ModelException("");
+			throw new ModelException(e);
 		}
 	}
 
@@ -319,7 +319,7 @@ public class Facade implements asteroids.part3.facade.IFacade {
 		try {
 			return world.getNextCollisionTime();
 		} catch (Exception e) {
-			throw new ModelException("");
+			throw new ModelException(e);
 		}
 	}
 

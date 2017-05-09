@@ -12,6 +12,7 @@ public interface ICollidable {
 
 	public double[] getCollisionPosition(ICollidable collidable);
 	public double getTimeToCollision(ICollidable collidable);
+	public boolean isTerminated();
 	
 	public void defaultCollide(Entity entity);
 	

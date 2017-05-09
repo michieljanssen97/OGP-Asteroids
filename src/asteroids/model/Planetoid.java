@@ -56,7 +56,7 @@ public class Planetoid extends MinorPlanet {
 		double distanceTraveled = Math.abs(Math.sqrt(Math.pow(distanceX, 2)+Math.pow(distanceY, 2)));
 		this.increaseTotalTraveledDistance(distanceTraveled);
 		
-		double newRadius = getRadius() - distanceTraveled * (0.01*getTotalTraveledDistance());
+		double newRadius = getRadius() - distanceTraveled * (0.00001*getTotalTraveledDistance());
 		if (newRadius < 5) {
 			this.destroy();
 		} else {
