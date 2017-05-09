@@ -30,9 +30,10 @@ public class Bullet extends Entity {
 	
 	public void terminate() {
 		if (isPartOfShip()) {
-			this.ship.removeBullet(this);
-			this.ship = null;
+			ship.removeBullet(this);
+			ship = null;
 		}
+		super.terminate();
 	}
 	
 	/**
@@ -168,16 +169,18 @@ public class Bullet extends Entity {
 		if (entity instanceof Ship) {
 			if (getSource() == entity) {
 				setCounter(0);
+				
 				getWorld().removeEntity(this);
+				this.world = null;
 				setPosition(entity.getPositionX(), entity.getPositionY());
 				((Ship) entity).loadBullets(this);
 			} else {
-				this.destroy();
-				entity.destroy();
+				this.terminate();
+				entity.terminate();
 			}
 		} else {
-			this.destroy();
-			entity.destroy();
+			this.terminate();
+			entity.terminate();
 		}
 	}
 	

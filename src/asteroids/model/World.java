@@ -5,7 +5,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import asteroids.part2.CollisionListener;
 
@@ -247,12 +249,8 @@ public class World implements ICollidable {
 	 */
 	public Double getNextCollisionTime() {
 		Double collisionTime = null;
-		try {
-			ICollidable[] collidables = getNextCollisionObjects();
-			collisionTime = collidables[0].getTimeToCollision(collidables[1]);
-		} catch (Exception e){
-			// No harm done
-		}
+		ICollidable[] collidables = getNextCollisionObjects();
+		collisionTime = collidables[0].getTimeToCollision(collidables[1]);
 		return collisionTime;
 
 	}
@@ -267,12 +265,8 @@ public class World implements ICollidable {
 	 */
 	public double[] getNextCollisionPosition() {
 		double[] collisionPosition = null;
-		try {
-			ICollidable[] collidables = getNextCollisionObjects();
-			collisionPosition = collidables[0].getCollisionPosition(collidables[1]);
-		} catch (Exception e) {
-			// No harm done
-		}
+		ICollidable[] collidables = getNextCollisionObjects();
+		collisionPosition = collidables[0].getCollisionPosition(collidables[1]);
 		return collisionPosition;
 	}
 	
@@ -293,10 +287,16 @@ public class World implements ICollidable {
 		for (Entity entity1 : this.getEntities()) {
 			// Calculate time of collision with other entities
 			for (Entity entity2: this.getEntities()) {
-				try {
-					collisionTime = entity1.getTimeToCollision(entity2);
-				} catch (Exception e) {
-					collisionTime = Double.POSITIVE_INFINITY;
+				
+				if (entity1 == entity2){continue;}
+				else if (entity1.overlap(entity2)) {
+					collisionTime = 0.0;
+				} else {
+					try {
+						collisionTime = entity1.getTimeToCollision(entity2);
+					} catch (Exception e) {
+						collisionTime = Double.POSITIVE_INFINITY;
+					}
 				}
 			    if (collisionTime == Double.POSITIVE_INFINITY || collisionTime == null){continue;}
 			    
@@ -321,49 +321,45 @@ public class World implements ICollidable {
 		
 	}
 	
+	public void showCollision(CollisionListener collisionListener, ICollidable[] collidables, double[] colPos) {
+		if (collisionListener == null) {return;}
+		if (collidables[0] instanceof Entity && collidables[1] instanceof Entity){
+			if (((Entity)collidables[0]).isTerminated() == true && ((Entity)collidables[1]).isTerminated() == true) {
+				double [] result = ((Entity)collidables[0]).explosionPosition((Entity)collidables[1]);
+				collisionListener.objectCollision((Entity)collidables[0],(Entity)collidables[1],result[0], result[1]);
+			}
+		} else {
+			collisionListener.boundaryCollision(collidables[0], colPos[0], colPos[1]);	
+		}
+	}
+	
 	/**
 	 * A function for advancing the game. No specification should be worked out according to the task explanation.
 	 */
 	public void evolve(double duration, CollisionListener collisionlistener) throws Exception {		
-		while (duration > 0 && !entities.isEmpty()) {
+		while (duration >= 0 && !entities.isEmpty()) {
 			// 1. Get first collision, if any
 			// Calculate all collisions, immediately continue if an apparent Collision is found
 			
 			Double firstCollisionTime = getNextCollisionTime();
-			double [] colPos = getNextCollisionPosition();
-			ICollidable[] collidables = getNextCollisionObjects();
 			
-			if (firstCollisionTime == null) {continue;}
-			
-			if (firstCollisionTime > duration) {
+			if (firstCollisionTime == null || firstCollisionTime > duration) {
 				advanceEntities(duration);
-				return;
+				break;
 			} else {
+				System.out.println(firstCollisionTime);
 				advanceEntities(firstCollisionTime);
 				
+				double [] colPos = getNextCollisionPosition();
+				ICollidable[] collidables = getNextCollisionObjects();
+				
 				collidables[0].collide(collidables[1]);
-
-				if (collidables[0] instanceof Entity && collidables[1] instanceof Entity){
-					if (((Entity)collidables[0]).isTerminated() == true && ((Entity)collidables[1]).isTerminated() == true) {
-						double [] result = ((Entity)collidables[0]).explosionPosition((Entity)collidables[1]);
-						collisionlistener.objectCollision((Entity)collidables[0],(Entity)collidables[1],result[0], result[1]);
-					}
-				} else {
-					collisionlistener.boundaryCollision(collidables[0], colPos[0], colPos[1]);	
-				}
+				showCollision(collisionlistener, collidables, colPos);
+				advanceEntities(0);
 				
-				if (collidables[0].isTerminated()) {
-					removeEntity((Entity)collidables[0]);
-				} else if (collidables[1].isTerminated()) {
-					removeEntity((Entity)collidables[1]);
-				}
-				
-				
-				//  Subtract firstTimeCollision from delta t and go to step 1.
 				duration -= firstCollisionTime;
 			}
 		} 
-		
 	}
 	
 	/**
@@ -374,8 +370,16 @@ public class World implements ICollidable {
 	 * 		 	* All entities have moved for the given duration
 	 */
 	public void advanceEntities(double duration) {
-		getEntities().stream()
-			.forEach(entity -> entity.move(duration));
+		getEntities().stream().forEach(entity -> entity.move(duration));
+		
+		Set<Entity> destroyedEntities = getEntities().stream()
+						.filter(entity -> entity.isDestroyed())
+						.collect(Collectors.toSet());
+		
+		destroyedEntities.forEach(entity -> entity.terminate());
+		entities = getEntities().stream()
+						.filter(entity -> !entity.isDestroyed())
+						.collect(Collectors.toSet());
 	}
 	
 	/**
@@ -415,12 +419,13 @@ public class World implements ICollidable {
 	 * 			* If the collidable is a world, 0.0 is returned
 	 */
 	@Override
-	public double[] getCollisionPosition(ICollidable collidable) {
-		if (!(collidable instanceof World)) {
-			return collidable.getCollisionPosition(this);
-		} else {
-			return new double[]{0, 0};
-		}
+	public double[] getCollisionPosition(Entity entity) {
+		return entity.getCollisionPosition(this);
+	}
+
+	@Override
+	public double[] getCollisionPosition(World world) {
+		return null;
 	}
 
 	/**
@@ -431,11 +436,13 @@ public class World implements ICollidable {
 	 * 			* If the collidable is a world, 0.0 is returned
 	 */
 	@Override
-	public double getTimeToCollision(ICollidable collidable) {
-		if (!(collidable instanceof World)) {
-			return collidable.getTimeToCollision(this);
-		}
+	public double getTimeToCollision(World world) {
 		return 0.0;
+	}
+	
+	@Override
+	public double getTimeToCollision(Entity entity) {
+		return entity.getTimeToCollision(this);
 	}
 	
 	/**

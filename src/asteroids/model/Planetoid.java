@@ -22,8 +22,18 @@ public class Planetoid extends MinorPlanet {
  			double velY = Math.sqrt(((1-Math.random())*magnitude));
  			Asteroid asteroid1 = new Asteroid(this.getPositionX()-((this.radiusUponCreation/2)+1),this.getPositionY(),velX,velY,this.radiusUponCreation/2);
  			Asteroid asteroid2 = new Asteroid(this.getPositionX()+((this.radiusUponCreation/2)+1),this.getPositionY(),-velX,-velY,this.radiusUponCreation/2);
- 			world.addEntity(asteroid1);
- 			world.addEntity(asteroid2);
+ 			
+ 			if (!world.significantOverlap(asteroid1)) {
+ 				world.addEntity(asteroid1);
+ 			} else {
+ 				asteroid1.destroy();
+ 			}
+ 			
+ 			if (!world.significantOverlap(asteroid2)) {
+ 				world.addEntity(asteroid2);
+ 			} else {
+ 				asteroid2.destroy();
+ 			}
  	}
 
  	@Override
@@ -31,7 +41,7 @@ public class Planetoid extends MinorPlanet {
  		if (isPartOfWorld() && getRadius() >= 30) {
 			spawnAsteroids();
 		}
- 		this.isTerminated = true;
+ 		super.terminate();
  	}
  	
 	@Override
@@ -61,13 +71,13 @@ public class Planetoid extends MinorPlanet {
 		super.move(duration);
 		double distanceX = this.getVelocityX()*duration;
 		double distanceY = this.getVelocityY()*duration;
-		double distanceTraveled = Math.abs(distanceX) + Math.abs(distanceY); //Math.abs(Math.sqrt(Math.pow(distanceX, 2)+Math.pow(distanceY, 2)));
+		double distanceTraveled = Math.sqrt(Math.pow(distanceX, 2)+Math.pow(distanceY, 2));
 		increaseTotalTraveledDistance(distanceTraveled);
 		
 		double newRadius = getRadiusUponCreation() - (0.000001*getTotalTraveledDistance());
 
 		if (newRadius < 5) {
-			this.terminate();
+			this.destroy();
 		} else {
 			setRadius(newRadius);
 		}
@@ -83,7 +93,7 @@ public class Planetoid extends MinorPlanet {
 								       rand.nextInt((int)((getWorld().getHeight()) - getRadius()))};
 			entity.setPosition(randomPosition[0], randomPosition[1]);
 			if (getWorld().significantOverlap(entity)) {
-				entity.destroy();
+				entity.terminate();
 			}
 		}
 		else if (entity instanceof Asteroid) {defaultCollide(entity);} 

@@ -19,7 +19,7 @@ public class Asteroid extends MinorPlanet implements ICollidable {
 	
 	public void collide(Entity entity) {
 		if (entity instanceof Ship) {
-			entity.destroy();
+			entity.terminate();
 		}
 		else if (entity instanceof Asteroid) {defaultCollide(entity);} 
 		else if (entity instanceof Planetoid) {defaultCollide(entity);}

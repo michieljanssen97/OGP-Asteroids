@@ -30,6 +30,7 @@ public abstract class Entity implements ICollidable {
 	protected World world;
 	
 	protected boolean isTerminated = false;
+	protected boolean isDestroyed = false;
 	
 	/**
 	 * Initialize this new entity with a given position, velocity, radius.
@@ -74,12 +75,18 @@ public abstract class Entity implements ICollidable {
 	 * 		 | new.isTerminated() == true
 	 */
 	public void terminate() {
+		if (isPartOfWorld()) {
+			world.removeEntity(this);
+		}
 		this.isTerminated = true;
 	}
 	
 	public void destroy() {
-		removeFromWorld();
-		this.terminate();
+		this.isDestroyed = true;
+	}
+	
+	public boolean isDestroyed() {
+		return this.isDestroyed;
 	}
 	
 	/**
@@ -419,12 +426,11 @@ public abstract class Entity implements ICollidable {
 	 */
 	public double getDistanceBetween(Entity other) throws NullPointerException {
 		if (other == this) {
-			return new Double(0);
+			return 0.0;
 		} else if (other == null) {
 			throw new NullPointerException();
-		}
-		else {
-			double distance = Math.sqrt(Math.pow((other.getPositionX()-this.getPositionX()), 2)+Math.pow((other.getPositionY()-this.getPositionY()), 2));
+		} else {
+			double distance = Math.sqrt(Math.pow(other.getPositionX()-this.getPositionX(), 2)+Math.pow(other.getPositionY()-this.getPositionY(), 2));
 			return distance;
 		}
 	}
@@ -476,9 +482,7 @@ public abstract class Entity implements ICollidable {
 	 */
 	@Override
 	public double getTimeToCollision(ICollidable collidable) {
-		if (collidable instanceof Entity) {return this.getTimeToCollision((Entity) collidable);}
-		else if (collidable instanceof World) {return this.getTimeToCollision((World) collidable);}
-		else {return 0;}
+		return collidable.getTimeToCollision(this);
 	}
 	
 	/**
@@ -550,11 +554,9 @@ public abstract class Entity implements ICollidable {
 		double verticalCollisionTime = 0;
 		double horizontalCollisionTime = 0;
 		
-		if (world == null) {
+		if (world == null || !withinBoundaries(world)) {
 			return Double.POSITIVE_INFINITY;
-		} else if (!withinBoundaries(world)) {
-			return 0.0;
-		}
+		} 
 		
 		if (getVelocityX() > 0) {
 			distanceToVerticalWall = world.getWidth()-(getPositionX()+getRadius());
