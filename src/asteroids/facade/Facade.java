@@ -359,7 +359,11 @@ public class Facade implements asteroids.part3.facade.IFacade {
 
 	@Override
 	public void addAsteroidToWorld(World world, Asteroid asteroid) throws ModelException {
-		world.addEntity(asteroid);
+		try {
+			world.addEntity(asteroid);
+		} catch (IllegalArgumentException e) {
+			throw new ModelException(e);
+		}
 		
 	}
 

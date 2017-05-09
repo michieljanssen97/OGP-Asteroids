@@ -250,7 +250,9 @@ public class World implements ICollidable {
 	public Double getNextCollisionTime() {
 		Double collisionTime = null;
 		ICollidable[] collidables = getNextCollisionObjects();
-		collisionTime = collidables[0].getTimeToCollision(collidables[1]);
+		if (collidables != null) {
+			collisionTime = collidables[0].getTimeToCollision(collidables[1]);
+		}
 		return collisionTime;
 
 	}
@@ -266,7 +268,9 @@ public class World implements ICollidable {
 	public double[] getNextCollisionPosition() {
 		double[] collisionPosition = null;
 		ICollidable[] collidables = getNextCollisionObjects();
-		collisionPosition = collidables[0].getCollisionPosition(collidables[1]);
+		if (collidables != null) {
+			collisionPosition = collidables[0].getCollisionPosition(collidables[1]);
+		}
 		return collisionPosition;
 	}
 	
@@ -280,6 +284,10 @@ public class World implements ICollidable {
 	 * @return An ICollidable array containing the two colliding objects
 	 */
 	public ICollidable[] getNextCollisionObjects() {
+		
+		if (entities.size() == 1) {
+			return null;
+		}
 
 		Map<ICollidable[], Double> collisionMap = new HashMap<ICollidable[], Double>();
 		Double collisionTime;
