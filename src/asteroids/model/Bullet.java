@@ -28,6 +28,13 @@ public class Bullet extends Entity {
 		super(x, y, xVelocity, yVelocity, radius);
 	}
 	
+	public void terminate() {
+		if (isPartOfShip()) {
+			this.ship.removeBullet(this);
+			this.ship = null;
+		}
+	}
+	
 	/**
 	 * Returns the maximum speed of a bullet
 	 */

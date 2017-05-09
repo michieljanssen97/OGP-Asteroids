@@ -164,7 +164,7 @@ public class Facade implements asteroids.part3.facade.IFacade {
 
 	@Override
 	public double[] getBulletVelocity(Bullet bullet) throws ModelException {
-		double[] velocity = {bullet.getPositionX(), bullet.getPositionY()};
+		double[] velocity = {bullet.getVelocityX(), bullet.getVelocityY()};
 		return velocity;
 	}
 

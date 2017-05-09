@@ -271,7 +271,7 @@ public abstract class Entity implements ICollidable {
 	 * @see implementation
 	 */
 	protected boolean isValidRadius(double radius) {
-		return (radius > getMinRadius()) && (!Double.isNaN(radius));
+		return (radius >= getMinRadius()) && (!Double.isNaN(radius));
 	}
 		
 	/**
@@ -550,9 +550,11 @@ public abstract class Entity implements ICollidable {
 		double verticalCollisionTime = 0;
 		double horizontalCollisionTime = 0;
 		
-		if (!withinBoundaries(world)) {
+		if (world == null) {
+			return Double.POSITIVE_INFINITY;
+		} else if (!withinBoundaries(world)) {
 			return 0.0;
-		} 
+		}
 		
 		if (getVelocityX() > 0) {
 			distanceToVerticalWall = world.getWidth()-(getPositionX()+getRadius());
@@ -612,7 +614,7 @@ public abstract class Entity implements ICollidable {
 	 */
 	public double[] getCollisionPosition(World world) throws NullPointerException {      
 		if (world == null){
-			throw new NullPointerException();
+			return null;
 		} else {
 			if (getTimeToCollision(world) != Double.POSITIVE_INFINITY ){
 				double posX = this.getPositionX() + this.getTimeToCollision(world)*this.getVelocityX();

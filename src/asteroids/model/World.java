@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.IntStream;
 
 import asteroids.part2.CollisionListener;
 
@@ -59,15 +60,9 @@ public class World implements ICollidable {
 	 * 		 | new.isTerminated() == true
 	 */
 	public void terminate() {
-		this.isTerminated = true;
-	}
-
-	/**
-	 * Destroys a world.
-	 */
-	public void destroyWorld(){
+		getEntities().forEach(entity->entity.removeFromWorld());
 		entities.clear();
-		this.terminate();
+		this.isTerminated = true;
 	}
 	
 	/**
@@ -338,7 +333,9 @@ public class World implements ICollidable {
 			double [] colPos = getNextCollisionPosition();
 			ICollidable[] collidables = getNextCollisionObjects();
 			
-			if (firstCollisionTime != null && firstCollisionTime > duration) {
+			if (firstCollisionTime == null) {continue;}
+			
+			if (firstCollisionTime > duration) {
 				advanceEntities(duration);
 				return;
 			} else {
@@ -474,11 +471,6 @@ public class World implements ICollidable {
 	@Override
 	public void collide(World world) {
 		// Shouldn't happen
-	}
-	
-	public void destroy() {
-		getEntities().stream()
-			.forEach(entity->removeEntity(entity));
 	}
 	
 }
