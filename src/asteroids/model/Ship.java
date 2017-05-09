@@ -107,7 +107,7 @@ public class Ship extends Entity {
 				this.thrust(amount*duration);
 			}
 		} else {
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Duration is not valid");
 		}
 	}
 	

@@ -30,8 +30,6 @@ public abstract class Entity implements ICollidable {
 	protected World world;
 	
 	protected boolean isTerminated = false;
-	public boolean isDestroyed = false;
-
 	
 	/**
 	 * Initialize this new entity with a given position, velocity, radius.
@@ -79,15 +77,9 @@ public abstract class Entity implements ICollidable {
 		this.isTerminated = true;
 	}
 	
-	public boolean isDestroyed() {
-		return this.isDestroyed;
-	}
-	
 	public void destroy() {
-		getWorld().removeEntity(this);
 		removeFromWorld();
 		this.terminate();
-		this.isDestroyed = true;
 	}
 	
 	/**
@@ -521,7 +513,7 @@ public abstract class Entity implements ICollidable {
 			double deltaRR = Math.pow(deltaPosX, 2) + Math.pow(deltaPosY, 2);
 			double deltaVV = Math.pow(deltaVelX, 2) + Math.pow(deltaVelY, 2);
 			double deltaVR = (deltaVelX*deltaPosX)  + (deltaVelY*deltaPosY);
-			double d = Math.pow(deltaVR, 2) - ((deltaVV)*(deltaRR - Math.pow(this.getRadius()+other.getRadius(), 2)));
+			double d = Math.pow(deltaVR, 2) - (deltaVV)*(deltaRR - Math.pow(this.getRadius()+other.getRadius(), 2));
 			
 			
 			if (deltaVR >= 0){
@@ -849,6 +841,22 @@ public abstract class Entity implements ICollidable {
 		}
 	}
 	
+	
+	//TODO Fix comment
+	/**
+	 * A helper function that resolves a default collision event between two entities
+	 * 
+	 * @param entity
+	 * @param this
+	 * @post This function executes in such a manner that ensures that, at the end of the function:
+	 * 			* In the case that both entities are Ships, both their velocities are changed according to the
+	 * 			  formula as found in the task specification
+	 * 			* In the case that one entity is a ship and another is a bullet:
+	 * 					* If the bullet originates from the ship it is loaded by the ship
+	 * 					* If the bullet does not originate from the ship both the ship and the bullet are removed
+	 * 					  from the world
+	 * 			* In the case that both entities are bullets, both bullets are removed form the world
+	 */
 	public void defaultCollide(Entity entity) {
 		double deltaPosX = this.getPositionX()-entity.getPositionX();
 		double deltaPosY = this.getPositionY()-entity.getPositionY();
@@ -872,35 +880,6 @@ public abstract class Entity implements ICollidable {
 		
 		entity.setVelocity(newVelocityX1, newVelocityY1);
 		this.setVelocity(newVelocityX2, newVelocityY2);
-	}
-	
-	/**
-	 * A function that resolves a collision event between two entities
-	 * 
-	 * @param entity
-	 * @param this
-	 * @post This function executes in such a manner that ensures that, at the end of the function:
-	 * 			* In the case that both entities are Ships, both their velocities are changed according to the
-	 * 			  formula as found in the task specification
-	 * 			* In the case that one entity is a ship and another is a bullet:
-	 * 					* If the bullet originates from the ship it is loaded by the ship
-	 * 					* If the bullet does not originate from the ship both the ship and the bullet are removed
-	 * 					  from the world
-	 * 			* In the case that both entities are bullets, both bullets are removed form the world
-	 */
-
-	
-	/**
-	 * Helper function for resolving collisions.
-	 */
-	public void destroyEntities(Entity entity1,Entity entity2){
-		entity1.getWorld().removeEntity(entity1);
-		entity2.getWorld().removeEntity(entity2);
-		entity1.terminate();
-		entity2.terminate();
-		entity1.destroy();
-		entity2.destroy();
-		
 	}
 
 }
