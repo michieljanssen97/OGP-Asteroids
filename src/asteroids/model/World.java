@@ -464,12 +464,17 @@ public class World implements ICollidable {
 		double distanceToRightWall = getWidth() - entity.getPositionX()- entity.getRadius();
 		double distanceToUpperWall = getHeight() - entity.getPositionY()- entity.getRadius();
 		double distanceToBottomWall = entity.getPositionY() - entity.getRadius();
-		
-		double minDistance = Math.min(Math.min(distanceToUpperWall, distanceToBottomWall), Math.min(distanceToLeftWall, distanceToRightWall));
-		if (minDistance == distanceToLeftWall || minDistance == distanceToRightWall) {
-			entity.setVelocity(-entity.getVelocityX(), entity.getVelocityY());
-		} else if (minDistance == distanceToUpperWall || minDistance == distanceToBottomWall) {
-			entity.setVelocity(entity.getVelocityX(), -entity.getVelocityY());
+
+		if (distanceToLeftWall == distanceToBottomWall || distanceToLeftWall == distanceToUpperWall ||
+				distanceToRightWall == distanceToUpperWall || distanceToRightWall == distanceToBottomWall){
+			entity.setVelocity(-entity.getVelocityX(), -entity.getVelocityY());
+		} else {
+			double minDistance = Math.min(Math.min(distanceToUpperWall, distanceToBottomWall), Math.min(distanceToLeftWall, distanceToRightWall));
+			if (minDistance == distanceToLeftWall || minDistance == distanceToRightWall) {
+				entity.setVelocity(-entity.getVelocityX(), entity.getVelocityY());
+			} else if (minDistance == distanceToUpperWall || minDistance == distanceToBottomWall) {
+				entity.setVelocity(entity.getVelocityX(), -entity.getVelocityY());
+			}
 		}
 	}
 
