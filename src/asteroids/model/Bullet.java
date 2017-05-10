@@ -163,6 +163,7 @@ public class Bullet extends Entity {
 		world.defaultCollide(this);
 		if (Counter() == true){
 			world.removeEntity(this);
+			this.terminate();
 		}
 	}
 	
