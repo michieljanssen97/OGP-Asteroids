@@ -343,9 +343,6 @@ public class World implements ICollidable {
 			
 			ICollidable[] collidables = getNextCollisionObjects();
 			Double firstCollisionTime = collidables[0].getTimeToCollision(collidables[1]);
-			System.out.println("-----------");
-			System.out.println(firstCollisionTime);
-			System.out.println(duration);
 
 			if (firstCollisionTime == 0) {
 				advanceEntities(duration);

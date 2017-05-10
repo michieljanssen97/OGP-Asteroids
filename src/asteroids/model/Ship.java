@@ -21,20 +21,10 @@ import be.kuleuven.cs.som.annotate.*;
  *
  */
 public class Ship extends Entity {
-
-	private static final double THRUSTER_FORCE = 1.1E18;
 	
 	private Set<Bullet> bullets = new HashSet<Bullet>();
 	
 	private boolean thrusterActive = false;
-	
-	public double getMinRadius() {return 10;}
-	public double getMinDensity() {return 1.42E12;}
-	
-	/**
-	 * Return the maximum exerted force on a ship.
-	 */
-	public double getThrusterForce() {return THRUSTER_FORCE;}
 	
 	/**
 	 * Initialize this new ship with a given position, velocity, radius and orientation.
@@ -59,6 +49,13 @@ public class Ship extends Entity {
 	};
 	
 	/**
+	 * Return the maximum exerted force on a ship.
+	 */
+	public double getThrusterForce() {return 1.1E18;}
+	public double getMinRadius() {return 10;}
+	public double getMinDensity() {return 1.42E12;}
+	
+	/**
 	 * This method moves the ship with a given valid duration.
 	 * 
 	 * Implemented defensively.
@@ -76,11 +73,7 @@ public class Ship extends Entity {
 	 */
 	@Override
 	public void move(double duration) throws IllegalArgumentException {
-		if (isValidDuration(duration)) {			
-			double deltaX = getVelocityX()*duration;
-			double deltaY = getVelocityY()*duration;
-			setPosition(getPositionX()+deltaX, getPositionY()+deltaY);
-			
+		if (isValidDuration(duration)) {		
 			if (IsThrusterActive()) {
 				double amount = this.getAcceleration();
 				if (amount < 0) {
@@ -88,6 +81,10 @@ public class Ship extends Entity {
 				}
 				this.thrust(amount*duration);
 			}
+			
+			double deltaX = getVelocityX()*duration;
+			double deltaY = getVelocityY()*duration;
+			setPosition(getPositionX()+deltaX, getPositionY()+deltaY);
 		} else {
 			throw new IllegalArgumentException("Duration is not valid");
 		}

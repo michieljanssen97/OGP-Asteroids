@@ -429,6 +429,34 @@ public abstract class Entity implements ICollidable {
 		}
 	}
 	
+	public double getDistanceBetween(World world) throws NullPointerException {
+		if (world == null) {
+			throw new NullPointerException();
+		} else {
+			
+			double distanceToHorizontalWall = 0;
+			double distanceToVerticalWall = 0;
+			
+			if (getVelocityX() > 0) {
+				distanceToVerticalWall = world.getWidth()-(getPositionX()+getRadius());
+			} else if (getVelocityX() < 0) {
+				distanceToVerticalWall = getPositionX()-getRadius();
+			} else if(getVelocityX() == 0){
+				distanceToVerticalWall = Double.POSITIVE_INFINITY;
+			}
+			
+			if (getVelocityY() > 0) {
+				distanceToHorizontalWall = world.getHeight()-(getPositionY()+getRadius());
+			} else if (getVelocityY() < 0) {
+				distanceToHorizontalWall = getPositionY()-getRadius();
+			} else if (getVelocityY() == 0) {
+				distanceToHorizontalWall = Double.POSITIVE_INFINITY;
+			}
+			
+			return Math.min(distanceToVerticalWall, distanceToHorizontalWall);
+		}
+	}
+	
 	/**
 	 * This method determines whether there is overlap between two entities.
 	 * 
@@ -543,8 +571,6 @@ public abstract class Entity implements ICollidable {
 	 */
 	public double getTimeToCollision(World world) throws NullPointerException, IllegalArgumentException {
 		
-		double distanceToHorizontalWall = 0;
-		double distanceToVerticalWall = 0;
 		double verticalCollisionTime = 0;
 		double horizontalCollisionTime = 0;
 		
@@ -552,25 +578,11 @@ public abstract class Entity implements ICollidable {
 			return Double.POSITIVE_INFINITY;
 		} 
 		
-		if (getVelocityX() > 0) {
-			distanceToVerticalWall = world.getWidth()-(getPositionX()+getRadius());
-		} else if (getVelocityX() < 0) {
-			distanceToVerticalWall = getPositionX()-getRadius();
-		} else if(getVelocityX() == 0){
-			distanceToVerticalWall = Double.POSITIVE_INFINITY;
-		}
+		double distanceToWall = getDistanceBetween(world);
 		
-		if (getVelocityY() >= 0) {
-			distanceToHorizontalWall = world.getHeight()-(getPositionY()+getRadius());
-		} else if (getVelocityY() < 0) {
-			distanceToHorizontalWall = getPositionY()-getRadius();
-		} else if (getVelocityY() == 0) {
-			distanceToHorizontalWall = Double.POSITIVE_INFINITY;
-		}
-		
-		verticalCollisionTime = Math.abs(distanceToVerticalWall)/Math.abs(getVelocityX());
-		horizontalCollisionTime = Math.abs(distanceToHorizontalWall)/Math.abs(getVelocityY());
-		
+		verticalCollisionTime = Math.abs(distanceToWall/getVelocityX());
+		horizontalCollisionTime = Math.abs(distanceToWall/getVelocityY());
+
 		return Math.min(verticalCollisionTime, horizontalCollisionTime);
 	}
 	
@@ -615,6 +627,25 @@ public abstract class Entity implements ICollidable {
 			if (getTimeToCollision(world) != Double.POSITIVE_INFINITY ){
 				double posX = this.getPositionX() + this.getTimeToCollision(world)*this.getVelocityX();
 				double posY = this.getPositionY() + this.getTimeToCollision(world)*this.getVelocityY();
+	
+				double distanceToWall = getDistanceBetween(world);
+				boolean verticalCollision = Math.abs(distanceToWall/this.getVelocityX()) < Math.abs(distanceToWall/this.getVelocityY());
+				
+				if (verticalCollision) {
+					if (getVelocityX() < 0) {
+						posX -= this.getRadius();
+					} else if (getVelocityX() > 0){
+						posX += this.getRadius();
+					}
+				} else if (!verticalCollision){
+					if (getVelocityY() < 0) {
+						posY -= this.getRadius();
+					} else if (getVelocityY() > 0) {
+						posY += this.getRadius();
+					}
+				}
+
+				
 				double[] pos =  {posX, posY};
 				return pos;	
 			} else {
