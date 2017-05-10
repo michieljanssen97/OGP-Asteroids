@@ -43,6 +43,8 @@ public interface ICollidable {
 	public void collide(Entity entity);
 	public void collide(World world);
 	
+	public boolean isDestroyed();
+	public void terminate();
 	public boolean isTerminated();
 	
 }

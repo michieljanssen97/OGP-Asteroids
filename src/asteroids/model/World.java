@@ -292,20 +292,16 @@ public class World implements ICollidable {
 			// Calculate time of collision with other entities
 			for (Entity entity2: this.getEntities()) {
 				
-				if (entity1 == entity2){continue;}
-				else if (entity1.overlap(entity2)) {
-					collisionTime = 0.0;
+				if (entity1 == entity2){
+					continue;
 				} else {
-					try {
-						collisionTime = entity1.getTimeToCollision(entity2);
-					} catch (Exception e) {
-						collisionTime = Double.POSITIVE_INFINITY;
-					}
+					collisionTime = entity1.getTimeToCollision(entity2);
+					
+					if (collisionTime == Double.POSITIVE_INFINITY || collisionTime == null){continue;}
+				    
+				    ICollidable[] collisionArray = { entity1, entity2 };
+			    	collisionMap.put(collisionArray, collisionTime);
 				}
-			    if (collisionTime == Double.POSITIVE_INFINITY || collisionTime == null){continue;}
-			    
-			    ICollidable[] collisionArray = { entity1, entity2 };
-		    	collisionMap.put(collisionArray, collisionTime);
 			}
 			
 			// Calculate time of collision with world
@@ -327,7 +323,7 @@ public class World implements ICollidable {
 	
 	public void showCollision(CollisionListener collisionListener, ICollidable[] collidables, double[] colPos) {
 		if (collisionListener == null) {return;}
-		if (collidables[0] instanceof Entity && collidables[1] instanceof Entity){
+		else if (collidables[0] instanceof Entity && collidables[1] instanceof Entity){
 			if (((Entity)collidables[0]).isTerminated() == true && ((Entity)collidables[1]).isTerminated() == true) {
 				double [] result = ((Entity)collidables[0]).explosionPosition((Entity)collidables[1]);
 				collisionListener.objectCollision((Entity)collidables[0],(Entity)collidables[1],result[0], result[1]);
@@ -345,32 +341,26 @@ public class World implements ICollidable {
 			// 1. Get first collision, if any
 			// Calculate all collisions, immediately continue if an apparent Collision is found
 			
-			Double firstCollisionTime = getNextCollisionTime();
+			ICollidable[] collidables = getNextCollisionObjects();
+			Double firstCollisionTime = collidables[0].getTimeToCollision(collidables[1]);
+			System.out.println("-----------");
 			System.out.println(firstCollisionTime);
 			System.out.println(duration);
-			
-			if (firstCollisionTime == null || firstCollisionTime > duration) {
+
+			if (firstCollisionTime == 0) {
 				advanceEntities(duration);
-				break;
-			} else if (firstCollisionTime < duration) {
-				advanceEntities(firstCollisionTime);
-				
-				double [] colPos = getNextCollisionPosition();
-				ICollidable[] collidables = getNextCollisionObjects();
-				
-				collidables[0].collide(collidables[1]);
-				showCollision(collisionlistener, collidables, colPos);
-				
-				duration -= firstCollisionTime;
-			} else if (firstCollisionTime == duration){
-				double [] colPos = getNextCollisionPosition();
-				ICollidable[] collidables = getNextCollisionObjects();
-				
-				collidables[0].collide(collidables[1]);
-				showCollision(collisionlistener, collidables, colPos);
+			} else if (firstCollisionTime == null || firstCollisionTime > duration) {
+				advanceEntities(duration);
 			} else {
-				System.out.println("Sheeeeit");
+				advanceEntities(firstCollisionTime);
+				double [] colPos = collidables[0].getCollisionPosition(collidables[1]);
+				
+				collidables[0].collide(collidables[1]);
+				showCollision(collisionlistener, collidables, colPos);
+
 			}
+			terminateEntities();
+			duration -= firstCollisionTime;
 		} 
 	}
 	
@@ -383,17 +373,16 @@ public class World implements ICollidable {
 	 */
 	public void advanceEntities(double duration) {
 		getEntities().stream().forEach(entity -> entity.move(duration));
-		
-		Set<Entity> destroyedEntities = getEntities().stream()
-						.filter(entity -> entity.isDestroyed())
-						.collect(Collectors.toSet());
-		
-		destroyedEntities.forEach(entity -> entity.terminate());
-		entities = getEntities().stream()
-						.filter(entity -> !entity.isDestroyed())
-						.collect(Collectors.toSet());
+		terminateEntities();
 	}
 	
+	public void terminateEntities() {
+		Set<Entity> destroyedEntities = getEntities().stream()
+				.filter(entity -> entity.isDestroyed())
+				.collect(Collectors.toSet());
+
+		destroyedEntities.stream().forEach(entity -> entity.terminate());
+	}
 	/**
 	 * Returns the entity at the given position
 	 * 
@@ -490,6 +479,12 @@ public class World implements ICollidable {
 	@Override
 	public void collide(World world) {
 		// Shouldn't happen
+	}
+
+	@Override
+	public boolean isDestroyed() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 	
 }

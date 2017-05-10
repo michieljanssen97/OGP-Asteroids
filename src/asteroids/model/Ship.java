@@ -247,7 +247,8 @@ public class Ship extends Entity {
 							.filter(entity -> bullet.overlap(entity))
 							.findFirst()
 							.orElse(null);
-						bullet.collide(collidee);
+						collidee.terminate();
+						bullet.terminate();
 					} else {
 						this.world.addEntity(bullet);
 					}

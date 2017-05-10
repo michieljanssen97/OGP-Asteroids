@@ -150,12 +150,12 @@ public class Bullet extends Entity {
 				setPosition(entity.getPositionX(), entity.getPositionY());
 				((Ship) entity).loadBullets(this);
 			} else {
-				this.terminate();
-				entity.terminate();
+				this.destroy();
+				entity.destroy();
 			}
 		} else {
-			this.terminate();
-			entity.terminate();
+			this.destroy();
+			entity.destroy();
 		}
 	}
 	

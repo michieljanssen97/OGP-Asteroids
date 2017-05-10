@@ -14,6 +14,7 @@ public class Planetoid extends MinorPlanet {
 		this.radiusUponCreation = radius;
 	}
  	
+	@Override
 	public double getMinDensity() {return 0.917E12;}
 	
  	public void spawnAsteroids() {
@@ -76,11 +77,11 @@ public class Planetoid extends MinorPlanet {
 	public void collide(Entity entity) {
 		if (entity instanceof Ship) {
 			Random rand = new Random();
-			double[] randomPosition = {rand.nextInt((int)((getWorld().getWidth()-getRadius()))), 
+			double[] randomPosition = {rand.nextInt((int)((getWorld().getWidth())-getRadius())), 
 								       rand.nextInt((int)((getWorld().getHeight()) - getRadius()))};
 			entity.setPosition(randomPosition[0], randomPosition[1]);
 			if (getWorld().significantOverlap(entity)) {
-				entity.terminate();
+				entity.destroy();
 			}
 		}
 		else if (entity instanceof Asteroid) {defaultCollide(entity);} 
