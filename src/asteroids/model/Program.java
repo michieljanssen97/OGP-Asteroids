@@ -1,6 +1,8 @@
 package asteroids.model;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import asteroids.model.programs.BreakException;
 import asteroids.model.programs.FalseProgramException;
@@ -15,7 +17,10 @@ public class Program<F,S> {
 	private SourceLocation endingSourceLocation;
 	private double consumedTime;
 	private boolean isInWhileLoop;
-	
+	private HashMap<String,Boolean> booleanVariables;
+	private HashMap<String,Double> doubleVariables;
+	private HashMap<String,Entity> entityVariables;
+
 	
 	public Program(List<F> functions, S main){
 		this.main = main;
@@ -28,7 +33,12 @@ public class Program<F,S> {
 	public  List<F> getFunctions() { 
 		return this.functions;
 	}
+	public Map<String,Boolean> getBooleanVariables() { return this.booleanVariables; }
+	public Map<String,Double> getDoubleVariables() { return this.doubleVariables;}
+	public Map<String,Entity> getEntityVariables() { return this.entityVariables; }
 	
+
+
 	public boolean getIsInWhileLoop() {
 		return isInWhileLoop;
 	}
