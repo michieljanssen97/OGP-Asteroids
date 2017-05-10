@@ -166,6 +166,7 @@ public class TestWorld {
 		assertEquals(ship.getPositionX(), 42, EPSILON);
 		assertEquals(ship.getPositionY(), 75, EPSILON);
 		
+		System.out.println("test start");
 		// Ship Collide with ship
 		world = new World(100, 100);
 		Ship ship1 = new Ship(21, 75, 1, 0, 20, 0, 1.0E20); 
@@ -191,6 +192,7 @@ public class TestWorld {
 		world.evolve(18.5,null);
 		assertTrue(ship3.isTerminated());
 		assertTrue(bullet1.isTerminated());
+		System.out.println("Stop test");
 
 	}
 	

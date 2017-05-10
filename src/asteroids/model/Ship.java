@@ -21,33 +21,15 @@ import be.kuleuven.cs.som.annotate.*;
  *
  */
 public class Ship extends Entity {
-	
-	private static double MAX_SPEED = 300000;
-	private static double MIN_RADIUS = 10;
-	private static double MIN_DENSITY = 1.42E12;
+
 	private static final double THRUSTER_FORCE = 1.1E18;
 	
 	private Set<Bullet> bullets = new HashSet<Bullet>();
 	
 	private boolean thrusterActive = false;
 	
-	/**
-	 * Return the maximum speed for a ship.
-	 */
-	@Override
-	public double getMaxSpeed() {return MAX_SPEED;}
-	
-	/**
-	 * Return the minimum radius for a ship.
-	 */
-	@Override
-	public double getMinRadius() {return MIN_RADIUS;}
-	
-	/**
-	 * Return the minimum density for a ship.
-	 */
-	@Override
-	public double getMinDensity() {return MIN_DENSITY;}
+	public double getMinRadius() {return 10;}
+	public double getMinDensity() {return 1.42E12;}
 	
 	/**
 	 * Return the maximum exerted force on a ship.
@@ -69,7 +51,7 @@ public class Ship extends Entity {
 		super(x, y, xVelocity, yVelocity, radius);
 		try {
 			setOrientation(orientation);
-			setMass(mass);	
+			setMass(mass);
 		} catch (IllegalArgumentException e) {
 			throw e;
 		}
@@ -265,7 +247,8 @@ public class Ship extends Entity {
 							.filter(entity -> bullet.overlap(entity))
 							.findFirst()
 							.orElse(null);
-						bullet.collide(collidee);
+						collidee.terminate();
+						bullet.terminate();
 					} else {
 						this.world.addEntity(bullet);
 					}

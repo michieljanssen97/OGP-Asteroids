@@ -12,11 +12,7 @@ import be.kuleuven.cs.som.annotate.*;
  */
 
 public abstract class Entity implements ICollidable {
-	
-	protected static double MAX_SPEED = 300000;
-	protected static double MIN_RADIUS = 0;
-	protected static double MIN_DENSITY = 0;
-	
+
 	protected double x;
 	protected double y;
 	
@@ -88,6 +84,22 @@ public abstract class Entity implements ICollidable {
 	public boolean isDestroyed() {
 		return this.isDestroyed;
 	}
+	
+	/**
+	 * Returns the maximum speed of a bullet
+	 */
+	public double getMaxSpeed() {return 300000;}
+
+	/**
+	 * Returns the minimum speed of a bullet
+	 */
+	public double getMinRadius() {return 0;}
+
+	/**
+	 * Returns the minimum density of a bullet
+	 */
+	public double getMinDensity() {return 0;}
+	
 	
 	/**
 	 * Check whether a given position is valid by returning a boolean indicating validness.
@@ -243,24 +255,6 @@ public abstract class Entity implements ICollidable {
 		}
 	}
 
-	/**
-	 * Returns the entities maximum speed
-	 */
-	@Basic @Immutable
-	public abstract double getMaxSpeed();
-	
-	/**
-	 * Returns the entities minimum radius
-	 */
-	@Basic @Immutable
-	public abstract double getMinRadius();
-	
-	/**
-	 * Returns the entities minimum density
-	 */
-	@Basic @Immutable
-	public abstract double getMinDensity();
-	
 	/**
 	 * Returns the radius of this entity.
 	 */
@@ -508,11 +502,11 @@ public abstract class Entity implements ICollidable {
 			throw new IllegalArgumentException();
 		} else {
 			
-			double deltaPosX = other.getPositionX()-this.getPositionX();
-			double deltaPosY = other.getPositionY()-this.getPositionY();
+			double deltaPosX = this.getPositionX()-other.getPositionX();
+			double deltaPosY = this.getPositionY()-other.getPositionY();
 
-			double deltaVelX = other.getVelocityX()-this.getVelocityX();
-			double deltaVelY = other.getVelocityY()-this.getVelocityY();
+			double deltaVelX = this.getVelocityX()-other.getVelocityX();
+			double deltaVelY = this.getVelocityY()-other.getVelocityY();
 			
 			double deltaRR = Math.pow(deltaPosX, 2) + Math.pow(deltaPosY, 2);
 			double deltaVV = Math.pow(deltaVelX, 2) + Math.pow(deltaVelY, 2);
