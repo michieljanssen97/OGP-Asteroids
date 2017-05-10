@@ -324,7 +324,7 @@ public class World implements ICollidable {
 	public void showCollision(CollisionListener collisionListener, ICollidable[] collidables, double[] colPos) {
 		if (collisionListener == null) {return;}
 		else if (collidables[0] instanceof Entity && collidables[1] instanceof Entity){
-			if (((Entity)collidables[0]).isTerminated() == true && ((Entity)collidables[1]).isTerminated() == true) {
+			if (((Entity)collidables[0]).isDestroyed() == true && ((Entity)collidables[1]).isDestroyed() == true) {
 				double [] result = ((Entity)collidables[0]).explosionPosition((Entity)collidables[1]);
 				collisionListener.objectCollision((Entity)collidables[0],(Entity)collidables[1],result[0], result[1]);
 			}
