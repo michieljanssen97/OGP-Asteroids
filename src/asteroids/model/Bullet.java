@@ -10,10 +10,6 @@ import be.kuleuven.cs.som.annotate.*;
  */
 
 public class Bullet extends Entity {
-
-	protected static double MAX_SPEED = 300000;
-	protected static double MIN_RADIUS = 1;
-	protected static double DENSITY = 7.8E12;
 	
 	private int counter = 0;
 	private Ship ship; 
@@ -28,6 +24,9 @@ public class Bullet extends Entity {
 		super(x, y, xVelocity, yVelocity, radius);
 	}
 	
+	public double getMinRadius() {return 1;}
+	public double getMinDensity() {return 7.8E12;}
+	
 	public void terminate() {
 		if (isPartOfShip()) {
 			ship.removeBullet(this);
@@ -35,24 +34,6 @@ public class Bullet extends Entity {
 		}
 		super.terminate();
 	}
-	
-	/**
-	 * Returns the maximum speed of a bullet
-	 */
-	@Override
-	public double getMaxSpeed() {return MAX_SPEED;}
-
-	/**
-	 * Returns the minimum speed of a bullet
-	 */
-	@Override
-	public double getMinRadius() {return MIN_RADIUS;}
-
-	/**
-	 * Returns the minimum density of a bullet
-	 */
-	@Override
-	public double getMinDensity() {return MIN_DENSITY;}
 	
     /**
      * Checks when a bullet is about to hit a wall for the third time.
@@ -83,20 +64,14 @@ public class Bullet extends Entity {
 	public void setCounter(int counter){
 		this.counter = counter;
 	}
-	
-	/**
-	 * Returns the density of the bullet.
-	 */
-	@Basic
-	public double getDensity() {return DENSITY;}
-	
+
 	/**
 	 * Returns the mass of the bullet.
 	 * @see implementation
 	 */
 	@Basic
 	public double getMass(){
-		double mass = (4/3.0)*Math.PI*Math.pow(this.getRadius(), 3)*getDensity();
+		double mass = (4/3.0)*Math.PI*Math.pow(this.getRadius(), 3)*getMinDensity();
 		return mass;
 	}
 	

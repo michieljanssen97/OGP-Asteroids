@@ -12,9 +12,10 @@ public class Planetoid extends MinorPlanet {
 		
 		increaseTotalTraveledDistance(totalTraveledDistance);
 		this.radiusUponCreation = radius;
-		DENSITY = 0.917E12;
 	}
  	
+	public double getMinDensity() {return 0.917E12;}
+	
  	public void spawnAsteroids() {
  			double magnitude = (1.5)*(Math.pow(this.getVelocityX(), 2)+Math.pow(this.getVelocityY(), 2));
  			double velX = Math.sqrt((Math.random()*magnitude));

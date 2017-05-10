@@ -284,10 +284,6 @@ public class World implements ICollidable {
 	 * @return An ICollidable array containing the two colliding objects
 	 */
 	public ICollidable[] getNextCollisionObjects() {
-		
-		if (entities.size() == 1) {
-			return null;
-		}
 
 		Map<ICollidable[], Double> collisionMap = new HashMap<ICollidable[], Double>();
 		Double collisionTime;
@@ -344,17 +340,19 @@ public class World implements ICollidable {
 	/**
 	 * A function for advancing the game. No specification should be worked out according to the task explanation.
 	 */
-	public void evolve(double duration, CollisionListener collisionlistener) throws Exception {		
-		while (duration >= 0 && !entities.isEmpty()) {
+	public void evolve(double duration, CollisionListener collisionlistener) {		
+		while (duration > 0 && !entities.isEmpty()) {
 			// 1. Get first collision, if any
 			// Calculate all collisions, immediately continue if an apparent Collision is found
 			
 			Double firstCollisionTime = getNextCollisionTime();
+			System.out.println(firstCollisionTime);
+			System.out.println(duration);
 			
 			if (firstCollisionTime == null || firstCollisionTime > duration) {
 				advanceEntities(duration);
 				break;
-			} else {
+			} else if (firstCollisionTime < duration) {
 				advanceEntities(firstCollisionTime);
 				
 				double [] colPos = getNextCollisionPosition();
@@ -364,6 +362,14 @@ public class World implements ICollidable {
 				showCollision(collisionlistener, collidables, colPos);
 				
 				duration -= firstCollisionTime;
+			} else if (firstCollisionTime == duration){
+				double [] colPos = getNextCollisionPosition();
+				ICollidable[] collidables = getNextCollisionObjects();
+				
+				collidables[0].collide(collidables[1]);
+				showCollision(collisionlistener, collidables, colPos);
+			} else {
+				System.out.println("Sheeeeit");
 			}
 		} 
 	}
