@@ -23,7 +23,7 @@ public class Program<F,S> {
 	}
 	
 	public Statement getMain(){
-		return (Statement)this.main;	
+		return (Statement) this.main;	
 	}
 	public  List<F> getFunctions() { 
 		return this.functions;

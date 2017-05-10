@@ -3,10 +3,13 @@ package asteroids.tests.Part1;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import java.util.ArrayList;
+
 import org.junit.Before;
 import org.junit.Test;
 
 import asteroids.model.Ship;
+import asteroids.model.programs.Type;
 import asteroids.facade.Facade;
 import asteroids.part1.facade.IFacade;
 import asteroids.util.ModelException;
@@ -52,4 +55,6 @@ public class TestPartial {
 		assertEquals(130, position[0], EPSILON);
 		assertEquals(85, position[1], EPSILON);
 	}
+	
+
 }
