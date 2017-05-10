@@ -1,5 +1,7 @@
 package asteroids.model.programs;
 
+import java.util.List;
+
 import asteroids.model.Entity;
 import asteroids.model.Program;
 import asteroids.model.Ship;
@@ -37,10 +39,10 @@ public class Statement<E,F> {
 			 program.setConsumedTime(0.0);
 			 throw new NoMoreTimeException();
 		 }
-		 
+
 		 if (this.getValue() instanceof SingleStatement) {
 			 SingleStatement<E,Statement<E,F>,F> singleStatement = ((SingleStatement<E,Statement<E,F>,F>) (this.getValue()));
-			 
+
 			 if (singleStatement.getStating().equals("while")){
 				 while (true){
 					 Expression<?> condition = singleStatement.getExpression();
@@ -57,7 +59,7 @@ public class Statement<E,F> {
 			 }
 			 else throw new FalseProgramException("Illegal single statement");
 		 }
-		 
+
 		 else if (this.getValue() instanceof DoubleStatement) {
 			 DoubleStatement<E,Statement<E,F>,F> doubleStatment = (DoubleStatement<E,Statement<E,F>,F>) this.getValue();
 			 if (doubleStatment.getStating().equals("if")) {
@@ -73,63 +75,99 @@ public class Statement<E,F> {
 			 }
 			 else throw new FalseProgramException("Illegal double statement");
 		 }
-		 
+
 		 else if (this.getValue() instanceof String) {
 			 String string = (String) this.getValue();
 			 if (string.equals("break")) {
 				 throw new BreakException();
 			 }
+			 else if (string.equals("thrust_on")){
+				 ship.toggleThruster();
+			 }
+			 else if (string.equals("thrust_off")){
+				 ship.toggleThruster();
+			 }
+			 else if (string.equals("fire")){
+				 ship.fireBullet();
+			 }
+			 else if (string.equals("skip")){
+				 
+			 }
 			 else throw new FalseProgramException("Illegal string statement");
 		 }
-		 
+
 		 else if (this.getValue() instanceof ExpressionStatement) {
 			 ExpressionStatement<E> expressionStatement = (ExpressionStatement<E>)this.getValue();
 			 if (expressionStatement.getStating().equals("print")){
-				 if (expressionStatement.getExpression().getValue() instanceof Variable) {
-					 Variable<?> var = (Variable<?>)expressionStatement.getExpression().getValue();
-					 Expression<Variable<?>> expresvar = new Expression<Variable<?>>(var, getSourceLocation());
-					 System.out.println(expresvar.read(program).getValue());
+				 if (expressionStatement.getExpression().getValue() instanceof String) {
+					 program.getPrintedObjects().add(0, expressionStatement.getExpression().read(program).getValue());
+					 System.out.println(expressionStatement.getExpression().read(program).getValue());
 				 }
 				 try {
-					 Expression<Double> exp = (expressionStatement.getExpression().calculationExpression(ship, world, program));
+					 Expression<Double> exp = (expressionStatement.getExpression().calculateExpression(ship, world, program));
+					 program.getPrintedObjects().add(0, exp.getValue());
 					 System.out.println(exp.getValue());
 				 } catch (FalseProgramException e) {	
 				 }
 				 try {
 					 Expression<Boolean> exp = (expressionStatement.getExpression().evaluateExpression(ship, world, program));
+					 program.getPrintedObjects().add(0, exp.getValue());
 					 System.out.println(exp.getValue());
 				 } catch (FalseProgramException e) {		
 				 }
 				 try {
 					 Expression<Entity> exp = (expressionStatement.getExpression().searchEntity(world, ship, program));
+					 program.getPrintedObjects().add(0, exp.getValue());
 					 System.out.println(exp.getValue());
 				 } catch (FalseProgramException e) {	
 				 }
 			 }
+			 else if(expressionStatement.getStating().equals("turn")){
+				 Expression<Double> angle = expressionStatement.getExpression().read(program).calculateExpression(ship, world, program);
+				 ship.turn(angle.getValue());
+			 }
 		 }
-		 
+
 		 else if (this.getValue() instanceof Assignment) {
 			 Assignment<E> assignment = (Assignment<E>) this.getValue();
-			 if (assignment.getValue().getValue().toString().equals("Double") {
-				 program.getDoubleVariables().put(assignment.getVariableName(), assignment.getValue().read(program).calculate(gameObject, world,program).getValue());
+			 if (assignment.getValue().getValue().getClass().getSimpleName().equals("Double")) {
+				 program.getDoubleVariables().put(assignment.getVariableName(), assignment.getValue().read(program).calculateExpression(ship, world,program).getValue());
 			 }
-			 else if (assignment.getValue().getValue().equals(T)){
+			 else if (assignment.getValue().getValue().getClass().getSimpleName().equals("Entity")){
 				 if (assignment.getValue().getValue() == null)
-					 program.getGameObjectVariables().put(assignment.getVariableName(), null);
+					 program.getEntityVariables().put(assignment.getVariableName(), null);
 				 else
-					 program.getGameObjectVariables().put(assignment.getVariableName(), assignment.getValue().read(program).search(world, gameObject, program).getValue());
+					 program.getEntityVariables().put(assignment.getVariableName(), assignment.getValue().read(program).searchEntity(world, ship, program).getValue());
 			 }
-			 else if (assignment.getValue().getValue().equals(Type.Double)){
-				 program.getBooleanVariables().put(assignment.getVariableName(), assignment.getValue().read(program).evaluate(gameObject, world,program).getValue());
+			 else if (assignment.getValue().getValue().getClass().getSimpleName().equals("Boolean")){
+				 program.getBooleanVariables().put(assignment.getVariableName(), assignment.getValue().read(program).evaluateExpression(ship, world,program).getValue());
 			 }
 			 else throw new FalseProgramException("no such type");
 		 }
-			 
-			 
-			 
-			 
-			 
-			 
+
+		 else {
+			 List<Statement<E,F>> newList = (List<Statement<E,F>>)this.getValue();
+			 int correctLocation = 0;
+			 if (program.getEndingSourceLocation() == null){
+				 for (Statement<E,F> currentStatement : newList) {
+					 currentStatement.execute(ship, world, program, deltaT);
+				 }
+			 }
+			 else {	 
+				 for (int i = 0 ; i < newList.size() ; i++) {
+					 if ((newList.get(i).getSourceLocation().getLine() <= program.getEndingSourceLocation().getLine())){
+						 if ((newList.get(i).getSourceLocation().getColumn() <= program.getEndingSourceLocation().getColumn())){
+							 correctLocation = i;
+						 }
+					 }
+				 }
+				 for (int i = 0 ; i < newList.size() ; i++) {
+					 if (i>=correctLocation) {
+						 newList.get(i).execute(ship, world, program, deltaT);
+					 }
+				 }
+			 }
+		 }	 
 	 }
 
 		 

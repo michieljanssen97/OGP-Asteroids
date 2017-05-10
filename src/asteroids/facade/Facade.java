@@ -10,6 +10,7 @@ import asteroids.model.Entity;
 import asteroids.model.Planetoid;
 import asteroids.model.Ship;
 import asteroids.model.World;
+import asteroids.model.programs.*;
 import asteroids.part2.CollisionListener;
 import asteroids.model.Program;
 import asteroids.part3.programs.IProgramFactory;
@@ -493,8 +494,8 @@ public class Facade implements asteroids.part3.facade.IFacade {
 
 	@Override
 	public IProgramFactory<?, ?, ?, ? extends Program> createProgramFactory() throws ModelException {
-		// TODO Auto-generated method stub
-		return null;
+		ProgramFactory<Expression, Statement, Function, Program> factory = new ProgramFactory<>();
+		return factory;
 	}
 
 

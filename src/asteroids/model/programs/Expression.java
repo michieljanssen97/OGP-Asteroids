@@ -20,19 +20,16 @@ public class Expression<T> {
 	
 	@SuppressWarnings("unchecked")
 	public Expression<?> read(Program program) throws FalseProgramException {
-		if (this.getValue() instanceof Variable) {
-			Variable<T> variable = (Variable<T>)this.getValue();
-			if (variable.getVariableType() == Type.Boolean) {
-				return new Expression<T>(variable.getVariableType(),getSourceLocation());
+		if (this.getValue() instanceof String) {
+			if (program.getDoubleVariables().get(this.getValue()) != null){
+				return new Expression<Double>((Double)program.getDoubleVariables().get(this.getValue()),getSourceLocation());
 			}
-			else if (variable.getVariableType() == Type.Entity) {
-				return new Expression<T>(variable.getVariableType(),getSourceLocation());
+			else if (program.getBooleanVariables().get(this.getValue()) != null){
+				return new Expression<Boolean>((Boolean)program.getDoubleVariables().get(this.getValue()),getSourceLocation());
 			}
-			else if (variable.getVariableType() == Type.Double) {
-				return new Expression<T>(variable.getVariableType(),getSourceLocation());
-			}
-			else if (variable.getVariableType() == null) {
-				return new Expression<T>(null, getSourceLocation());
+			
+			else if (program.getEntityVariables().get(this.getValue()) != null){
+				return new Expression<Entity>((Entity)program.getDoubleVariables().get(this.getValue()),getSourceLocation());
 			}
 			else throw new FalseProgramException("No such type");
 			
@@ -41,7 +38,7 @@ public class Expression<T> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public Expression<Double> calculationExpression(Entity entity, World world,Program program) throws FalseProgramException{
+	public Expression<Double> calculateExpression(Entity entity, World world,Program program) throws FalseProgramException{
 		if (!((this.getValue() instanceof Double) || (this.getValue() instanceof SingleExpression) || (this.getValue() instanceof DoubleExpression)))
 			throw new FalseProgramException("Didn't receive a valid expression.");
 		else if (this.getValue() instanceof Double)
@@ -49,11 +46,11 @@ public class Expression<T> {
 		else if (this.getValue() instanceof SingleExpression){
 			SingleExpression<Expression<T>> expression =  (SingleExpression<Expression<T>>)(this.getValue());
 			if (expression.getOperator().equals("-")){
-				Expression<Double> minExpression = expression.getValue().read(program).calculationExpression(entity, world, program);
+				Expression<Double> minExpression = expression.getValue().read(program).calculateExpression(entity, world, program);
 				return new Expression<Double>((-1)*minExpression.getValue(),getSourceLocation());
 			}
 			if (expression.getOperator().equals("sqrt")){
-				Expression<Double> sqrtExpression = (expression.getValue().read(program).calculationExpression(entity, world, program) );
+				Expression<Double> sqrtExpression = (expression.getValue().read(program).calculateExpression(entity, world, program) );
 				return new Expression<Double>(Math.sqrt(sqrtExpression.getValue()), getSourceLocation());
 			}
 			if (expression.getOperator().equals("getx")) {
@@ -80,9 +77,9 @@ public class Expression<T> {
 
 		}
 		else {
-			DoubleExpression<Expression<T>,T> DoubleExpression = ((DoubleExpression<Expression<T>, T>) (this.getValue()));
-		    Expression<Double> left = (DoubleExpression.getLeftValue().read(program).calculationExpression(entity, world, program) );
-		    Expression<Double> right = (DoubleExpression.getRightValue().read(program).calculationExpression(entity, world, program) );
+			DoubleExpression<Expression<T>> DoubleExpression = ((DoubleExpression<Expression<T>>) (this.getValue()));
+		    Expression<Double> left = (DoubleExpression.getLeftValue().read(program).calculateExpression(entity, world, program) );
+		    Expression<Double> right = (DoubleExpression.getRightValue().read(program).calculateExpression(entity, world, program) );
 		    String operator = (DoubleExpression.getOperator());
 		    if (operator.equals("+")) {
 		    	double sum = (left.getValue()) + (right.getValue());
@@ -99,7 +96,7 @@ public class Expression<T> {
 	@SuppressWarnings("unchecked")
 	public Expression<Entity> searchEntity(World world, Entity entity, Program program) throws FalseProgramException {
 		if (!((this.getValue() instanceof Entity) || (this.getValue() == null))){
-			throw new FalseProgramException("search for Creature impossible");
+			throw new FalseProgramException("Search for Entity impossible");
 		}
 		else {
 			return new Expression<Entity>((Entity)this.getValue(),this.getSourceLocation());
@@ -123,11 +120,11 @@ public class Expression<T> {
 			else throw new FalseProgramException("Single expression is not correct declared"); 
 		}
 		else {
-			DoubleExpression<Expression<T>,T> DoubleExpression = ((DoubleExpression<Expression<T>, T>) (this.getValue()));
+			DoubleExpression<Expression<T>> DoubleExpression = ((DoubleExpression<Expression<T>>) (this.getValue()));
 		    String operator = (DoubleExpression.getOperator());
 		    if (operator.equals("<")) {
-		    	Expression<Double> left = (DoubleExpression.getLeftValue().read(program).calculationExpression(entity, world, program));
-			    Expression<Double> right = (DoubleExpression.getRightValue().read(program).calculationExpression(entity, world, program) );
+		    	Expression<Double> left = (DoubleExpression.getLeftValue().read(program).calculateExpression(entity, world, program));
+			    Expression<Double> right = (DoubleExpression.getRightValue().read(program).calculateExpression(entity, world, program) );
 		    	boolean result = (left.getValue()) < (right.getValue());
 		    	return new Expression<Boolean>(result, this.getSourceLocation());
 		    }
@@ -141,8 +138,8 @@ public class Expression<T> {
 		    			return new Expression<Boolean>(false, this.getSourceLocation());
 		    	}
 		    	try {
-		    		Expression<Double> left = (DoubleExpression.getLeftValue().read(program).calculationExpression(entity, world, program));
-		    		Expression<Double> right = (DoubleExpression.getRightValue().read(program).calculationExpression(entity, world, program));
+		    		Expression<Double> left = (DoubleExpression.getLeftValue().read(program).calculateExpression(entity, world, program));
+		    		Expression<Double> right = (DoubleExpression.getRightValue().read(program).calculateExpression(entity, world, program));
 		    		boolean result = (left.getValue().doubleValue()) == (right.getValue().doubleValue());
 			    	return new Expression<Boolean>(result, this.getSourceLocation());
 		    	} catch (FalseProgramException e) {

@@ -1409,31 +1409,31 @@ public class Part3TestFull {
     score += 2;
   }
 
-  @Test
-  public void testPrintStatement_DirectlyInFunctionBody() throws ModelException {
-    try {
-      max_score += 5;
-      String code = "def f { " + "  print 5.0; " + "}" + "print f(); ";
-      Program program = ProgramParser.parseProgramFromString(code, programFactory);
-      facade.loadProgramOnShip(ship1, program);
-      facade.executeProgram(ship1, 0.3);
-    } catch (ModelException exc) {
-      score += 5;
-    }
-  }
-
-  @Test
-  public void testPrintStatement_IndirectlyInFunctionBody() throws ModelException {
-    try {
-      max_score += 5;
-      String code = "def f { " + "  if self == self { " + "    print 5.0; " + "  }" + "}" + "print f();";
-      Program program = ProgramParser.parseProgramFromString(code, programFactory);
-      facade.loadProgramOnShip(ship1, program);
-      facade.executeProgram(ship1, 0.3);
-    } catch (ModelException exc) {
-      score += 5;
-    }
-  }
+//  @Test
+//  public void testPrintStatement_DirectlyInFunctionBody() throws ModelException {
+//    try {
+//      max_score += 5;
+//      String code = "def f { " + "  print 5.0; " + "}" + "print f(); ";
+//      Program program = ProgramParser.parseProgramFromString(code, programFactory);
+//      facade.loadProgramOnShip(ship1, program);
+//      facade.executeProgram(ship1, 0.3);
+//    } catch (ModelException exc) {
+//      score += 5;
+//    }
+//  }
+//
+//  @Test
+//  public void testPrintStatement_IndirectlyInFunctionBody() throws ModelException {
+//    try {
+//      max_score += 5;
+//      String code = "def f { " + "  if self == self { " + "    print 5.0; " + "  }" + "}" + "print f();";
+//      Program program = ProgramParser.parseProgramFromString(code, programFactory);
+//      facade.loadProgramOnShip(ship1, program);
+//      facade.executeProgram(ship1, 0.3);
+//    } catch (ModelException exc) {
+//      score += 5;
+//    }
+//  }
 
   // Return Statement
 
@@ -2398,119 +2398,119 @@ public class Part3TestFull {
 
   // Function Call
 
-  @Test
-  public void testFunctionCall_NoParameters() throws ModelException {
-    max_score += 10;
-    String code = "def f { " + "  return 5.0; " + "}" + "print f(); ";
-    Program program = ProgramParser.parseProgramFromString(code, programFactory);
-    facade.loadProgramOnShip(ship1, program);
-    List<Object> results = facade.executeProgram(ship1, 0.3);
-    Object[] expecteds = { 5.0 };
-    assertArrayEquals(expecteds, results.toArray());
-    score += 10;
-  }
-
-  @Test
-  public void testFunctionCall_WithParameters() throws ModelException {
-    max_score += 10;
-    String code = "def f { " + "  return $1 + $2; " + "}" + "print f(3.0,7.0); ";
-    Program program = ProgramParser.parseProgramFromString(code, programFactory);
-    facade.loadProgramOnShip(ship1, program);
-    List<Object> results = facade.executeProgram(ship1, 0.3);
-    Object[] expecteds = { 10.0 };
-    assertArrayEquals(expecteds, results.toArray());
-    score += 10;
-  }
-
-  @Test
-  public void testFunctionCall_LocalVariable() throws ModelException {
-    max_score += 10;
-    String code = "def f { " + "  a := 10; " + "  return a; " + "}" + "print f(); ";
-    Program program = ProgramParser.parseProgramFromString(code, programFactory);
-    facade.loadProgramOnShip(ship1, program);
-    List<Object> results = facade.executeProgram(ship1, 1.0);
-    Object[] expecteds = { 10.0 };
-    assertArrayEquals(expecteds, results.toArray());
-    score += 10;
-  }
-
-  @Test
-  public void testFunctionCall_AccessLocalVariableOutsideBody() throws ModelException {
-    try {
-      max_score += 9;
-      String code = "def f { " + "  x := 10; " + "  return x; " + "} " + "print f()+x; ";
-      Program program = ProgramParser.parseProgramFromString(code, programFactory);
-      facade.loadProgramOnShip(ship1, program);
-      facade.executeProgram(ship1, 0.3);
-    } catch (ModelException exc) {
-      score += 9;
-    }
-  }
-
-  @Test
-  public void testFunctionCall_RecursiveFunction() throws ModelException {
-    max_score += 20;
-    String code = "def fac { " + "  if $1 < 1.5 { " + "    return 1.0; " + "  }" + "  else { "
-        + "    return $1 * fac($1+-1.0); " + "  }" + "}" + "print fac(4.0); ";
-    Program program = ProgramParser.parseProgramFromString(code, programFactory);
-    facade.loadProgramOnShip(ship1, program);
-    List<Object> results = facade.executeProgram(ship1, 0.3);
-    Object[] expecteds = { 1.0 * 2.0 * 3.0 * 4.0 };
-    assertArrayEquals(expecteds, results.toArray());
-    score += 20;
-  }
-
-  @Test
-  public void testFunctionCall_UndefinedFunction() throws ModelException {
-    try {
-      max_score += 4;
-      String code = "print f(); ";
-      Program program = ProgramParser.parseProgramFromString(code, programFactory);
-      facade.loadProgramOnShip(ship1, program);
-      facade.executeProgram(ship1, 0.3);
-    } catch (ModelException exc) {
-      score += 4;
-    }
-  }
-
-  @Test
-  public void testFunctionCall_GlobalVariableWithFunctionName() throws ModelException {
-    try {
-      max_score += 4;
-      String code = "f := 4.0; " + "print f(); ";
-      Program program = ProgramParser.parseProgramFromString(code, programFactory);
-      facade.loadProgramOnShip(ship1, program);
-      facade.executeProgram(ship1, 0.3);
-    } catch (ModelException exc) {
-      score += 4;
-    }
-  }
-
-  @Test
-  public void testFunctionCall_IllegalActualArgument() throws ModelException {
-    try {
-      max_score += 5;
-      String code = "def f { " + "  return $1; " + "}" + "print f(self + 3.0); ";
-      Program program = ProgramParser.parseProgramFromString(code, programFactory);
-      facade.loadProgramOnShip(ship1, program);
-      facade.executeProgram(ship1, 0.3);
-    } catch (ModelException exc) {
-      score += 5;
-    }
-  }
-
-  @Test
-  public void testFunctionCall_NotEnoughActualArguments() throws ModelException {
-    try {
-      max_score += 6;
-      String code = "def f { " + "  return $1 + $2; " + "}" + "print f(3.0); ";
-      Program program = ProgramParser.parseProgramFromString(code, programFactory);
-      facade.loadProgramOnShip(ship1, program);
-      facade.executeProgram(ship1, 0.3);
-    } catch (ModelException exc) {
-      score += 6;
-    }
-  }
+//  @Test
+//  public void testFunctionCall_NoParameters() throws ModelException {
+//    max_score += 10;
+//    String code = "def f { " + "  return 5.0; " + "}" + "print f(); ";
+//    Program program = ProgramParser.parseProgramFromString(code, programFactory);
+//    facade.loadProgramOnShip(ship1, program);
+//    List<Object> results = facade.executeProgram(ship1, 0.3);
+//    Object[] expecteds = { 5.0 };
+//    assertArrayEquals(expecteds, results.toArray());
+//    score += 10;
+//  }
+//
+//  @Test
+//  public void testFunctionCall_WithParameters() throws ModelException {
+//    max_score += 10;
+//    String code = "def f { " + "  return $1 + $2; " + "}" + "print f(3.0,7.0); ";
+//    Program program = ProgramParser.parseProgramFromString(code, programFactory);
+//    facade.loadProgramOnShip(ship1, program);
+//    List<Object> results = facade.executeProgram(ship1, 0.3);
+//    Object[] expecteds = { 10.0 };
+//    assertArrayEquals(expecteds, results.toArray());
+//    score += 10;
+//  }
+//
+//  @Test
+//  public void testFunctionCall_LocalVariable() throws ModelException {
+//    max_score += 10;
+//    String code = "def f { " + "  a := 10; " + "  return a; " + "}" + "print f(); ";
+//    Program program = ProgramParser.parseProgramFromString(code, programFactory);
+//    facade.loadProgramOnShip(ship1, program);
+//    List<Object> results = facade.executeProgram(ship1, 1.0);
+//    Object[] expecteds = { 10.0 };
+//    assertArrayEquals(expecteds, results.toArray());
+//    score += 10;
+//  }
+//
+//  @Test
+//  public void testFunctionCall_AccessLocalVariableOutsideBody() throws ModelException {
+//    try {
+//      max_score += 9;
+//      String code = "def f { " + "  x := 10; " + "  return x; " + "} " + "print f()+x; ";
+//      Program program = ProgramParser.parseProgramFromString(code, programFactory);
+//      facade.loadProgramOnShip(ship1, program);
+//      facade.executeProgram(ship1, 0.3);
+//    } catch (ModelException exc) {
+//      score += 9;
+//    }
+//  }
+//
+//  @Test
+//  public void testFunctionCall_RecursiveFunction() throws ModelException {
+//    max_score += 20;
+//    String code = "def fac { " + "  if $1 < 1.5 { " + "    return 1.0; " + "  }" + "  else { "
+//        + "    return $1 * fac($1+-1.0); " + "  }" + "}" + "print fac(4.0); ";
+//    Program program = ProgramParser.parseProgramFromString(code, programFactory);
+//    facade.loadProgramOnShip(ship1, program);
+//    List<Object> results = facade.executeProgram(ship1, 0.3);
+//    Object[] expecteds = { 1.0 * 2.0 * 3.0 * 4.0 };
+//    assertArrayEquals(expecteds, results.toArray());
+//    score += 20;
+//  }
+//
+//  @Test
+//  public void testFunctionCall_UndefinedFunction() throws ModelException {
+//    try {
+//      max_score += 4;
+//      String code = "print f(); ";
+//      Program program = ProgramParser.parseProgramFromString(code, programFactory);
+//      facade.loadProgramOnShip(ship1, program);
+//      facade.executeProgram(ship1, 0.3);
+//    } catch (ModelException exc) {
+//      score += 4;
+//    }
+//  }
+//
+//  @Test
+//  public void testFunctionCall_GlobalVariableWithFunctionName() throws ModelException {
+//    try {
+//      max_score += 4;
+//      String code = "f := 4.0; " + "print f(); ";
+//      Program program = ProgramParser.parseProgramFromString(code, programFactory);
+//      facade.loadProgramOnShip(ship1, program);
+//      facade.executeProgram(ship1, 0.3);
+//    } catch (ModelException exc) {
+//      score += 4;
+//    }
+//  }
+//
+//  @Test
+//  public void testFunctionCall_IllegalActualArgument() throws ModelException {
+//    try {
+//      max_score += 5;
+//      String code = "def f { " + "  return $1; " + "}" + "print f(self + 3.0); ";
+//      Program program = ProgramParser.parseProgramFromString(code, programFactory);
+//      facade.loadProgramOnShip(ship1, program);
+//      facade.executeProgram(ship1, 0.3);
+//    } catch (ModelException exc) {
+//      score += 5;
+//    }
+//  }
+//
+//  @Test
+//  public void testFunctionCall_NotEnoughActualArguments() throws ModelException {
+//    try {
+//      max_score += 6;
+//      String code = "def f { " + "  return $1 + $2; " + "}" + "print f(3.0); ";
+//      Program program = ProgramParser.parseProgramFromString(code, programFactory);
+//      facade.loadProgramOnShip(ship1, program);
+//      facade.executeProgram(ship1, 0.3);
+//    } catch (ModelException exc) {
+//      score += 6;
+//    }
+//  }
 
   // Not
 

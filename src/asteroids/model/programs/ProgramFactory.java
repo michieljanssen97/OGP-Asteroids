@@ -8,7 +8,7 @@ import asteroids.part3.programs.IProgramFactory;
 import asteroids.part3.programs.SourceLocation;
 
 
-public class ProgramFactory<E, S, F, P, T> implements IProgramFactory<E, S, F, P>{
+public class ProgramFactory<E, S, F, P> implements IProgramFactory<E, S, F, P>{
 
 	@Override
 	public P createProgram(List<F> functions, S main) {
@@ -63,14 +63,12 @@ public class ProgramFactory<E, S, F, P, T> implements IProgramFactory<E, S, F, P
 
 	@Override
 	public E createReadVariableExpression(String variableName, SourceLocation sourceLocation) {
-		Variable<T> readVariableExpr = new Variable<T>(variableName);
-		return (E) new Expression<Variable<T>>(readVariableExpr, sourceLocation);
+		return (E) new Expression<String>(variableName, sourceLocation);
 	}
 
 	@Override
 	public E createReadParameterExpression(String parameterName, SourceLocation sourceLocation) {
-		Variable<T> readParameterExpr = new Variable<T>(parameterName);
-		return (E) new Expression<Variable<T>>(readParameterExpr, sourceLocation);
+		return (E) new Expression<String>(parameterName, sourceLocation);
 	}
 
 	@Override
@@ -176,26 +174,26 @@ public class ProgramFactory<E, S, F, P, T> implements IProgramFactory<E, S, F, P
 
 	@Override
 	public E createLessThanExpression(E e1, E e2, SourceLocation location) {
-		DoubleExpression<E,T> lessExpr = new DoubleExpression<E,T>(e1,e2,"<");
-		return (E) new Expression<DoubleExpression<E,T>>(lessExpr,location);
+		DoubleExpression<E> lessExpr = new DoubleExpression<E>(e1,e2,"<");
+		return (E) new Expression<DoubleExpression<E>>(lessExpr,location);
 	}
 
 	@Override
 	public E createEqualityExpression(E e1, E e2, SourceLocation location) {
-		DoubleExpression<E,T> equalExpr = new DoubleExpression<E,T>(e1,e2,"==");
-		return (E) new Expression<DoubleExpression<E,T>>(equalExpr,location);
+		DoubleExpression<E> equalExpr = new DoubleExpression<E>(e1,e2,"==");
+		return (E) new Expression<DoubleExpression<E>>(equalExpr,location);
 	}
 
 	@Override
 	public E createAdditionExpression(E e1, E e2, SourceLocation location) {
-		DoubleExpression<E,T> addExpr = new DoubleExpression<E,T>(e1,e2,"+");
-		return (E) new Expression<DoubleExpression<E,T>>(addExpr,location);
+		DoubleExpression<E> addExpr = new DoubleExpression<E>(e1,e2,"+");
+		return (E) new Expression<DoubleExpression<E>>(addExpr,location);
 	}
 
 	@Override
 	public E createMultiplicationExpression(E e1, E e2, SourceLocation location) {
-		DoubleExpression<E,T> mulExpr = new DoubleExpression<E,T>(e1,e2,"*");
-		return (E) new Expression<DoubleExpression<E,T>>(mulExpr,location);
+		DoubleExpression<E> mulExpr = new DoubleExpression<E>(e1,e2,"*");
+		return (E) new Expression<DoubleExpression<E>>(mulExpr,location);
 	}
 
 	@Override
@@ -212,32 +210,28 @@ public class ProgramFactory<E, S, F, P, T> implements IProgramFactory<E, S, F, P
 
 	@Override
 	public S createThrustOnStatement(SourceLocation location) {
-		// TODO Auto-generated method stub
-		return null;
+		return (S) new Statement<String,F>("thrust_on",location);
 	}
 
 	@Override
 	public S createThrustOffStatement(SourceLocation location) {
-		// TODO Auto-generated method stub
-		return null;
+		return (S) new Statement<String,F>("thrust_off",location);
 	}
 
 	@Override
 	public S createFireStatement(SourceLocation location) {
-		// TODO Auto-generated method stub
-		return null;
+		return (S) new Statement<String,F>("fire",location);
 	}
 
 	@Override
 	public S createTurnStatement(E angle, SourceLocation location) {
-		// TODO Auto-generated method stub
-		return null;
+		ExpressionStatement<E> turnStat = new ExpressionStatement<>(angle, "turn");
+		return (S) new Statement<ExpressionStatement<E>,F>(turnStat,location);
 	}
 
 	@Override
 	public S createSkipStatement(SourceLocation location) {
-		// TODO Auto-generated method stub
-		return null;
+		return (S) new Statement<String,F>("skip",location);
 	}
 	
 }

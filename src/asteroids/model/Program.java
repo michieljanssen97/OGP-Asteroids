@@ -20,6 +20,7 @@ public class Program<F,S> {
 	private HashMap<String,Boolean> booleanVariables;
 	private HashMap<String,Double> doubleVariables;
 	private HashMap<String,Entity> entityVariables;
+	private List<Object> printedObjects;
 
 	
 	public Program(List<F> functions, S main){
@@ -33,9 +34,10 @@ public class Program<F,S> {
 	public  List<F> getFunctions() { 
 		return this.functions;
 	}
-	public Map<String,Boolean> getBooleanVariables() { return this.booleanVariables; }
-	public Map<String,Double> getDoubleVariables() { return this.doubleVariables;}
-	public Map<String,Entity> getEntityVariables() { return this.entityVariables; }
+	public HashMap<String,Boolean> getBooleanVariables() { return this.booleanVariables; }
+	public HashMap<String,Double> getDoubleVariables() { return this.doubleVariables;}
+	public HashMap<String,Entity> getEntityVariables() { return this.entityVariables; }
+	public List<Object> getPrintedObjects() {return this.printedObjects;}
 	
 
 

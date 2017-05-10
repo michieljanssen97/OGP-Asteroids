@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import asteroids.model.programs.FalseProgramException;
 import be.kuleuven.cs.som.annotate.*;
 
 /**
@@ -295,18 +296,30 @@ public class Ship extends Entity {
 		return bullet_mass + this.mass;
 		
 	}
-
+	
+	private Program program;
+	private void setProgram(Program newProgram){
+		this.program = newProgram;
+	}
+	
 	public Program getProgram() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.program;
 	}
 
 	public List<Object> executeProgram(double dt) {
-		return null;
+		try {
+			getProgram().execute(dt, this, this.getWorld());
+		} catch (FalseProgramException e) {
+		}
+		if (getProgram().getEndingSourceLocation() == null){
+			return null;
+		} else{
+			return getProgram().getPrintedObjects();
+		}
 	}
 
 	public void loadProgram(Program program) {
-		// TODO Auto-generated method stub
+		setProgram(program);
 	}
 	
 	public void collide(Entity entity) {

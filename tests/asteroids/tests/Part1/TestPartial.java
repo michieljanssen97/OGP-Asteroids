@@ -56,5 +56,10 @@ public class TestPartial {
 		assertEquals(85, position[1], EPSILON);
 	}
 	
-
+//	@Test
+//	public void t() {
+//		ArrayList<Double> d = new ArrayList<>();
+//		d.add(5.0);
+//		System.out.println(d.get(0).getClass().getSimpleName());
+//	}
 }
