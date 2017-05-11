@@ -311,7 +311,7 @@ public class Ship extends Entity {
 			getProgram().execute(dt, this, this.getWorld());
 		} catch (FalseProgramException e) {
 		}
-		if (getProgram().getEndingSourceLocation() == null){
+		if (getProgram().getEndingSourceLocation() != null){
 			return null;
 		} else{
 			return getProgram().getPrintedObjects();

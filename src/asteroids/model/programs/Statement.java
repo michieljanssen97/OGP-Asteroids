@@ -82,16 +82,19 @@ public class Statement<E,F> {
 				 throw new BreakException();
 			 }
 			 else if (string.equals("thrust_on")){
+				 program.setConsumedTime(program.getConsumedTime()+0.2);
 				 ship.toggleThruster();
 			 }
 			 else if (string.equals("thrust_off")){
+				 program.setConsumedTime(program.getConsumedTime()+0.2);
 				 ship.toggleThruster();
 			 }
 			 else if (string.equals("fire")){
+				 program.setConsumedTime(program.getConsumedTime()+0.2);
 				 ship.fireBullet();
 			 }
 			 else if (string.equals("skip")){
-				 
+				 program.setConsumedTime(program.getConsumedTime()+0.2);
 			 }
 			 else throw new FalseProgramException("Illegal string statement");
 		 }
@@ -100,29 +103,30 @@ public class Statement<E,F> {
 			 ExpressionStatement<E> expressionStatement = (ExpressionStatement<E>)this.getValue();
 			 if (expressionStatement.getStating().equals("print")){
 				 if (expressionStatement.getExpression().getValue() instanceof String) {
-					 program.getPrintedObjects().add(0, expressionStatement.getExpression().read(program).getValue());
+					 program.getPrintedObjects().add(expressionStatement.getExpression().read(program).getValue());
 					 System.out.println(expressionStatement.getExpression().read(program).getValue());
 				 }
 				 try {
 					 Expression<Double> exp = (expressionStatement.getExpression().calculateExpression(ship, world, program));
-					 program.getPrintedObjects().add(0, exp.getValue());
+					 program.getPrintedObjects().add(exp.getValue());
 					 System.out.println(exp.getValue());
 				 } catch (FalseProgramException e) {	
 				 }
 				 try {
 					 Expression<Boolean> exp = (expressionStatement.getExpression().evaluateExpression(ship, world, program));
-					 program.getPrintedObjects().add(0, exp.getValue());
+					 program.getPrintedObjects().add(exp.getValue());
 					 System.out.println(exp.getValue());
 				 } catch (FalseProgramException e) {		
 				 }
 				 try {
 					 Expression<Entity> exp = (expressionStatement.getExpression().searchEntity(world, ship, program));
-					 program.getPrintedObjects().add(0, exp.getValue());
+					 program.getPrintedObjects().add(exp.getValue());
 					 System.out.println(exp.getValue());
 				 } catch (FalseProgramException e) {	
 				 }
 			 }
 			 else if(expressionStatement.getStating().equals("turn")){
+				 program.setConsumedTime(program.getConsumedTime()+0.2);
 				 Expression<Double> angle = expressionStatement.getExpression().read(program).calculateExpression(ship, world, program);
 				 ship.turn(angle.getValue());
 			 }
@@ -141,6 +145,25 @@ public class Statement<E,F> {
 			 }
 			 else if (assignment.getValue().getValue().getClass().getSimpleName().equals("Boolean")){
 				 program.getBooleanVariables().put(assignment.getVariableName(), assignment.getValue().read(program).evaluateExpression(ship, world,program).getValue());
+			 }
+			 else if (assignment.getValue() instanceof Expression){
+				 Expression<?> assignmentExpr = (Expression<?>)assignment.getValue();
+				 try {
+					 Expression<Double> exp = (assignmentExpr.read(program).calculateExpression(ship, world, program));
+					 program.getDoubleVariables().put(assignment.getVariableName(), exp.getValue());
+				 } catch (FalseProgramException e) {	
+				 }
+				 try {
+					 Expression<Boolean> exp = (assignmentExpr.read(program).evaluateExpression(ship, world, program));
+					 program.getBooleanVariables().put(assignment.getVariableName(), exp.getValue());
+				 } catch (FalseProgramException e) {		
+				 }
+				 try {
+					 Expression<Entity> exp = (assignmentExpr.read(program).searchEntity(world, ship, program));
+					 program.getEntityVariables().put(assignment.getVariableName(), exp.getValue());
+				 } catch (FalseProgramException e) {	
+				 }
+			 
 			 }
 			 else throw new FalseProgramException("no such type");
 		 }

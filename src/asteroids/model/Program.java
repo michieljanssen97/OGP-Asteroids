@@ -1,5 +1,6 @@
 package asteroids.model;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,10 +18,10 @@ public class Program<F,S> {
 	private SourceLocation endingSourceLocation;
 	private double consumedTime;
 	private boolean isInWhileLoop;
-	private HashMap<String,Boolean> booleanVariables;
-	private HashMap<String,Double> doubleVariables;
-	private HashMap<String,Entity> entityVariables;
-	private List<Object> printedObjects;
+	private HashMap<String,Boolean> booleanVariables = new HashMap<>();
+	private HashMap<String,Double> doubleVariables = new HashMap<>();
+	private HashMap<String,Entity> entityVariables = new HashMap<>();
+	private List<Object> printedObjects = new ArrayList<>();
 
 	
 	public Program(List<F> functions, S main){
@@ -69,6 +70,7 @@ public class Program<F,S> {
 		catch (NoMoreTimeException e) {
 			break;}
 		catch (BreakException ex) { throw new FalseProgramException("Break is not in a while");};
+		break;
 	}
 	
 	}
