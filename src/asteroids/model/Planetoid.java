@@ -17,20 +17,23 @@ public class Planetoid extends MinorPlanet {
 	@Override
 	public double getMinDensity() {return 0.917E12;}
 	
- 	public void spawnAsteroids() {
+ 	public void spawnAsteroidsTerminate() {
  			double magnitude = (1.5)*(Math.pow(this.getVelocityX(), 2)+Math.pow(this.getVelocityY(), 2));
  			double velX = Math.sqrt((Math.random()*magnitude));
  			double velY = Math.sqrt(((1-Math.random())*magnitude));
- 			Asteroid asteroid1 = new Asteroid(this.getPositionX()-((this.radiusUponCreation/2)+1),this.getPositionY(),velX,velY,this.radiusUponCreation/2);
- 			Asteroid asteroid2 = new Asteroid(this.getPositionX()+((this.radiusUponCreation/2)+1),this.getPositionY(),-velX,-velY,this.radiusUponCreation/2);
+ 			Asteroid asteroid1 = new Asteroid(this.getPositionX()-(this.getRadius()/2.0),this.getPositionY(),velX,velY,this.getRadius()/2.0);
+ 			Asteroid asteroid2 = new Asteroid(this.getPositionX()+(this.getRadius()/2.0),this.getPositionY(),-velX,-velY,this.getRadius()/2.0);
  			
- 			if (!world.significantOverlap(asteroid1)) {
+ 			World world = this.world;
+ 			super.terminate();
+ 			
+ 			if (!world.significantOverlap(asteroid1) && asteroid1.withinBoundaries(world)) {
  				world.addEntity(asteroid1);
  			} else {
  				asteroid1.destroy();
  			}
  			
- 			if (!world.significantOverlap(asteroid2)) {
+ 			if (!world.significantOverlap(asteroid2) && asteroid2.withinBoundaries(world)) {
  				world.addEntity(asteroid2);
  			} else {
  				asteroid2.destroy();
@@ -40,9 +43,10 @@ public class Planetoid extends MinorPlanet {
  	@Override
  	public void terminate() {
  		if (isPartOfWorld() && getRadius() >= 30) {
-			spawnAsteroids();
+ 			spawnAsteroidsTerminate();
+		} else {
+			super.terminate();
 		}
- 		super.terminate();
  	}
 	
 	public double getTotalTraveledDistance() {
