@@ -59,6 +59,7 @@ public class Planetoid extends MinorPlanet {
 
 		if (newRadius < 5) {
 			this.destroy();
+			this.terminate();
 		} else {
 			setRadius(newRadius);
 		}

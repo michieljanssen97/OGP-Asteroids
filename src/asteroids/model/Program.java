@@ -16,7 +16,8 @@ public class Program<F,S> {
 	private final S main;
 	private final List<F> functions;
 	private SourceLocation endingSourceLocation;
-	private double consumedTime;
+	private double extraTime = 0;
+	private double consumedTime = 0;
 	private boolean isInWhileLoop;
 	private HashMap<String,Boolean> booleanVariables = new HashMap<>();
 	private HashMap<String,Double> doubleVariables = new HashMap<>();
@@ -47,6 +48,13 @@ public class Program<F,S> {
 	}
 	public void setIsInWhileLoop(boolean isInWhileLoop) {
 		this.isInWhileLoop = isInWhileLoop;
+	}
+	
+	public double getExtraTime() {
+		return this.extraTime;
+	}
+	public void setExtraTime(double time) {
+		this.extraTime = time;
 	}
 	
 	public double getConsumedTime() {
