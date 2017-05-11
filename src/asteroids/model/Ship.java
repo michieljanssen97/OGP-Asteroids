@@ -312,6 +312,7 @@ public class Ship extends Entity {
 		try {
 			getProgram().execute(dt, this, this.getWorld());
 		} catch (FalseProgramException e) {
+				
 		}
 		if (getProgram().getEndingSourceLocation() != null){
 			return null;
