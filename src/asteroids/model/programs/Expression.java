@@ -1,14 +1,11 @@
 package asteroids.model.programs;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
 import asteroids.model.*;
-import asteroids.model.Entity;
-import asteroids.model.Program;
-import asteroids.model.Ship;
-import asteroids.model.World;
 import asteroids.part3.programs.SourceLocation;
 
 public class Expression<T> {
@@ -116,7 +113,6 @@ public class Expression<T> {
 	@SuppressWarnings("unchecked")
 	public Expression<Entity> searchEntity(World world, Ship ship, Program program) throws FalseProgramException {
 		Set<Entity> allEntities = ship.getWorld().getEntities();
-		allEntities.remove(ship);
 		if (!((this.getValue() instanceof Entity) || (this.getValue() == null) || (this.getValue() instanceof SingleExpression))){
 			throw new FalseProgramException("Search for Entity impossible");
 		}
@@ -132,6 +128,7 @@ public class Expression<T> {
 				return new Expression<Entity>(ship,getSourceLocation());
 			}
 			else if (singleExpr.getOperator().equals("ship")) {
+				allEntities.remove(ship);
 				Ship closest = null;
 				double distance = Double.POSITIVE_INFINITY;
 				for(Entity e: allEntities){
@@ -184,14 +181,23 @@ public class Expression<T> {
 				return new Expression<Entity>(closest,getSourceLocation());
 			}
 			else if (singleExpr.getOperator().equals("any")) {
-				Random rd = new Random();
-				ArrayList<Entity> arrayEnt = new ArrayList<>();
-				arrayEnt.addAll(allEntities);
-				arrayEnt.add(ship);
-				Entity randomEnt = arrayEnt.get(rd.nextInt(arrayEnt.size()));
-				return new Expression<Entity>(randomEnt,getSourceLocation());
+//				Entity randomEnt = null;
+//				Random rd = new Random();
+//				ArrayList<Entity> arrayEnt = new ArrayList<>();
+//				arrayEnt.addAll(allEntities);
+//				randomEnt = arrayEnt.get(rd.nextInt(arrayEnt.size()));				
+				return new Expression<Entity>((allEntities.iterator().next()),getSourceLocation());
 			}
 			else if (singleExpr.getOperator().equals("bullet")) {
+				Set<Bullet> wrongBullets = new HashSet<>();
+				for (Entity e: allEntities){
+					if (e instanceof Bullet){
+						if (!(((Bullet) e).getSource() == ship)){
+							wrongBullets.add((Bullet) e);
+						}
+					}
+				}
+				allEntities.removeAll(wrongBullets);
 				allEntities.removeAll(ship.getBullets());
 				Bullet firedBullet = null;
 				for(Entity e: allEntities){

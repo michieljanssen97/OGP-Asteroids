@@ -29,18 +29,20 @@ public class Statement<E,F> {
 		this.value = value;
 	 }
 	 public void execute(Ship ship,World world, Program<Statement,F> program, double deltaT) throws FalseProgramException, BreakException, NoMoreTimeException {
+		 deltaT = deltaT + program.getExtraTime();
 		 if (program.getEndingSourceLocation() != null){
 			 if ((this.getSourceLocation().getLine() == (program.getEndingSourceLocation().getLine())) && (this.getSourceLocation().getColumn() == program.getEndingSourceLocation().getColumn())) {	 
 				 program.setEndingSourceLocation(null);
 			 }
 		 }
-		 if (program.getConsumedTime() > deltaT){
+		 if ((deltaT-program.getConsumedTime())<0.2){
 			 program.setEndingSourceLocation(this.getSourceLocation());
 			 program.setConsumedTime(0.0);
+			 program.setExtraTime(deltaT-program.getConsumedTime());
 			 throw new NoMoreTimeException();
 		 }
 
-		 if (this.getValue() instanceof SingleStatement) {
+		 else if (this.getValue() instanceof SingleStatement) {
 			 SingleStatement<E,Statement<E,F>,F> singleStatement = ((SingleStatement<E,Statement<E,F>,F>) (this.getValue()));
 
 			 if (singleStatement.getStating().equals("while")){

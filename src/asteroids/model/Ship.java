@@ -1,5 +1,6 @@
 package asteroids.model;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -225,8 +226,11 @@ public class Ship extends Entity {
      */
 	public void fireBullet() {
 		if (this.isPartOfWorld() && (getNbBulletsOnShip() > 0)) {
+//			ArrayList<Bullet> bulletArray = new ArrayList<>();
+//			bulletArray.addAll(this.bullets);
+//			Bullet bullet = bulletArray.get(0);
 			
-			Bullet bullet = this.bullets.iterator().next();
+			Bullet bullet = this.getBullets().iterator().next();
 			
 			if (bullet != null) {
 
