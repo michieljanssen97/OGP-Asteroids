@@ -227,7 +227,7 @@ public class Ship extends Entity {
      */
 	public void fireBullet() {
 		if (this.isPartOfWorld() && (getNbBulletsOnShip() > 0)) {
-			
+
 			Bullet bullet = this.bullets.iterator().next();
 			
 			if (bullet != null) {
