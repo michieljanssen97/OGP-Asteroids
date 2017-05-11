@@ -62,7 +62,7 @@ public class World implements ICollidable {
 	 * 		 | new.isTerminated() == true
 	 */
 	public void terminate() {
-		getEntities().forEach(entity->entity.removeFromWorld());
+		getEntities().forEach(entity->entity.disown());
 		entities.clear();
 		this.isTerminated = true;
 	}
@@ -208,8 +208,8 @@ public class World implements ICollidable {
 		} else if (!entity.withinBoundaries(this)) {
 			throw new IllegalArgumentException("Entity does not lie within the world's boundaries");
 		} else {
-			if (entity.canBePartOfWorld()) {
-				entity.makePartOfWorld(this);
+			if (entity.canHaveAsOwner(this)) {
+				entity.changeOwner(this);
 				entities.add(entity);
 			}
 		}
@@ -233,8 +233,8 @@ public class World implements ICollidable {
 	public void removeEntity(Entity entity) throws NullPointerException {
 		if (entity == null){
 			throw new NullPointerException();
-		} else {
-			entity.removeFromWorld();
+		} else if (entities.contains(entity)){
+			entity.disown();
 			entities.remove(entity);
 		}
 	}
@@ -349,13 +349,13 @@ public class World implements ICollidable {
 			} else if (firstCollisionTime == null || firstCollisionTime > duration) {
 				advanceEntities(duration);
 			} else {
-				advanceEntities(firstCollisionTime);
+				if (firstCollisionTime >= 0) {advanceEntities(firstCollisionTime);}
 				double [] colPos = collidables[0].getCollisionPosition(collidables[1]);
-				
+			
 				collidables[0].collide(collidables[1]);
 				showCollision(collisionlistener, collidables, colPos);
-
 			}
+
 			terminateEntities();
 			duration -= firstCollisionTime;
 		} 
@@ -369,16 +369,14 @@ public class World implements ICollidable {
 	 * 		 	* All entities have moved for the given duration
 	 */
 	public void advanceEntities(double duration) {
-		getEntities().stream().forEach(entity -> entity.move(duration));
+		getEntities().forEach(entity -> entity.move(duration));
 		terminateEntities();
 	}
 	
 	public void terminateEntities() {
-		Set<Entity> destroyedEntities = getEntities().stream()
-				.filter(entity -> entity.isDestroyed())
-				.collect(Collectors.toSet());
-
-		destroyedEntities.stream().forEach(entity -> entity.terminate());
+		new HashSet<Entity>(getEntities()).stream()
+		.filter(entity -> entity.isDestroyed())
+		.forEach(entity -> {entity.terminate();});
 	}
 	/**
 	 * Returns the entity at the given position

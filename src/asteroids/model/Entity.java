@@ -11,7 +11,7 @@ import be.kuleuven.cs.som.annotate.*;
  *
  */
 
-public abstract class Entity implements ICollidable {
+public abstract class Entity implements ICollidable, IOwnable {
 
 	protected double x;
 	protected double y;
@@ -71,7 +71,7 @@ public abstract class Entity implements ICollidable {
 	 * 		 | new.isTerminated() == true
 	 */
 	public void terminate() {
-		if (isPartOfWorld()) {
+		if (hasAsOwner(world)) {
 			world.removeEntity(this);
 		}
 		this.isTerminated = true;
@@ -100,6 +100,9 @@ public abstract class Entity implements ICollidable {
 	 */
 	public double getMinDensity() {return 0;}
 	
+	public Object getOwner() {
+		return this.world;
+	}
 	
 	/**
 	 * Check whether a given position is valid by returning a boolean indicating validness.
@@ -351,31 +354,15 @@ public abstract class Entity implements ICollidable {
 			this.mass = (4.0/3.0)*Math.PI*Math.pow(this.getRadius(), 3)*getMinDensity();
 		}
 	}
-	
-	/**
-	 * Returns the world this entity is associated with
-	 * @see implementation
-	 */
+
 	public World getWorld() {
 		return this.world;
 	}
 	
-	/**
-	 * Returns a boolean indicating whether an entity belongs to a world
-	 * @see implementation
-	 */
 	public boolean isPartOfWorld() {
-		return this.getWorld() != null;
+		return !(this.world==null);
 	}
 	
-	/**
-	 * Returns a boolean indicating whether an entity can be part of a world
-	 * @see implementation
-	 */
-	public boolean canBePartOfWorld() {
-		return !isPartOfWorld();
-	}
-
 	/**
 	 * Associates this entity with a particular world
 	 * @param world
@@ -385,17 +372,19 @@ public abstract class Entity implements ICollidable {
 	 * 		| if (!isPartOfWorld())
 	 * 		|		new.world == world
 	 */		
-	public void makePartOfWorld(World world) {
-		if (canBePartOfWorld()) {
+	public void changeOwner(World world) {
+		if (canHaveAsOwner(world)) {
 			this.world = world;
 		}
 	}
+	
+	public void changeOwner(Object object) {};
 	
 	/**
 	 * Removes any association with a world
 	 * @see implementation
 	 */
-	public void removeFromWorld() {
+	public void disown() {
 		this.world = null;
 	}
 	

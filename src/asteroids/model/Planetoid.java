@@ -1,6 +1,9 @@
 package asteroids.model;
 
 import java.util.Random;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Planetoid extends MinorPlanet {
 	
@@ -17,32 +20,32 @@ public class Planetoid extends MinorPlanet {
 	@Override
 	public double getMinDensity() {return 0.917E12;}
 	
- 	public void spawnAsteroids() {
+ 	public void spawnAsteroidsTerminate(World world) {
  			double magnitude = (1.5)*(Math.pow(this.getVelocityX(), 2)+Math.pow(this.getVelocityY(), 2));
  			double velX = Math.sqrt((Math.random()*magnitude));
  			double velY = Math.sqrt(((1-Math.random())*magnitude));
- 			Asteroid asteroid1 = new Asteroid(this.getPositionX()-((this.radiusUponCreation/2)+1),this.getPositionY(),velX,velY,this.radiusUponCreation/2);
- 			Asteroid asteroid2 = new Asteroid(this.getPositionX()+((this.radiusUponCreation/2)+1),this.getPositionY(),-velX,-velY,this.radiusUponCreation/2);
+ 			Asteroid asteroid1 = new Asteroid(this.getPositionX()-(this.getRadius()/2.0),this.getPositionY(),velX,velY,this.getRadius()/2.0);
+ 			Asteroid asteroid2 = new Asteroid(this.getPositionX()+(this.getRadius()/2.0),this.getPositionY(),-velX,-velY,this.getRadius()/2.0);
+ 			world.removeEntity(this);
  			
- 			if (!world.significantOverlap(asteroid1)) {
- 				world.addEntity(asteroid1);
- 			} else {
- 				asteroid1.destroy();
- 			}
- 			
- 			if (!world.significantOverlap(asteroid2)) {
- 				world.addEntity(asteroid2);
- 			} else {
- 				asteroid2.destroy();
- 			}
+ 			Stream.of(asteroid1, asteroid2)
+ 				.forEach( 
+ 					asteroid -> {
+	 					if (!world.significantOverlap(asteroid) && asteroid.withinBoundaries(world)) {
+	 						world.addEntity(asteroid);
+	 					} else {
+	 						asteroid.terminate();
+	 					}
+ 					}
+ 				);
  	}
 
  	@Override
  	public void terminate() {
  		if (isPartOfWorld() && getRadius() >= 30) {
-			spawnAsteroids();
+ 			spawnAsteroidsTerminate(this.world);
 		}
- 		super.terminate();
+		super.terminate();
  	}
 	
 	public double getTotalTraveledDistance() {
@@ -55,7 +58,7 @@ public class Planetoid extends MinorPlanet {
 		double newRadius = getRadius() - (0.000001*distance);
 
 		if (newRadius < 5) {
-			this.terminate();
+			this.destroy();
 		} else {
 			setRadius(newRadius);
 		}
