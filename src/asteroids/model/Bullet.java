@@ -80,40 +80,34 @@ public class Bullet extends Entity {
 	 */
 	@Basic
 	public Ship getSource(){return this.source;}
-	
 
-	/**
-	 * Check whether a bullet can be part of a world.
-	 * @see implementation
-	 */
-	public boolean canBePartOfWorld() {
-		if (isPartOfWorld() || isPartOfShip()) {
-			return false;
+	public Ship getShip(){return this.ship;}
+	
+	@Override
+	public Object getOwner() {
+		if (world != null) {
+			return world;
+		} else if (ship != null) {
+			return ship;
 		}
-		return true;
+		return null;
 	}
 	
-	/**
-	 * Check whether a bullet can be part of a ship.
-	 * @see implementation
-	 */
-	public boolean canBePartOfShip(){
-		if (isPartOfWorld() || isPartOfShip()) {
-			return false;
-		}
-		return true;
+	public boolean canHaveAsOwner(Object object) {
+		return !isOwned() && object != null;
+		
 	}
 	
 	/**
 	 * Make a bullet part of a ship.
 	 * @see implementation
 	 */
-	public void makePartOfShip(Ship ship) {
-		if (canBePartOfShip()) {
+	public void changeOwner(Ship ship) {
+		if (canHaveAsOwner(ship)) {
 			this.ship = ship;
 			this.source = ship;
 		}
-	};
+	}
 	
 	/**
 	 * Remove a bullet from a ship.
@@ -127,19 +121,9 @@ public class Bullet extends Entity {
 	 * Check whether a bullet is part of a ship.
 	 */
 	public boolean isPartOfShip() {
-		if (this.ship instanceof Ship) {
-			return true;
-		} else {
-			return false;
-		}
+		return getOwner() instanceof Ship;
 	}
 	
-	/**
-	 * Return the current ship a bullet belongs to.
-	 */
-	@Basic
-	public Ship getShip() {return this.ship;}
-		
 	public void collide(Entity entity) {
 		if (entity instanceof Ship) {
 			if (getSource() == entity) {
@@ -165,6 +149,11 @@ public class Bullet extends Entity {
 			world.removeEntity(this);
 			this.terminate();
 		}
+	}
+
+	@Override
+	public void changeOwner(Object object) {
+		
 	}
 	
 }

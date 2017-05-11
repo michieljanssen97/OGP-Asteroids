@@ -196,8 +196,8 @@ public class Ship extends Entity {
 	 */
 	public void loadBullets(Bullet... bullets) throws AssertionError {
 		for(Bullet bullet: bullets) {
-			if (bullet.withinBoundaries(this) && bullet.canBePartOfShip()){
-				bullet.makePartOfShip(this);
+			if (bullet.withinBoundaries(this) && bullet.canHaveAsOwner(this)){
+				bullet.changeOwner(this);
 				this.bullets.add(bullet);
 			} else {
 				throw new AssertionError("Either the bullet cannot be part of the ship or the bullet doesn't lie within the ship's boundaries");
@@ -212,7 +212,9 @@ public class Ship extends Entity {
      */
 	public void removeBullet(Bullet bullet) {
 		bullet.removeFromShip();
-		this.bullets.remove(bullet);
+		if (bullet != null && bullets.contains(bullet)) {
+			this.bullets.remove(bullet);
+		}
 	}
 
     /**

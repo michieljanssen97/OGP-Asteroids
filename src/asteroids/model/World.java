@@ -62,7 +62,7 @@ public class World implements ICollidable {
 	 * 		 | new.isTerminated() == true
 	 */
 	public void terminate() {
-		getEntities().forEach(entity->entity.removeFromWorld());
+		getEntities().forEach(entity->entity.disown());
 		entities.clear();
 		this.isTerminated = true;
 	}
@@ -208,8 +208,8 @@ public class World implements ICollidable {
 		} else if (!entity.withinBoundaries(this)) {
 			throw new IllegalArgumentException("Entity does not lie within the world's boundaries");
 		} else {
-			if (entity.canBePartOfWorld()) {
-				entity.makePartOfWorld(this);
+			if (entity.canHaveAsOwner(this)) {
+				entity.changeOwner(this);
 				entities.add(entity);
 			}
 		}
@@ -233,8 +233,8 @@ public class World implements ICollidable {
 	public void removeEntity(Entity entity) throws NullPointerException {
 		if (entity == null){
 			throw new NullPointerException();
-		} else {
-			entity.removeFromWorld();
+		} else if (entities.contains(entity)){
+			entity.disown();
 			entities.remove(entity);
 		}
 	}
