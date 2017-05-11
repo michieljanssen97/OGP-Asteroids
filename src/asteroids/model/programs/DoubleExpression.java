@@ -1,29 +1,29 @@
 package asteroids.model.programs;
 
 public class DoubleExpression<E> {
-	public DoubleExpression(E left,E right, String operator) {
+	public DoubleExpression(Expression left, Expression right, String operator) {
 		this.left = left;
 		this.right = right;
 		this.operator = operator;
 	}
 	
-	private E left;
-	private E right;
+	private Expression left;
+	private Expression right;
 	private String operator;
-	public String getOperator() { return this.operator; }
+	public String getOperator() {return this.operator;}
 	
 	public Expression<?> getLeftValue(){
-		return ((Expression<?>) this.left);
+		return (this.left);
 	}
 	public Expression<?> getRightValue(){
-		return ((Expression<?>) this.right);
+		return (this.right);
 	}
 	
-	public void setLeftValue(E newLeftValue){
+	public void setLeftValue(Expression newLeftValue){
 		this.left = newLeftValue;
 	}
 	
-	public void setRightValue(E newRightValue){
+	public void setRightValue(Expression newRightValue){
 		this.left = newRightValue;
 	}
 }

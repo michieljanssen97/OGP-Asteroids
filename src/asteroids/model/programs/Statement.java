@@ -35,14 +35,14 @@ public class Statement<E,F> {
 				 program.setEndingSourceLocation(null);
 			 }
 		 }
-		 if ((deltaT-program.getConsumedTime())<0.2){
+		 
+		 if ((deltaT-program.getConsumedTime())<0.2) {
 			 program.setEndingSourceLocation(this.getSourceLocation());
 			 program.setConsumedTime(0.0);
 			 program.setExtraTime(deltaT-program.getConsumedTime());
 			 throw new NoMoreTimeException();
-		 }
-
-		 else if (this.getValue() instanceof SingleStatement) {
+			 
+		 } else if (this.getValue() instanceof SingleStatement) {
 			 SingleStatement<E,Statement<E,F>,F> singleStatement = ((SingleStatement<E,Statement<E,F>,F>) (this.getValue()));
 
 			 if (singleStatement.getStating().equals("while")){
@@ -58,20 +58,18 @@ public class Statement<E,F> {
 						 break;
 					 }
 				 }	
-			 }
-			 else throw new FalseProgramException("Illegal single statement");
-		 }
+			 } else throw new FalseProgramException("Illegal single statement");
+			 
+		 } else if (this.getValue() instanceof DoubleStatement) {
+			 DoubleStatement<E,Statement<E,F>,F> doubleStatement = (DoubleStatement<E,Statement<E,F>,F>) this.getValue();
+			 if (doubleStatement.getStating().equals("if")) {
 
-		 else if (this.getValue() instanceof DoubleStatement) {
-			 DoubleStatement<E,Statement<E,F>,F> doubleStatment = (DoubleStatement<E,Statement<E,F>,F>) this.getValue();
-			 if (doubleStatment.getStating().equals("if")) {
-
-				 if (doubleStatment.getCondition().read(program).evaluateExpression(ship, world, program).getValue()) {
-					 doubleStatment.getLeft().execute(ship, world, program, deltaT);
+				 if (doubleStatement.getCondition().read(program).evaluateExpression(ship, world, program).getValue()) {
+					 doubleStatement.getLeft().execute(ship, world, program, deltaT);
 
 				 } else{
-					 if (doubleStatment.getRight() != null){
-						 doubleStatment.getRight().execute(ship, world, program, deltaT); 
+					 if (doubleStatement.getRight() != null){
+						 doubleStatement.getRight().execute(ship, world, program, deltaT); 
 					 }
 				 }
 			 }
@@ -79,29 +77,25 @@ public class Statement<E,F> {
 		 }
 
 		 else if (this.getValue() instanceof String) {
+			 
 			 String string = (String) this.getValue();
-			 if (string.equals("break")) {
-				 throw new BreakException();
+			 switch (string) {
+	            case "break":  		throw new BreakException();
+	            case "thrust_on": 	program.setConsumedTime(program.getConsumedTime()+0.2);
+				 					ship.toggleThruster();
+				 					break;
+	            case "thrust_off":  program.setConsumedTime(program.getConsumedTime()+0.2);
+				 					ship.toggleThruster();
+				 					break;
+	            case "fire":        program.setConsumedTime(program.getConsumedTime()+0.2);
+				 					ship.fireBullet();
+				 					break;
+	            case "skip":		program.setConsumedTime(program.getConsumedTime()+0.2);
+	            					break;
+	            default: 			throw new FalseProgramException("Illegal string statement");
 			 }
-			 else if (string.equals("thrust_on")){
-				 program.setConsumedTime(program.getConsumedTime()+0.2);
-				 ship.toggleThruster();
-			 }
-			 else if (string.equals("thrust_off")){
-				 program.setConsumedTime(program.getConsumedTime()+0.2);
-				 ship.toggleThruster();
-			 }
-			 else if (string.equals("fire")){
-				 program.setConsumedTime(program.getConsumedTime()+0.2);
-				 ship.fireBullet();
-			 }
-			 else if (string.equals("skip")){
-				 program.setConsumedTime(program.getConsumedTime()+0.2);
-			 }
-			 else throw new FalseProgramException("Illegal string statement");
-		 }
 
-		 else if (this.getValue() instanceof ExpressionStatement) {
+		 } else if (this.getValue() instanceof ExpressionStatement) {
 			 ExpressionStatement<E> expressionStatement = (ExpressionStatement<E>)this.getValue();
 			 if (expressionStatement.getStating().equals("print")){
 				 if (expressionStatement.getExpression().getValue() instanceof String) {
@@ -177,16 +171,14 @@ public class Statement<E,F> {
 				 for (Statement<E,F> currentStatement : newList) {
 					 currentStatement.execute(ship, world, program, deltaT);
 				 }
-			 }
-			 else {	 
+			 } else {	 
 				 for (int i = 0 ; i < newList.size() ; i++) {
 					 if ((newList.get(i).getSourceLocation().getLine() <= program.getEndingSourceLocation().getLine())){
 						 if ((newList.get(i).getSourceLocation().getColumn() <= program.getEndingSourceLocation().getColumn())){
 							 correctLocation = i;
 						 }
 					 }
-				 }
-				 for (int i = 0 ; i < newList.size() ; i++) {
+				 }for (int i = 0 ; i < newList.size() ; i++) {
 					 if (i>=correctLocation) {
 						 newList.get(i).execute(ship, world, program, deltaT);
 					 }
