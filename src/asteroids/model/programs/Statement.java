@@ -172,8 +172,20 @@ public class Statement<E,F> {
 	
 	public void executeAssignment(Ship ship,World world, Program<Statement,F> program, double deltaT) throws FalseProgramException, BreakException, NoMoreTimeException {
 		Assignment<E> assignment = (Assignment<E>) this.getValue();
+		System.out.println(assignment.getVariableName());
+		System.out.println(assignment.getValue().getValue().getClass().getSimpleName().equals("Double"));
 		 if (assignment.getValue().getValue().getClass().getSimpleName().equals("Double")) {
-			 program.getDoubleVariables().put(assignment.getVariableName(), assignment.getValue().read(program).calculateExpression(ship, world,program).getValue());
+			 if (program.getAllVariables().contains(assignment.getVariableName())){
+				 if(program.getDoubleVariables().containsKey(assignment.getVariableName())){
+					 program.getDoubleVariables().put(assignment.getVariableName(), assignment.getValue().read(program).calculateExpression(ship, world, program).getValue());
+				 } else {
+					 throw new FalseProgramException("Type change of variable is not allowed.");
+				 }
+			 } else {
+				 program.getDoubleVariables().put(assignment.getVariableName(), assignment.getValue().read(program).calculateExpression(ship, world, program).getValue());
+				 program.getAllVariables().add(assignment.getVariableName());
+			 }
+			 
 		 }
 		 else if (assignment.getValue().getValue().getClass().getSimpleName().equals("Entity")){
 			 if (assignment.getValue().getValue() == null)
@@ -198,8 +210,21 @@ public class Statement<E,F> {
 			 }
 			 try {
 				 Expression<Entity> exp = (assignmentExpr.read(program).searchEntity(world, ship, program));
-				 program.getEntityVariables().put(assignment.getVariableName(), exp.getValue());
+				 if (program.getAllVariables().contains(assignment.getVariableName())){
+					 if(program.getEntityVariables().containsKey(assignment.getVariableName())){
+						 program.getEntityVariables().put(assignment.getVariableName(), exp.getValue());
+					 }
+					 else {
+						 throw new FalseProgramException("Type change of variable is not allowed.");
+					 }
+				 }
+				 else {
+					 program.getEntityVariables().put(assignment.getVariableName(), exp.getValue());
+					 program.getAllVariables().add(assignment.getVariableName());
+				 }
 			 } catch (FalseProgramException e) {	
+				 throw new FalseProgramException("Type change of variable is not allowed.");
+
 			 }
 		 
 		 }
