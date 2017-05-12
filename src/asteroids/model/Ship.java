@@ -328,7 +328,7 @@ public class Ship extends Entity {
 	public List<Object> executeProgram(double dt) {
 		try {
 			getProgram().execute(dt, this, getWorld());
-		} catch (FalseProgramException e) {
+		} catch (Exception e) {
 		}
 		if (getProgram().getEndingSourceLocation() != null){
 			return null;

@@ -1,6 +1,7 @@
 package asteroids.model.programs;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import asteroids.model.Entity;
 import asteroids.model.Program;
@@ -215,15 +216,14 @@ public class Statement<E,F> {
 						 program.getEntityVariables().put(assignment.getVariableName(), exp.getValue());
 					 }
 					 else {
-						 throw new FalseProgramException("Type change of variable is not allowed.");
+						 throw new IllegalArgumentException("Type change of variable is not allowed.");
 					 }
 				 }
 				 else {
 					 program.getEntityVariables().put(assignment.getVariableName(), exp.getValue());
 					 program.getAllVariables().add(assignment.getVariableName());
 				 }
-			 } catch (FalseProgramException e) {	
-				 throw new FalseProgramException("Type change of variable is not allowed.");
+			 } catch (FalseProgramException e) {
 
 			 }
 		 
