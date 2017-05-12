@@ -2289,7 +2289,6 @@ public class Part3TestFull {
     Planetoid planetoid1 = facade.createPlanetoid(250, 250, 0, 0, 20, 0);
     facade.addPlanetoidToWorld(world, planetoid1);
     Set<? extends Object> allEntities = facade.getEntities(world);
-    System.out.println(allEntities);
     facade.loadProgramOnShip(ship1, program);
     List<Object> results = facade.executeProgram(ship1, 1.0);
     assertEquals(1, results.size());

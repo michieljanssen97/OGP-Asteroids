@@ -90,6 +90,9 @@ public class Expression<T> {
 				}
 				return new Expression<Double>((double)getRadius.getValue().getRadius(), getSourceLocation());
 			}
+			if (expression.getOperator().equals("getdir")){
+				return new Expression<Double>(ship.getOrientation(),getSourceLocation());
+			}
 			else throw new FalseProgramException("Single expression is not correct declared");
 
 		}

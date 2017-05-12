@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import asteroids.model.programs.FalseProgramException;
+import asteroids.util.ModelException;
 import be.kuleuven.cs.som.annotate.*;
 
 /**
@@ -197,11 +198,16 @@ public class Ship extends Entity {
 	 */
 	public void loadBullets(Bullet... bullets) throws AssertionError {
 		for(Bullet bullet: bullets) {
+			try {
 			if (bullet.withinBoundaries(this) && bullet.canHaveAsOwner(this)){
 				bullet.changeOwner(this);
 				this.bullets.add(bullet);
 			} else {
 				throw new AssertionError("Either the bullet cannot be part of the ship or the bullet doesn't lie within the ship's boundaries");
+			}
+			} catch (NullPointerException e){
+				this.bullets = new HashSet<Bullet>();
+				throw new NullPointerException();
 			}
 		}
 	}
@@ -228,9 +234,6 @@ public class Ship extends Entity {
      */
 	public void fireBullet() {
 		if (this.isPartOfWorld() && (getNbBulletsOnShip() > 0)) {
-//			ArrayList<Bullet> bulletArray = new ArrayList<>();
-//			bulletArray.addAll(this.bullets);
-//			Bullet bullet = bulletArray.get(0);
 			
 			Bullet bullet = this.getBullets().iterator().next();
 			
@@ -312,10 +315,11 @@ public class Ship extends Entity {
 		return this.program;
 	}
 
-	public List<Object> executeProgram(double dt) {
+	public List<Object> executeProgram(double dt) throws ModelException {
 		try {
 			getProgram().execute(dt, this, this.getWorld());
 		} catch (FalseProgramException e) {
+			throw new ModelException("Type change of variable is not allowed");
 		}
 		if (getProgram().getEndingSourceLocation() != null){
 			return null;

@@ -2,6 +2,7 @@ package asteroids.model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -22,6 +23,7 @@ public class Program<F,S> {
 	private HashMap<String,Boolean> booleanVariables = new HashMap<>();
 	private HashMap<String,Double> doubleVariables = new HashMap<>();
 	private HashMap<String,Entity> entityVariables = new HashMap<>();
+	private HashSet<String> allVariables = new HashSet<>();
 	private List<Object> printedObjects = new ArrayList<>();
 
 	
@@ -39,6 +41,7 @@ public class Program<F,S> {
 	public HashMap<String,Boolean> getBooleanVariables() { return this.booleanVariables; }
 	public HashMap<String,Double> getDoubleVariables() { return this.doubleVariables;}
 	public HashMap<String,Entity> getEntityVariables() { return this.entityVariables; }
+	public HashSet<String> getAllVariables() { return this.allVariables; }
 	public List<Object> getPrintedObjects() {return this.printedObjects;}
 	
 
