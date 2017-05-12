@@ -237,6 +237,9 @@ public class World implements ICollidable {
 			entity.disown();
 			entities.remove(entity);
 		}
+		else {
+			throw new IllegalArgumentException();
+		}
 	}
 	
 	/**
@@ -330,33 +333,46 @@ public class World implements ICollidable {
 		}
 	}
 	
+	protected static boolean isValidEvolveTime(double duration){
+		return (!(Double.isNaN(duration)) && duration >= 0);
+	}
+	
 	/**
 	 * A function for advancing the game. No specification should be worked out according to the task explanation.
 	 */
-	public void evolve(double duration, CollisionListener collisionlistener) {		
-		while (duration > 0 && !entities.isEmpty()) {
-			// 1. Get first collision, if any
-			// Calculate all collisions, immediately continue if an apparent Collision is found
-			
-			ICollidable[] collidables = getNextCollisionObjects();
-			Double firstCollisionTime = collidables[0].getTimeToCollision(collidables[1]);
+	public void evolve(double duration, CollisionListener collisionlistener) throws IllegalArgumentException {
+		try {
+			if (isValidEvolveTime(duration)){
+				while (duration > 0 && !entities.isEmpty()) {
+					// 1. Get first collision, if any
+					// Calculate all collisions, immediately continue if an apparent Collision is found
 
-			if (firstCollisionTime == 0) {
-				advanceEntities(duration);
-			} else if (firstCollisionTime == null || firstCollisionTime > duration) {
-				advanceEntities(duration);
-			} else {
-				if (firstCollisionTime >= 0) {advanceEntities(firstCollisionTime);}
-				double [] colPos = collidables[0].getCollisionPosition(collidables[1]);
-			
-				collidables[0].collide(collidables[1]);
-				showCollision(collisionlistener, collidables, colPos);
-			}
+					ICollidable[] collidables = getNextCollisionObjects();
+					Double firstCollisionTime = collidables[0].getTimeToCollision(collidables[1]);
 
-			terminateEntities();
-			duration -= firstCollisionTime;
-		} 
-	}
+					if (firstCollisionTime == 0) {
+						advanceEntities(duration);
+					} else if (firstCollisionTime == null || firstCollisionTime > duration) {
+						advanceEntities(duration);
+					} else {
+						if (firstCollisionTime >= 0) {advanceEntities(firstCollisionTime);}
+						double [] colPos = collidables[0].getCollisionPosition(collidables[1]);
+
+						collidables[0].collide(collidables[1]);
+						showCollision(collisionlistener, collidables, colPos);
+					}
+
+					terminateEntities();
+					duration -= firstCollisionTime;
+				} 
+		   }
+			 else {
+				  throw new IllegalArgumentException("EvolvingTime must not be NaN or less than zero.");
+			  }
+		}catch (Exception e){
+			throw new IllegalArgumentException("EvolvingTime must not be NaN or less than zero.");
+		}
+	  }
 	
 	/**
 	 * Advances all entities in this world

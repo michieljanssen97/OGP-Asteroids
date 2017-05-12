@@ -77,6 +77,8 @@ public class Expression<T> {
 								  throw new FalseProgramException("Cannot calculate on a null entity");
 							  }
 							  return new Expression<Double>((double)getRadius.getValue().getRadius(), getSourceLocation());
+			case "getdir":    return new Expression<Double>(ship.getOrientation(),getSourceLocation());
+				  
 			default: 		  throw new FalseProgramException("Single expression is not correct declared");
 			}
 		} else {

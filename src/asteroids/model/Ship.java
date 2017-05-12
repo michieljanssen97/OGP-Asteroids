@@ -216,11 +216,22 @@ public class Ship extends Entity {
      * @param bullet
      * @see implementation
      */
-	public void removeBullet(Bullet bullet) {
-		bullet.removeFromShip();
-		if (bullet != null && bullets.contains(bullet)) {
-			this.bullets.remove(bullet);
+	public void removeBullet(Bullet bullet) throws IllegalArgumentException  {
+		try{
+			if (bullets.contains(bullet)){
+				bullet.removeFromShip();
+				if (bullet != null) {
+					this.bullets.remove(bullet);
+				}
+			} else {
+				throw new IllegalArgumentException();
+			}
+		} catch (Exception e){
+			throw new IllegalArgumentException();
+
 		}
+		
+		
 	}
 
     /**
