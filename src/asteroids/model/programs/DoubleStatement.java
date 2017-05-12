@@ -2,16 +2,16 @@ package asteroids.model.programs;
 
 public class DoubleStatement<E,S,F> {
 
-	public DoubleStatement(Expression condition, Statement left, Statement right, String stating) {
+	public DoubleStatement(Expression<?> condition, Statement<E,F> left, Statement<E,F> right, String stating) {
 		this.condition = condition;
 		this.left = left;
 		this.right = right;
 		this.stating = stating;
 	}
 	
-	private Expression condition;
-	private Statement left;
-	private Statement right;
+	private Expression<?> condition;
+	private Statement<E,F> left;
+	private Statement<E,F> right;
 	private String stating;
 
 	
