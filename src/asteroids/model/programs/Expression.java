@@ -20,7 +20,6 @@ public class Expression<T> {
 	private SourceLocation sourceLocation;
 	public SourceLocation getSourceLocation() { return this.sourceLocation; }
 	
-	@SuppressWarnings("unchecked")
 	public Expression<?> read(Program program) throws FalseProgramException {
 		if (this.getValue() instanceof String) {
 			if (program.getDoubleVariables().get(this.getValue()) != null){
@@ -39,64 +38,48 @@ public class Expression<T> {
 		else return this;
 	}
 	
-	@SuppressWarnings("unchecked")
 	public Expression<Double> calculateExpression(Ship ship, World world,Program program) throws FalseProgramException{
 		if (!((this.getValue() instanceof Double) || (this.getValue() instanceof SingleExpression) || (this.getValue() instanceof DoubleExpression)))
 			throw new FalseProgramException("Didn't receive a valid expression.");
 		else if (this.getValue() instanceof Double)
 			return (Expression<Double>) this;
 		else if (this.getValue() instanceof SingleExpression){
+			
 			SingleExpression<Expression<T>> expression =  (SingleExpression<Expression<T>>)(this.getValue());
-			if (expression.getOperator().equals("-")){
-				Expression<Double> minExpression = expression.getValue().read(program).calculateExpression(ship, world, program);
-				return new Expression<Double>((-1)*minExpression.getValue(),getSourceLocation());
-			}
-			if (expression.getOperator().equals("sqrt")){
-				Expression<Double> sqrtExpression = (expression.getValue().read(program).calculateExpression(ship, world, program) );
-				return new Expression<Double>(Math.sqrt(sqrtExpression.getValue()), getSourceLocation());
-			}
-			if (expression.getOperator().equals("getx")) {
-				Expression<Entity> getXEntity = (expression.getValue().read(program).searchEntity(world,ship, program) );
-				if (getXEntity.getValue() == null){
-					throw new FalseProgramException("Cannot calculate on a null entity");
-				}
-				return new Expression<Double>((double)getXEntity.getValue().getPositionX(), getSourceLocation());
-			}
-			if (expression.getOperator().equals("gety")) {
-				Expression<Entity> getYEntity = (expression.getValue().read(program).searchEntity(world,ship, program) );
-				if (getYEntity.getValue() == null){
-					throw new FalseProgramException("Cannot calculate on a null entity");
-				}
-				return new Expression<Double>((double)getYEntity.getValue().getPositionY(), getSourceLocation());
-			}
-			if (expression.getOperator().equals("getvx")) {
-				Expression<Entity> getVXEntity = (expression.getValue().read(program).searchEntity(world,ship, program) );
-				if (getVXEntity.getValue() == null){
-					throw new FalseProgramException("Cannot calculate on a null entity");
-				}
-				return new Expression<Double>((double)getVXEntity.getValue().getVelocityX(), getSourceLocation());
-			}
-			if (expression.getOperator().equals("getvy")) {
-				Expression<Entity> getVYEntity = (expression.getValue().read(program).searchEntity(world,ship, program) );
-				if (getVYEntity.getValue() == null){
-					throw new FalseProgramException("Cannot calculate on a null entity");
-				}
-				return new Expression<Double>((double)getVYEntity.getValue().getVelocityY(), getSourceLocation());
-			}
-			if (expression.getOperator().equals("getradius")) {
-				Expression<Entity> getRadius = (expression.getValue().read(program).searchEntity(world,ship, program) );
-				if (getRadius.getValue() == null){
-					throw new FalseProgramException("Cannot calculate on a null entity");
-				}
-				return new Expression<Double>((double)getRadius.getValue().getRadius(), getSourceLocation());
-			}
-			if (expression.getOperator().equals("getdir")){
-				return new Expression<Double>(ship.getOrientation(),getSourceLocation());
-			}
-			else throw new FalseProgramException("Single expression is not correct declared");
 
-		}
-		else {
+			switch (expression.getOperator()) {
+            case "-":  	 	  Expression<Double> minExpression = expression.getValue().read(program).calculateExpression(ship, world, program);
+					     	  return new Expression<Double>((-1)*minExpression.getValue(),getSourceLocation());
+            case "sqrt": 	  Expression<Double> sqrtExpression = (expression.getValue().read(program).calculateExpression(ship, world, program) );
+						 	  return new Expression<Double>(Math.sqrt(sqrtExpression.getValue()), getSourceLocation());
+            case "getx": 	  Expression<Entity> getXEntity = (expression.getValue().read(program).searchEntity(world,ship, program) );
+					     	  if (getXEntity.getValue() == null){
+					     		  throw new FalseProgramException("Cannot calculate on a null entity");
+						 	  }
+						 	  return new Expression<Double>((double)getXEntity.getValue().getPositionX(), getSourceLocation());
+            case "gety": 	  Expression<Entity> getYEntity = (expression.getValue().read(program).searchEntity(world,ship, program) );
+						 	  if (getYEntity.getValue() == null){
+						 	 	  throw new FalseProgramException("Cannot calculate on a null entity");
+						 	  }
+						 	  return new Expression<Double>((double)getYEntity.getValue().getPositionY(), getSourceLocation());
+            case "getvx":     Expression<Entity> getVXEntity = (expression.getValue().read(program).searchEntity(world,ship, program) );
+							  if (getVXEntity.getValue() == null){
+								  throw new FalseProgramException("Cannot calculate on a null entity");
+							  }
+							  return new Expression<Double>((double)getVXEntity.getValue().getVelocityX(), getSourceLocation());
+			case "getvy":	  Expression<Entity> getVYEntity = (expression.getValue().read(program).searchEntity(world,ship, program) );
+							  if (getVYEntity.getValue() == null){
+								  throw new FalseProgramException("Cannot calculate on a null entity");
+							  }
+							  return new Expression<Double>((double)getVYEntity.getValue().getVelocityY(), getSourceLocation());
+			case "getradius": Expression<Entity> getRadius = (expression.getValue().read(program).searchEntity(world,ship, program) );
+							  if (getRadius.getValue() == null){
+								  throw new FalseProgramException("Cannot calculate on a null entity");
+							  }
+							  return new Expression<Double>((double)getRadius.getValue().getRadius(), getSourceLocation());
+			default: 		  throw new FalseProgramException("Single expression is not correct declared");
+			}
+		} else {
 			DoubleExpression<Expression<T>> DoubleExpression = ((DoubleExpression<Expression<T>>) (this.getValue()));
 		    Expression<Double> left = (DoubleExpression.getLeftValue().read(program).calculateExpression(ship, world, program) );
 		    Expression<Double> right = (DoubleExpression.getRightValue().read(program).calculateExpression(ship, world, program) );

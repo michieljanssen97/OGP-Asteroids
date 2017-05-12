@@ -1,6 +1,5 @@
 package asteroids.model;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -234,8 +233,8 @@ public class Ship extends Entity {
      */
 	public void fireBullet() {
 		if (this.isPartOfWorld() && (getNbBulletsOnShip() > 0)) {
-			
-			Bullet bullet = this.getBullets().iterator().next();
+
+			Bullet bullet = this.bullets.iterator().next();
 			
 			if (bullet != null) {
 
@@ -319,7 +318,6 @@ public class Ship extends Entity {
 		try {
 			getProgram().execute(dt, this, this.getWorld());
 		} catch (FalseProgramException e) {
-			throw new ModelException("Type change of variable is not allowed");
 		}
 		if (getProgram().getEndingSourceLocation() != null){
 			return null;

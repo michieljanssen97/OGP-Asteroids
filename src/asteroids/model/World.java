@@ -287,21 +287,18 @@ public class World implements ICollidable {
 
 		Map<ICollidable[], Double> collisionMap = new HashMap<ICollidable[], Double>();
 		Double collisionTime;
-
+		
 		for (Entity entity1 : this.getEntities()) {
+			
 			// Calculate time of collision with other entities
 			for (Entity entity2: this.getEntities()) {
-				
-				if (entity1 == entity2){
-					continue;
-				} else {
+				if (entity1 != entity2) {
 					collisionTime = entity1.getTimeToCollision(entity2);
-					
-					if (collisionTime == Double.POSITIVE_INFINITY || collisionTime == null){continue;}
-				    
-				    ICollidable[] collisionArray = { entity1, entity2 };
-			    	collisionMap.put(collisionArray, collisionTime);
-				}
+					if (collisionTime != Double.POSITIVE_INFINITY && collisionTime != null) {
+						ICollidable[] collisionArray = { entity1, entity2 };
+						collisionMap.put(collisionArray, collisionTime);
+					}
+				}  
 			}
 			
 			// Calculate time of collision with world
