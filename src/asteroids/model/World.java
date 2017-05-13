@@ -165,7 +165,7 @@ public class World implements ICollidable {
 	 *         | this.bullets + this.ships
 	 */
 	public Set<Entity> getEntities() {
-		return this.entities;
+		return new HashSet<Entity>(this.entities);
 	}
 	
 	public <T> Set<T> getEntities(Class<T> type) {
