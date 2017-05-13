@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import asteroids.model.programs.FalseProgramException;
+import asteroids.model.programs.FalseReturnException;
 import asteroids.util.ModelException;
 import be.kuleuven.cs.som.annotate.*;
 
@@ -175,7 +176,7 @@ public class Ship extends Entity {
      * Returns a set of bullets that belongs to a ship.
      */
 	public Set<Bullet> getBullets() {
-		return this.bullets;
+		return new HashSet<Bullet>(this.bullets);
 	}
 	
 	/**
@@ -325,7 +326,7 @@ public class Ship extends Entity {
 		return this.program;
 	}
 
-	public List<Object> executeProgram(double dt) throws FalseProgramException {
+	public List<Object> executeProgram(double dt) throws FalseProgramException, FalseReturnException {
 		getProgram().execute(dt, this, getWorld());
 
 		if (getProgram().getEndingSourceLocation() != null){

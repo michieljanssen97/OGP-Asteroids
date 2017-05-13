@@ -8,6 +8,7 @@ import java.util.Map;
 
 import asteroids.model.programs.BreakException;
 import asteroids.model.programs.FalseProgramException;
+import asteroids.model.programs.FalseReturnException;
 import asteroids.model.programs.NoMoreTimeException;
 import asteroids.model.programs.Statement;
 import asteroids.part3.programs.SourceLocation;
@@ -20,6 +21,7 @@ public class Program<F,S> {
 	private double extraTime = 0;
 	private double consumedTime = 0;
 	private boolean isInWhileLoop;
+	private boolean isInFunction = false;
 	private HashMap<String,Boolean> booleanVariables = new HashMap<>();
 	private HashMap<String,Double> doubleVariables = new HashMap<>();
 	private HashMap<String,Entity> entityVariables = new HashMap<>();
@@ -44,7 +46,12 @@ public class Program<F,S> {
 	public HashSet<String> getAllVariables() { return this.allVariables; }
 	public List<Object> getPrintedObjects() {return this.printedObjects;}
 	
-
+	public boolean getIsInFunction() {
+		return isInFunction;
+	}
+	public void setIsInFunctionLoop(boolean isInFunction) {
+		this.isInFunction = isInFunction;
+	}
 
 	public boolean getIsInWhileLoop() {
 		return isInWhileLoop;
@@ -74,7 +81,7 @@ public class Program<F,S> {
 		this.endingSourceLocation = sourceLocation;
 	}
 	
-	public void execute(double deltaT, Ship ship, World world) throws FalseProgramException {
+	public void execute(double deltaT, Ship ship, World world) throws FalseProgramException, FalseReturnException {
 		while (true) {try {
 		getMain().execute(ship, world, this, deltaT);
 		}

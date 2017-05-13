@@ -1440,18 +1440,18 @@ public class Part3TestFull {
   // Tests for correct return statements are part of the tests for
   // function calls.
 
-//  @Test
-//  public void testReturnStatement_NonInFunctionBody() throws ModelException {
-//    try {
-//      max_score += 5;
-//      String code = "return 4.0;";
-//      Program program = ProgramParser.parseProgramFromString(code, programFactory);
-//      facade.loadProgramOnShip(ship1, program);
-//      facade.executeProgram(ship1, 1.0);
-//    } catch (ModelException exc) {
-//      score += 5;
-//    }
-//  }
+  @Test
+  public void testReturnStatement_NonInFunctionBody() throws ModelException {
+    try {
+      max_score += 5;
+      String code = "return 4.0;";
+      Program program = ProgramParser.parseProgramFromString(code, programFactory);
+      facade.loadProgramOnShip(ship1, program);
+      facade.executeProgram(ship1, 1.0);
+    } catch (ModelException exc) {
+      score += 5;
+    }
+  }
 
   // If Statement
 
