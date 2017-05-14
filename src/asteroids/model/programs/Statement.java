@@ -43,7 +43,6 @@ public class Statement<E,F> {
 		 if ((deltaT-program.getConsumedTime())<0.2) {
 			 if ( (program.getEndingSourceLocation() == null) || (program.getEndingSourceLocation().getLine() <= this.getSourceLocation().getLine()) && (program.getEndingSourceLocation().getColumn() <= this.getSourceLocation().getColumn()))
 				 program.setEndingSourceLocation(this.getSourceLocation());
-			 //program.setConsumedTime(0.0);
 			 program.setExtraTime(deltaT-program.getConsumedTime());
 			 program.setConsumedTime(0.0);
 			 throw new NoMoreTimeException();
@@ -110,7 +109,7 @@ public class Statement<E,F> {
 			 DoubleStatement<E,Statement<E,F>,F> doubleStatement = (DoubleStatement<E,Statement<E,F>,F>) this.getValue();
 			 if (doubleStatement.getStating().equals("if")) {
 
-				 if (doubleStatement.getCondition().read(program).evaluateExpression(ship, world, program).getValue()) {
+				 if ((boolean) doubleStatement.getCondition().read(ship, world, program).getValue()) {
 					 doubleStatement.getLeft().execute(ship, world, program, deltaT);
 
 				 } else{
@@ -145,36 +144,12 @@ public class Statement<E,F> {
 	public void executeExpressionStatement(Ship ship,World world, Program<Statement,F> program, double deltaT) throws FalseProgramException, FalseReturnException {
 		ExpressionStatement<E> expressionStatement = (ExpressionStatement<E>)this.getValue();
 		 if (expressionStatement.getStating().equals("print")){
-			 
-			 if (expressionStatement.getExpression().getValue() instanceof String) {
-				 program.getPrintedObjects().add(expressionStatement.getExpression().read(program).getValue());
-				 System.out.println(expressionStatement.getExpression().read(program).getValue());
-			 }
-			 try {
-				 Expression<Double> exp = (expressionStatement.getExpression().calculateExpression(ship, world, program));
-				 program.getPrintedObjects().add(exp.getValue());
-				 System.out.println(exp.getValue());
-				 return;
-			 } catch (FalseProgramException e) {
-			 }
-			 try {
-				 Expression<Boolean> exp = (expressionStatement.getExpression().evaluateExpression(ship, world, program));
-				 program.getPrintedObjects().add(exp.getValue());
-				 System.out.println(exp.getValue());
-				 return;
-			 } catch (FalseProgramException e) {
-			 }
-			 try {
-				 Expression<Entity> exp = (expressionStatement.getExpression().searchEntity(world, ship, program));
-				 program.getPrintedObjects().add(exp.getValue());
-				 System.out.println(exp.getValue());
-				 return;
-			 } catch (FalseProgramException e) {	
-			 }
+			program.getPrintedObjects().add(expressionStatement.getExpression().read(ship, world, program).getValue());
+			System.out.println(expressionStatement.getExpression().read(ship, world, program).getValue());
 		 }
 		 else if(expressionStatement.getStating().equals("turn")){
 			 program.setConsumedTime(program.getConsumedTime()+0.2);
-			 Expression<Double> angle = expressionStatement.getExpression().read(program).calculateExpression(ship, world, program);
+			 Expression<Double> angle = (Expression<Double>) expressionStatement.getExpression().read(ship, world, program);
 			 try {
 				 ship.turn(angle.getValue());
 			 } catch (AssertionError e){
@@ -192,60 +167,33 @@ public class Statement<E,F> {
 	
 	public void executeAssignment(Ship ship,World world, Program<Statement,F> program, double deltaT) throws FalseProgramException, BreakException, NoMoreTimeException {
 		Assignment<E> assignment = (Assignment<E>) this.getValue();
-		 if (assignment.getValue().getValue().getClass().getSimpleName().equals("Double")) {
-			 if (program.getAllVariables().contains(assignment.getVariableName())){
-				 if(program.getDoubleVariables().containsKey(assignment.getVariableName())){
-					 program.getDoubleVariables().put(assignment.getVariableName(), assignment.getValue().read(program).calculateExpression(ship, world, program).getValue());
-				 } else {
-					 throw new FalseProgramException("Type change of variable is not allowed.");
-				 }
-			 } else {
-				 program.getDoubleVariables().put(assignment.getVariableName(), assignment.getValue().read(program).calculateExpression(ship, world, program).getValue());
-				 program.getAllVariables().add(assignment.getVariableName());
-			 }
-			 
-		 }
-		 else if (assignment.getValue().getValue().getClass().getSimpleName().equals("Entity")){
-			 if (assignment.getValue().getValue() == null)
-				 program.getEntityVariables().put(assignment.getVariableName(), null);
-			 else
-				 program.getEntityVariables().put(assignment.getVariableName(), assignment.getValue().read(program).searchEntity(world, ship, program).getValue());
-		 }
-		 else if (assignment.getValue().getValue().getClass().getSimpleName().equals("Boolean")){
-			 program.getBooleanVariables().put(assignment.getVariableName(), assignment.getValue().read(program).evaluateExpression(ship, world,program).getValue());
-		 }
-		 else if (assignment.getValue() instanceof Expression){
-			 Expression<?> assignmentExpr = (Expression<?>)assignment.getValue();
-			 try {
-				 Expression<Double> exp = (assignmentExpr.read(program).calculateExpression(ship, world, program));
-				 program.getDoubleVariables().put(assignment.getVariableName(), exp.getValue());
-			 } catch (FalseProgramException e) {	
-			 }
-			 try {
-				 Expression<Boolean> exp = (assignmentExpr.read(program).evaluateExpression(ship, world, program));
-				 program.getBooleanVariables().put(assignment.getVariableName(), exp.getValue());
-			 } catch (FalseProgramException e) {		
-			 }
-			 try {
-				 Expression<Entity> exp = (assignmentExpr.read(program).searchEntity(world, ship, program));
-				 if (program.getAllVariables().contains(assignment.getVariableName())){
-					 if(program.getEntityVariables().containsKey(assignment.getVariableName())){
-						 program.getEntityVariables().put(assignment.getVariableName(), exp.getValue());
-					 }
-					 else {
-						 throw new IllegalArgumentException("Type change of variable is not allowed.");
-					 }
-				 }
-				 else {
-					 program.getEntityVariables().put(assignment.getVariableName(), exp.getValue());
-					 program.getAllVariables().add(assignment.getVariableName());
-				 }
-			 } catch (FalseProgramException e) {
+		 if (assignment.getValue() instanceof Expression){
+			 Expression<?> assignmentExpr = (Expression<?>)assignment.getValue().read(ship, world, program);
 
+			 switch (assignmentExpr.getValue().getClass().getSimpleName()){
+			 
+			 case "Boolean": 	if ((!(program.getAllVariables().contains(assignment.getVariableName()))) || (program.getBooleanVariables().containsKey(assignment.getVariableName()))) {
+				 					program.getBooleanVariables().put(assignment.getVariableName(), (Boolean) assignmentExpr.getValue());
+				 					program.getAllVariables().add(assignment.getVariableName());
+				 					break;
+			 					}
+				 
+			 case "Entity":		if ((!(program.getAllVariables().contains(assignment.getVariableName()))) || (program.getEntityVariables().containsKey(assignment.getVariableName()))) {
+				 					program.getEntityVariables().put(assignment.getVariableName(), (Entity) assignmentExpr.getValue());
+				 					program.getAllVariables().add(assignment.getVariableName());
+				 					break;
+			 					}	
+				 
+			 case "Double":		if ((!(program.getAllVariables().contains(assignment.getVariableName()))) || (program.getDoubleVariables().containsKey(assignment.getVariableName()))) {
+				 					program.getDoubleVariables().put(assignment.getVariableName(), (Double) assignmentExpr.getValue());
+				 					program.getAllVariables().add(assignment.getVariableName());
+				 					break;
+								}
+			 default: throw new FalseProgramException("Wrong type");
 			 }
-		 
 		 }
-		 else throw new FalseProgramException("no such type");
-	}
-		 
+		 else
+			 throw new FalseProgramException("Not a correct assignment");
+
+	}	 
 }
