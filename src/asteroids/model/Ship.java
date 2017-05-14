@@ -45,8 +45,8 @@ public class Ship extends Entity {
 		try {
 			setOrientation(orientation);
 			setMass(mass);
-		} catch (IllegalArgumentException e) {
-			throw e;
+		} catch (AssertionError e) {
+			throw new IllegalArgumentException();
 		}
 		
 	};
@@ -106,6 +106,7 @@ public class Ship extends Entity {
 	 * 		| The given angle that will be added to the ship's current orientation
 	 */
 	public void turn(double angle) {
+		assert 0<= angle && angle <= 2*Math.PI;
 		setOrientation(this.orientation+ angle % (2*Math.PI));
 	}
 	

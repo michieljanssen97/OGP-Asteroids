@@ -321,6 +321,7 @@ public abstract class Entity implements ICollidable, IOwnable {
 	 * @param angle
 	 */
 	public void setOrientation(double angle) {
+		assert 0<= angle && angle<=2*Math.PI;
 		this.orientation = angle;
 	}
 	
