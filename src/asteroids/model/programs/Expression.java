@@ -48,14 +48,17 @@ public class Expression<T> {
 			SingleExpression<Expression<T>> expression =  (SingleExpression<Expression<T>>)(this.getValue());
 
 			switch (expression.getOperator()) {
-            case "-":  	 	  Expression<Double> minExpression = expression.getValue().read(program).calculateExpression(ship, world, program);
-					     	  return new Expression<Double>((-1)*minExpression.getValue(),getSourceLocation());
-            case "sqrt": 	  Expression<Double> sqrtExpression = (expression.getValue().read(program).calculateExpression(ship, world, program) );
-						 	  return new Expression<Double>(Math.sqrt(sqrtExpression.getValue()), getSourceLocation());
+            case "-":  	 	  if (expression.getValue().getValue().getClass().getSimpleName().equals("Double")){
+            				  Expression<Double> minExpression = expression.getValue().read(program).calculateExpression(ship, world, program);
+					     	  return new Expression<Double>((-1)*minExpression.getValue(),getSourceLocation());}
+            				  else { throw new IllegalArgumentException("Wrong type");}
+            case "sqrt": 	  if (expression.getValue().getValue().getClass().getSimpleName().equals("Double")){
+            				  Expression<Double> sqrtExpression = (expression.getValue().read(program).calculateExpression(ship, world, program) );
+						 	  return new Expression<Double>(Math.sqrt(sqrtExpression.getValue()), getSourceLocation());}
+            			      else { throw new IllegalArgumentException("Wrong type");} 
             case "getx": 	  Expression<Entity> getXEntity = (expression.getValue().read(program).searchEntity(world,ship, program) );
 					     	  if (getXEntity.getValue() == null){
-					     		  throw new FalseProgramException("Cannot calculate on a null entity");
-						 	  }
+					     		  throw new FalseProgramException("Cannot calculate on a null entity");}
 						 	  return new Expression<Double>((double)getXEntity.getValue().getPositionX(), getSourceLocation());
             case "gety": 	  Expression<Entity> getYEntity = (expression.getValue().read(program).searchEntity(world,ship, program) );
 						 	  if (getYEntity.getValue() == null){
@@ -67,7 +70,7 @@ public class Expression<T> {
 								  throw new FalseProgramException("Cannot calculate on a null entity");
 							  }
 							  return new Expression<Double>((double)getVXEntity.getValue().getVelocityX(), getSourceLocation());
-			case "getvy":	  Expression<Entity> getVYEntity = (expression.getValue().read(program).searchEntity(world,ship, program) );
+            case "getvy":	  Expression<Entity> getVYEntity = (expression.getValue().read(program).searchEntity(world,ship, program) );
 							  if (getVYEntity.getValue() == null){
 								  throw new FalseProgramException("Cannot calculate on a null entity");
 							  }
@@ -212,8 +215,10 @@ public class Expression<T> {
 		else if (this.getValue() instanceof SingleExpression) {
 			SingleExpression<Expression<T>> singleExpr = (SingleExpression<Expression<T>>)this.getValue();
 			if (singleExpr.getOperator().equals("!")) {
+				if (singleExpr.getValue().getValue().getClass().getSimpleName().equals("Boolean")){
 				Expression<Boolean> bool = singleExpr.getValue().read(program).evaluateExpression(ship, world, program);
-				return new Expression<Boolean>(!bool.getValue(),this.getSourceLocation());
+				return new Expression<Boolean>(!bool.getValue(),this.getSourceLocation());}
+				else {throw new IllegalArgumentException("Wrong type");}
 			}
 			else throw new FalseProgramException("Single expression is not correct declared"); 
 		}

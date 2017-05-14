@@ -42,11 +42,12 @@ public class Statement<E,F> {
 			 program.setEndingSourceLocation(this.getSourceLocation());
 			 program.setConsumedTime(0.0);
 			 program.setExtraTime(deltaT-program.getConsumedTime());
+			 //program.setConsumedTime(0.0);
 			 throw new NoMoreTimeException();
 		 }
 	}
 	 
-	public void execute(Ship ship,World world, Program<Statement,F> program, double deltaT) throws FalseProgramException, BreakException, NoMoreTimeException {
+	public void execute(Ship ship,World world, Program<Statement,F> program, double deltaT) throws FalseProgramException, BreakException, NoMoreTimeException, FalseReturnException {
 		doStuff(ship, world, program, deltaT);
 		if (this.getValue() instanceof SingleStatement) {
 			executeSingleStatement(ship, world, program, deltaT);
@@ -82,7 +83,7 @@ public class Statement<E,F> {
 		
 	}
 	
-	public void executeSingleStatement(Ship ship,World world, Program<Statement,F> program, double deltaT) throws FalseProgramException, BreakException, NoMoreTimeException {
+	public void executeSingleStatement(Ship ship,World world, Program<Statement,F> program, double deltaT) throws FalseProgramException, BreakException, NoMoreTimeException, FalseReturnException {
 		SingleStatement<E,Statement<E,F>,F> singleStatement = ((SingleStatement<E,Statement<E,F>,F>) (this.getValue()));
 
 		 if (singleStatement.getStating().equals("while")){
@@ -101,7 +102,7 @@ public class Statement<E,F> {
 		 } else throw new FalseProgramException("Illegal single statement");
 	}
 	
-	public void executeDoubleStatement(Ship ship,World world, Program<Statement,F> program, double deltaT) throws FalseProgramException, BreakException, NoMoreTimeException {
+	public void executeDoubleStatement(Ship ship,World world, Program<Statement,F> program, double deltaT) throws FalseProgramException, BreakException, NoMoreTimeException, FalseReturnException {
 		if (this.getValue() instanceof DoubleStatement) {
 			 DoubleStatement<E,Statement<E,F>,F> doubleStatement = (DoubleStatement<E,Statement<E,F>,F>) this.getValue();
 			 if (doubleStatement.getStating().equals("if")) {
@@ -138,7 +139,7 @@ public class Statement<E,F> {
 		 }
 	}
 	
-	public void executeExpressionStatement(Ship ship,World world, Program<Statement,F> program, double deltaT) throws FalseProgramException {
+	public void executeExpressionStatement(Ship ship,World world, Program<Statement,F> program, double deltaT) throws FalseProgramException, FalseReturnException {
 		ExpressionStatement<E> expressionStatement = (ExpressionStatement<E>)this.getValue();
 		 if (expressionStatement.getStating().equals("print")){
 			 if (expressionStatement.getExpression().getValue() instanceof String) {
@@ -167,14 +168,24 @@ public class Statement<E,F> {
 		 else if(expressionStatement.getStating().equals("turn")){
 			 program.setConsumedTime(program.getConsumedTime()+0.2);
 			 Expression<Double> angle = expressionStatement.getExpression().read(program).calculateExpression(ship, world, program);
-			 ship.turn(angle.getValue());
+			 if ( 0<= angle.getValue() && angle.getValue() <= 2*Math.PI){
+				 ship.turn(angle.getValue());
+
+			 } else {
+				 throw new IllegalArgumentException("Wrong angle");
+			 }
+		 }else if(expressionStatement.getStating().equals("return")){
+			 if (program.getIsInFunction()){
+				 
+			 }else {
+				 throw new FalseReturnException("Return outside function body");
+			 }
 		 }
+		 
 	}
 	
 	public void executeAssignment(Ship ship,World world, Program<Statement,F> program, double deltaT) throws FalseProgramException, BreakException, NoMoreTimeException {
 		Assignment<E> assignment = (Assignment<E>) this.getValue();
-		System.out.println(assignment.getVariableName());
-		System.out.println(assignment.getValue().getValue().getClass().getSimpleName().equals("Double"));
 		 if (assignment.getValue().getValue().getClass().getSimpleName().equals("Double")) {
 			 if (program.getAllVariables().contains(assignment.getVariableName())){
 				 if(program.getDoubleVariables().containsKey(assignment.getVariableName())){

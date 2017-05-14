@@ -29,7 +29,8 @@ import asteroids.part3.programs.internal.ProgramParser;
 import asteroids.util.ModelException;
 
 public class PracticeTest {
-	private static final double EPSILON = 0.0001;
+
+	  private static final double EPSILON = 0.0001;
 	  private static final double BIG_EPSILON = 1.0E14;
 	  private static final double VERY_BIG_EPSILON = 1.0E34;
 
@@ -574,7 +575,7 @@ public class PracticeTest {
 	    assertTrue(entities.contains(bullet1));
 	    Ship otherShip = facade.createShip(400, 420, 10, 5, 50, 0, 1.0E20);
 	    facade.addShipToWorld(filledWorld, otherShip);
-	    assertEquals(4, entities.size());
+	    assertEquals(3, entities.size());
 	    score += 6;
 	  }
 
@@ -1326,19 +1327,19 @@ public class PracticeTest {
 	    assertNull(facade.getBulletWorld(bullet1));
 	    score += 7;
 	  }
-	  
+
+	  // Assignment Statement
+
 	  @Test
-	  public void testAssignment_ImproperType() throws ModelException {
-	    try {
-	      max_score += 4;
-	      String code = "varname := 7.0; " + "varname := self; ";
-	      Program program = ProgramParser.parseProgramFromString(code, programFactory);
-	      facade.loadProgramOnShip(ship1, program);
-	      facade.executeProgram(ship1, 1.0);
-	      fail();
-	    } catch (ModelException exc) {
-	      score += 4;
-	    }
+	  public void testAssignmentStatement_NewGlobalVariable() throws ModelException {
+	    max_score += 4;
+	    String code = "varname := 7.0;" + "print varname; ";
+	    Program program = ProgramParser.parseProgramFromString(code, programFactory);
+	    facade.loadProgramOnShip(ship1, program);
+	    List<Object> results = facade.executeProgram(ship1, 1.0);
+	    Object[] expecteds = { 7.0 };
+	    assertArrayEquals(expecteds, results.toArray());
+	    score += 4;
 	  }
 	  @Test
 	  public void testPrintStatement_LegalCase() throws ModelException {
@@ -1350,6 +1351,18 @@ public class PracticeTest {
 	    Object[] expecteds = { 4.0 };
 	    assertArrayEquals(expecteds, results.toArray());
 	    score += 2;
+	  }
+	  @Test
+	  public void testReturnStatement_NonInFunctionBody() throws ModelException {
+	    try {
+	      max_score += 5;
+	      String code = "return 4.0;";
+	      Program program = ProgramParser.parseProgramFromString(code, programFactory);
+	      facade.loadProgramOnShip(ship1, program);
+	      facade.executeProgram(ship1, 1.0);
+	    } catch (ModelException exc) {
+	      score += 5;
+	    }
 	  }
 
 	  @Test
@@ -1380,5 +1393,94 @@ public class PracticeTest {
 	    assertArrayEquals(expecteds, results.toArray());
 	    score += 8;
 	  }
+	  
+	  @Test
+	  public void testIfStatement_ElsePartNonIterruptable() throws ModelException {
+	    max_score += 3;
+	    String code = "if self == 2.0 { " + "  print 4.0; " + "}" + "else { " + "print 8.0; " + "}";
+	    Program program = ProgramParser.parseProgramFromString(code, programFactory);
+	    facade.loadProgramOnShip(ship1, program);
+	    List<Object> results = facade.executeProgram(ship1, 1.0);
+	    Object[] expecteds = { 8.0 };
+	    assertArrayEquals(expecteds, results.toArray());
+	    score += 3;
+	  }
+	  @Test
+	  public void testIfStatement_ElsePartIterruptable() throws ModelException {
+	    max_score += 12;
+	    String code = "print 2.0; " + "if self == 22.22  " + "  { print 33.33; } " + "else "
+	        + "  { print 4.0; skip; skip; print 8.0; } " + "skip; " + "print 16.0; ";
+	    Program program = ProgramParser.parseProgramFromString(code, programFactory);
+	    facade.loadProgramOnShip(ship1, program);
+	    assertNull(facade.executeProgram(ship1, 0.25));
+	    score += 2;
+	    assertNull(facade.executeProgram(ship1, 0.25));
+	    assertNull(facade.executeProgram(ship1, 0.10));
+	    score += 2;
+	    List<Object> results = facade.executeProgram(ship1, 0.25);
+	    assertEquals(4, results.size());
+	    score += 2;
+	    Object[] expecteds = { 2.0, 4.0, 8.0, 16.0 };
+	    assertArrayEquals(expecteds, results.toArray());
+	    score += 6;
+	  }
+	  
+	  @Test
+	  public void testIfStatement_NoElsePart() throws ModelException {
+	    max_score += 3;
+	    String code = "if self == 4.0 " + "  { print 4.0; } ";
+	    Program program = ProgramParser.parseProgramFromString(code, programFactory);
+	    facade.loadProgramOnShip(ship1, program);
+	    List<Object> results = facade.executeProgram(ship1, 1.0);
+	    assertEquals(0, results.size());
+	    score += 3;
+	  }
 
+	  @Test
+	  public void testIfStatement_NonBooleanControllingExpression() throws ModelException {
+	    try {
+	      max_score += 5;
+	      String code = "if self { " + "  print 4.0; " + "}";
+	      Program program = ProgramParser.parseProgramFromString(code, programFactory);
+	      facade.loadProgramOnShip(ship1, program);
+	      facade.executeProgram(ship1, 1.0);
+	    } catch (ModelException exc) {
+	      score += 5;
+	    }
+	  }
+
+	  // Sequence Statement
+
+	  @Test
+	  public void testSequenceStatement_NonNestedNonIterruptable() throws ModelException {
+	    max_score += 3;
+	    String code = "print 4.0; " + "print 12.0; ";
+	    Program program = ProgramParser.parseProgramFromString(code, programFactory);
+	    facade.loadProgramOnShip(ship1, program);
+	    List<Object> results = facade.executeProgram(ship1, 1.0);
+	    Object[] expecteds = { 4.0, 12.0 };
+	    assertArrayEquals(expecteds, results.toArray());
+	    score += 3;
+	  }
+	  
+	  @Test
+	  public void testSequenceStatement_NonNestedIterruptable() throws ModelException {
+	    max_score += 10;
+	    String code = "print 4.0; " + "skip; " + "skip; " + "print 3.0; " + "print 7.0; " + "skip; " + "print 5.0; ";
+	    Program program = ProgramParser.parseProgramFromString(code, programFactory);
+	    facade.loadProgramOnShip(ship1, program);
+	    List<Object> results = facade.executeProgram(ship1, 0.05);
+	    assertNull(results);
+	    results = facade.executeProgram(ship1, 0.25);
+	    assertNull(results);
+	    score += 2;
+	    results = facade.executeProgram(ship1, 0.25);
+	    assertNull(results);
+	    results = facade.executeProgram(ship1, 0.03);
+	    assertNull(results);
+	    results = facade.executeProgram(ship1, 0.23);
+	    Object[] expecteds = { 4.0, 3.0, 7.0, 5.0 };
+	    assertArrayEquals(expecteds, results.toArray());
+	    score += 8;
+	  }
 }
