@@ -168,11 +168,10 @@ public class Statement<E,F> {
 		 else if(expressionStatement.getStating().equals("turn")){
 			 program.setConsumedTime(program.getConsumedTime()+0.2);
 			 Expression<Double> angle = expressionStatement.getExpression().read(program).calculateExpression(ship, world, program);
-			 if ( 0<= angle.getValue() && angle.getValue() <= 2*Math.PI){
+			 try {
 				 ship.turn(angle.getValue());
-
-			 } else {
-				 throw new IllegalArgumentException("Wrong angle");
+			 } catch (AssertionError e){
+				 throw new IllegalArgumentException();
 			 }
 		 }else if(expressionStatement.getStating().equals("return")){
 			 if (program.getIsInFunction()){
