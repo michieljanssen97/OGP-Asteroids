@@ -2,13 +2,13 @@ package asteroids.model.programs;
 
 public class Assignment<E> {
 	
-	public Assignment(Expression value, String operator, String variableName){
+	public Assignment(Expression<?> value, String operator, String variableName){
 		this.value = value;
 		this.operator = operator;
 		this.variableName = variableName;
 	}
 	
-	private Expression value;
+	private Expression<?> value;
 	private String operator;
 	private String variableName;
 

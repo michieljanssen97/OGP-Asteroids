@@ -9,7 +9,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import asteroids.model.Ship;
-import asteroids.model.programs.Type;
 import asteroids.facade.Facade;
 import asteroids.part1.facade.IFacade;
 import asteroids.util.ModelException;
@@ -56,10 +55,4 @@ public class TestPartial {
 		assertEquals(85, position[1], EPSILON);
 	}
 	
-//	@Test
-//	public void t() {
-//		ArrayList<Double> d = new ArrayList<>();
-//		d.add(5.0);
-//		System.out.println(d.get(0).getClass().getSimpleName());
-//	}
 }
