@@ -31,7 +31,9 @@ public class Statement<E,F> {
 	 }
 	 
 	 public void doStuff(Ship ship,World world, Program program, double deltaT) throws NoMoreTimeException {
-		 deltaT = deltaT + program.getExtraTime();
+		 double toRound = (deltaT + program.getExtraTime())*100000.0;
+		 toRound = Math.round(toRound);
+		 deltaT = (toRound)/100000.0;
 		 if (program.getEndingSourceLocation() != null){
 			 if ((this.getSourceLocation().getLine() == (program.getEndingSourceLocation().getLine())) && (this.getSourceLocation().getColumn() == program.getEndingSourceLocation().getColumn())) {	 
 				 program.setEndingSourceLocation(null);
@@ -39,10 +41,11 @@ public class Statement<E,F> {
 		 }
 		 
 		 if ((deltaT-program.getConsumedTime())<0.2) {
-			 program.setEndingSourceLocation(this.getSourceLocation());
-			 program.setConsumedTime(0.0);
-			 program.setExtraTime(deltaT-program.getConsumedTime());
+			 if ( (program.getEndingSourceLocation() == null) || (program.getEndingSourceLocation().getLine() <= this.getSourceLocation().getLine()) && (program.getEndingSourceLocation().getColumn() <= this.getSourceLocation().getColumn()))
+				 program.setEndingSourceLocation(this.getSourceLocation());
 			 //program.setConsumedTime(0.0);
+			 program.setExtraTime(deltaT-program.getConsumedTime());
+			 program.setConsumedTime(0.0);
 			 throw new NoMoreTimeException();
 		 }
 	}
@@ -142,6 +145,7 @@ public class Statement<E,F> {
 	public void executeExpressionStatement(Ship ship,World world, Program<Statement,F> program, double deltaT) throws FalseProgramException, FalseReturnException {
 		ExpressionStatement<E> expressionStatement = (ExpressionStatement<E>)this.getValue();
 		 if (expressionStatement.getStating().equals("print")){
+			 
 			 if (expressionStatement.getExpression().getValue() instanceof String) {
 				 program.getPrintedObjects().add(expressionStatement.getExpression().read(program).getValue());
 				 System.out.println(expressionStatement.getExpression().read(program).getValue());
@@ -150,18 +154,21 @@ public class Statement<E,F> {
 				 Expression<Double> exp = (expressionStatement.getExpression().calculateExpression(ship, world, program));
 				 program.getPrintedObjects().add(exp.getValue());
 				 System.out.println(exp.getValue());
-			 } catch (FalseProgramException e) {	
+				 return;
+			 } catch (FalseProgramException e) {
 			 }
 			 try {
 				 Expression<Boolean> exp = (expressionStatement.getExpression().evaluateExpression(ship, world, program));
 				 program.getPrintedObjects().add(exp.getValue());
 				 System.out.println(exp.getValue());
-			 } catch (FalseProgramException e) {		
+				 return;
+			 } catch (FalseProgramException e) {
 			 }
 			 try {
 				 Expression<Entity> exp = (expressionStatement.getExpression().searchEntity(world, ship, program));
 				 program.getPrintedObjects().add(exp.getValue());
 				 System.out.println(exp.getValue());
+				 return;
 			 } catch (FalseProgramException e) {	
 			 }
 		 }

@@ -84,14 +84,18 @@ public class Expression<T> {
 			}
 		} else {
 			DoubleExpression<Expression<T>> DoubleExpression = ((DoubleExpression<Expression<T>>) (this.getValue()));
-		    Expression<Double> left = (DoubleExpression.getLeftValue().read(program).calculateExpression(ship, world, program) );
-		    Expression<Double> right = (DoubleExpression.getRightValue().read(program).calculateExpression(ship, world, program) );
-		    String operator = (DoubleExpression.getOperator());
+			String operator = (DoubleExpression.getOperator());
 		    if (operator.equals("+")) {
+			    Expression<Double> left = (DoubleExpression.getLeftValue().read(program).calculateExpression(ship, world, program) );
+			    Expression<Double> right = (DoubleExpression.getRightValue().read(program).calculateExpression(ship, world, program) );
+			   
 		    	double sum = (left.getValue()) + (right.getValue());
 		    	return new Expression<Double>(sum, this.getSourceLocation());
 		    }
 		    else if (operator.equals("*")) {
+			    Expression<Double> left = (DoubleExpression.getLeftValue().read(program).calculateExpression(ship, world, program) );
+			    Expression<Double> right = (DoubleExpression.getRightValue().read(program).calculateExpression(ship, world, program) );
+			   
 		    	double multiplication = (left.getValue()) * (right.getValue());
 		    	return new Expression<Double>(multiplication, this.getSourceLocation());
 		    }
@@ -222,10 +226,21 @@ public class Expression<T> {
 			DoubleExpression<Expression<T>> DoubleExpression = ((DoubleExpression<Expression<T>>) (this.getValue()));
 		    String operator = (DoubleExpression.getOperator());
 		    if (operator.equals("<")) {
-		    	Expression<Double> left = (DoubleExpression.getLeftValue().read(program).calculateExpression(ship, world, program));
-			    Expression<Double> right = (DoubleExpression.getRightValue().read(program).calculateExpression(ship, world, program) );
-		    	boolean result = (left.getValue()) < (right.getValue());
-		    	return new Expression<Boolean>(result, this.getSourceLocation());
+		    	if (((null == (DoubleExpression.getLeftValue().read(program).getValue())) || (null == (DoubleExpression.getRightValue().read(program).getValue())))) {
+		    		throw new FalseProgramException("null can not be a part of a comparison");
+		    	}
+		    	try {
+			    	Expression<Double> left = (DoubleExpression.getLeftValue().read(program).calculateExpression(ship, world, program));
+				    Expression<Double> right = (DoubleExpression.getRightValue().read(program).calculateExpression(ship, world, program) );
+			    	boolean result = (left.getValue()) < (right.getValue());
+			    	return new Expression<Boolean>(result, this.getSourceLocation());
+		    	} catch (FalseProgramException e) {
+		    		throw e;
+		    	}
+//		    	Expression<Double> left = (DoubleExpression.getLeftValue().read(program).calculateExpression(ship, world, program));
+//			    Expression<Double> right = (DoubleExpression.getRightValue().read(program).calculateExpression(ship, world, program) );
+//		    	boolean result = (left.getValue()) < (right.getValue());
+//		    	return new Expression<Boolean>(result, this.getSourceLocation());
 		    }
 		    
 		    else if (operator.equals("==")) {
