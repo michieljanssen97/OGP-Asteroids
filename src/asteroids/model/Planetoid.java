@@ -8,13 +8,11 @@ import java.util.stream.Stream;
 public class Planetoid extends MinorPlanet {
 	
 	private double totalTraveledDistance = 0;
-	private double radiusUponCreation = 0;
 	
 	public Planetoid(double x, double y, double xVelocity, double yVelocity, double radius, double totalTraveledDistance) {
 		super(x, y, xVelocity, yVelocity, radius);
 		
 		increaseTotalTraveledDistance(totalTraveledDistance);
-		this.radiusUponCreation = radius;
 	}
  	
 	@Override
@@ -58,15 +56,10 @@ public class Planetoid extends MinorPlanet {
 		double newRadius = getRadius() - (0.000001*distance);
 
 		if (newRadius < 5) {
-			this.destroy();
 			this.terminate();
 		} else {
 			setRadius(newRadius);
 		}
-	}
-	
-	public double getRadiusUponCreation(){
-		return this.radiusUponCreation;
 	}
 	
 	@Override
