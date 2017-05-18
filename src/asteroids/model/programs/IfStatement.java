@@ -5,37 +5,33 @@ import asteroids.model.Ship;
 import asteroids.model.World;
 import asteroids.part3.programs.SourceLocation;
 
-public class IfStatement<E, F> extends Statement {
+public class IfStatement<E,S,F> extends Statement {
 
-	public IfStatement(Expression<?> expression, Statement statement,String stating, SourceLocation sourceLocation) {
+	public IfStatement(Expression<?> condition, Statement<E,F> ifBody, Statement<E,F> elseBody, SourceLocation sourceLocation) {
 		super(sourceLocation);
-		this.expression = expression;
-		this.stating = stating;
-		this.statement = statement;
-	}
-
-	private Expression expression;
-	private String stating;
-	private Statement statement;
+		this.condition = condition;
+		this.ifBody = ifBody;
+		this.elseBody = elseBody;	}
 	
-	public Statement getStatement() {return this.statement;}
-	public String getStating() {return this.stating;}
-	public Expression<?> getExpression() {return this.expression;}	
+	private Expression<?> condition;
+	private Statement<E,F> ifBody;
+	private Statement<E,F> elseBody;
+
+	
+	public Expression<?> getCondition() { return this.condition;}	
+	public Statement<E,F> getIfBody() { return this.ifBody ;}
+	public Statement<E,F> getElseBody() { return this.elseBody; }
 	
 	public void execute(Ship ship,World world, Program program, double deltaT) throws FalseProgramException, BreakException, NoMoreTimeException, FalseReturnException {
+		doStuff(ship, world, program, deltaT);
 
-		 if (getStating().equals("while")){
-			 while (true){
-				 Expression<?> condition = getExpression();
-				 Statement<E,F> breakWhileStat = new StringStatement("break",getSourceLocation());
-				 Statement<E,F> whileBody = getStatement();
-				 WhileStatement newWhileStat = new WhileStatement(condition, whileBody, breakWhileStat, "if", getSourceLocation());
-				 try {
-					 newWhileStat.execute(ship, world, program, deltaT);
-				 } catch (BreakException e) {
-					 break;
+			 if ((boolean) getCondition().read(ship, world, program).getValue()) {
+				 getIfBody().execute(ship, world, program, deltaT);
+
+			 } else {
+				 if (getElseBody() != null){
+					 getElseBody().execute(ship, world, program, deltaT); 
 				 }
-			 }	
-		 } else throw new FalseProgramException("Illegal single statement");
-	}
+			 }
+		}
 }
