@@ -15,7 +15,7 @@ import asteroids.part3.programs.SourceLocation;
 
 public class Program<F,S> {
 	
-	private final S main;
+	private final Statement main;
 	private final List<F> functions;
 	private SourceLocation endingSourceLocation;
 	private double extraTime = 0;
@@ -29,13 +29,13 @@ public class Program<F,S> {
 	private List<Object> printedObjects = new ArrayList<>();
 
 	
-	public Program(List<F> functions, S main){
+	public Program(List<F> functions, Statement main){
 		this.main = main;
 		this.functions = functions;
 	}
 	
 	public Statement getMain(){
-		return (Statement) this.main;	
+		return this.main;	
 	}
 	public  List<F> getFunctions() { 
 		return this.functions;
@@ -82,14 +82,14 @@ public class Program<F,S> {
 	}
 	
 	public void execute(double deltaT, Ship ship, World world) throws FalseProgramException, FalseReturnException {
-		while (true) {try {
-		getMain().execute(ship, world, this, deltaT);
-		}
-		catch (NoMoreTimeException e) {
-			break;}
-		catch (BreakException ex) { throw new FalseProgramException("Break is not in a while");};
-		break;
-	}
+		while (true) {
+			try {
+				getMain().execute(ship, world, this, deltaT);
+			} catch (NoMoreTimeException e) {
+				break;
+			} catch (BreakException ex) { throw new FalseProgramException("Break is not in a while");};
+				break;
+			}
 	
 	}
 }
