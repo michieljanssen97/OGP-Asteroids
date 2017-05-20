@@ -56,12 +56,12 @@ public class ProgramFactory<E, S, F, P> implements IProgramFactory<Expression, S
 
 	@Override
 	public Expression createReadVariableExpression(String variableName, SourceLocation sourceLocation) {
-		return new Expression<String>(variableName, sourceLocation);
+		return new ContainerExpression(variableName, sourceLocation);
 	}
 
 	@Override
 	public Expression createReadParameterExpression(String parameterName, SourceLocation sourceLocation) {
-		return new Expression<String>(parameterName, sourceLocation);
+		return new ContainerExpression(parameterName, sourceLocation);
 	}
 
 	@Override
@@ -82,7 +82,7 @@ public class ProgramFactory<E, S, F, P> implements IProgramFactory<Expression, S
 
 	@Override
 	public Expression createDoubleLiteralExpression(double value, SourceLocation location) {
-		return new Expression<Double>(value,location);
+		return new ContainerExpression(value,location);
 	}
 
 	@Override

@@ -8,13 +8,13 @@ import asteroids.part3.programs.SourceLocation;
 
 public class Expression<T> {
 	
-	public Expression(T value, SourceLocation sourceLocation) {
+	public Expression(Expression<?> value, SourceLocation sourceLocation) {
 		this.sourceLocation = sourceLocation;
 		this.value = value;
 	}
-	protected T value;
-	public Expression<?> getValue() { return (Expression<?>) this.value; }
-	public void setValue(T value) { this.value = value; }
+	protected Expression<?> value;
+	public Expression<?> getValue() { return this.value; }
+	public void setValue(Expression<?> value) { this.value = value; }
 	private SourceLocation sourceLocation;
 	public SourceLocation getSourceLocation() { return this.sourceLocation; }
 	

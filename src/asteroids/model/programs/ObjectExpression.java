@@ -8,8 +8,11 @@ import asteroids.part3.programs.SourceLocation;
 
 public class ObjectExpression extends Expression {
 	
-	public ObjectExpression(Object value, SourceLocation sourceLocation) {
-		super(value, sourceLocation);
+	String objectName;
+	
+	public ObjectExpression(String objectName, SourceLocation sourceLocation) {
+		super(null, sourceLocation);
+		this.objectName = objectName;
 	}
 
 	public Entity getClosest(Ship ship, World world, Class<? extends Entity> type) {
@@ -19,7 +22,7 @@ public class ObjectExpression extends Expression {
 	}
 
 	public Object read(Ship ship, World world, Program program) throws FalseProgramException {
-		switch((String) getValue().read(ship, world, program)) {		
+		switch(objectName) {		
 			case "null":	return null;
 			case "self":	return ship;
 			case "ship":	return getClosest(ship, world, Ship.class);

@@ -25,15 +25,7 @@ public class DoubleExpression<E> extends Expression {
 		return this.right;
 	}
 	
-	public void setLeftValue(Expression<?> newLeftValue){
-		this.left = newLeftValue;
-	}
-	
-	public void setRightValue(Expression<?> newRightValue){
-		this.left = newRightValue;
-	}
-	
-	public Object execute(Ship ship, World world,Program program) throws FalseProgramException{
+	public Object read(Ship ship, World world,Program program) throws FalseProgramException{
 		switch (getOperator()) {
 			case "+":		return (Double) getLeftValue().read(ship, world, program) + (Double) getRightValue().read(ship, world, program);	
 			case "*":		return (Double) getLeftValue().read(ship, world, program) * (Double) getRightValue().read(ship, world, program);	    	
