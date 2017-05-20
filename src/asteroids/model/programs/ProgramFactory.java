@@ -2,7 +2,7 @@ package asteroids.model.programs;
 
 import java.util.List;
 
-import asteroids.model.Program;
+import asteroids.model.*;
 import asteroids.part3.programs.IProgramFactory;
 import asteroids.part3.programs.SourceLocation;
 
@@ -56,12 +56,12 @@ public class ProgramFactory<E, S, F, P> implements IProgramFactory<Expression, S
 
 	@Override
 	public Expression createReadVariableExpression(String variableName, SourceLocation sourceLocation) {
-		return new ContainerExpression(variableName, sourceLocation);
+		return new ContainerExpression<String>(variableName, sourceLocation);
 	}
 
 	@Override
 	public Expression createReadParameterExpression(String parameterName, SourceLocation sourceLocation) {
-		return new ContainerExpression(parameterName, sourceLocation);
+		return new ContainerExpression<String>(parameterName, sourceLocation);
 	}
 
 	@Override
@@ -72,107 +72,107 @@ public class ProgramFactory<E, S, F, P> implements IProgramFactory<Expression, S
 
 	@Override
 	public Expression createChangeSignExpression(Expression expression, SourceLocation sourceLocation) {
-		return new SingleExpression(expression,"-", sourceLocation);
+		return new SingleExpression<Double>(expression,"-", sourceLocation);
 	}
 
 	@Override
 	public Expression createNotExpression(Expression expression, SourceLocation sourceLocation) {
-		return new SingleExpression<Expression>(expression,"!", sourceLocation);
+		return new SingleExpression<Boolean>(expression,"!", sourceLocation);
 	}
 
 	@Override
 	public Expression createDoubleLiteralExpression(double value, SourceLocation location) {
-		return new ContainerExpression(value,location);
+		return new ContainerExpression<Double>(value,location);
 	}
 
 	@Override
 	public Expression createNullExpression(SourceLocation location) {
-		return new ObjectExpression("null", location);
+		return new ObjectExpression<String>("null", location);
 	}
 
 	@Override
 	public Expression createSelfExpression(SourceLocation location) {
-		return new ObjectExpression("self", location);
+		return new ObjectExpression<String>("self", location);
 	}
 
 	@Override
 	public Expression createShipExpression(SourceLocation location) {
-		return new ObjectExpression("ship", location);
+		return new ObjectExpression<String>("ship", location);
 	}
 
 	@Override
 	public Expression createAsteroidExpression(SourceLocation location) {
-		return new ObjectExpression("asteroid", location);
+		return new ObjectExpression<String>("asteroid", location);
 	}
 
 	@Override
 	public Expression createPlanetoidExpression(SourceLocation location) {
-		return new ObjectExpression("planetoid", location);
+		return new ObjectExpression<Planetoid>("planetoid", location);
 	}
 
 	@Override
 	public Expression createBulletExpression(SourceLocation location) {
-		return new ObjectExpression("bullet", location);
+		return new ObjectExpression<Bullet>("bullet", location);
 	}
 
 	@Override
 	public Expression createPlanetExpression(SourceLocation location) {
-		return new ObjectExpression("planet", location);
+		return new ObjectExpression<MinorPlanet>("planet", location);
 	}
 
 	@Override
 	public Expression createAnyExpression(SourceLocation location) {
-		return new ObjectExpression("any", location);
+		return new ObjectExpression<Entity>("any", location);
 	}
 
 	@Override
 	public Expression createGetXExpression(Expression e, SourceLocation location) {
-		return new SingleExpression<Expression>(e, "getx", location);
+		return new SingleExpression<Double>(e, "getx", location);
 	}
 
 	@Override
 	public Expression createGetYExpression(Expression e, SourceLocation location) {
-		return new SingleExpression<Expression>(e, "gety", location);
+		return new SingleExpression<Double>(e, "gety", location);
 	}
 
 	@Override
 	public Expression createGetVXExpression(Expression e, SourceLocation location) {
-		return new SingleExpression<Expression>(e, "getvx", location);
+		return new SingleExpression<Double>(e, "getvx", location);
 	}
 
 	@Override
 	public Expression createGetVYExpression(Expression e, SourceLocation location) {
-		return new SingleExpression<Expression>(e, "getvy", location);
+		return new SingleExpression<Double>(e, "getvy", location);
 	}
 
 	@Override
 	public Expression createGetRadiusExpression(Expression e, SourceLocation location) {
-		return new SingleExpression(e, "getradius", location);
+		return new SingleExpression<Double>(e, "getradius", location);
 	}
 
 	@Override
 	public Expression createLessThanExpression(Expression e1, Expression e2, SourceLocation location) {
-		return new DoubleExpression(e1,e2,"<", location);
+		return new DoubleExpression<Boolean>(e1,e2,"<", location);
 	}
 
 	@Override
 	public Expression createEqualityExpression(Expression e1, Expression e2, SourceLocation location) {
-		return new DoubleExpression(e1,e2,"==", location);
+		return new DoubleExpression<Boolean>(e1,e2,"==", location);
 	}
 
 	@Override
 	public Expression createAdditionExpression(Expression e1, Expression e2, SourceLocation location) {
-		return new DoubleExpression(e1,e2,"+", location);
+		return new DoubleExpression<Double>(e1,e2,"+", location);
 	}
 
 	@Override
 	public Expression createMultiplicationExpression(Expression e1, Expression e2, SourceLocation location) {
-		return new DoubleExpression(e1,e2,"*", location);
+		return new DoubleExpression<Double>(e1,e2,"*", location);
 	}
 
 	@Override
 	public Expression createSqrtExpression(Expression e, SourceLocation location) {
-		return new SingleExpression(e, "sqrt", location);
+		return new SingleExpression<Double>(e, "sqrt", location);
 	}
 
 	@Override

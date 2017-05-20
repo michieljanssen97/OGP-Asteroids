@@ -5,19 +5,19 @@ import asteroids.part3.programs.SourceLocation;
 
 public class ContainerExpression<T> extends Expression<T> {
 	
-	Object contained;
+	T value;
 	
-	public ContainerExpression(Object value, SourceLocation sourceLocation) {
+	public ContainerExpression(T value, SourceLocation sourceLocation) {
 		super(null, sourceLocation);
-		this.contained = value;
+		this.value = value;
 	}
 	
 	private SourceLocation sourceLocation;
 	public SourceLocation getSourceLocation() { return this.sourceLocation; }
 	
 	
-	public Object read(Ship ship, World world, Program<?,?> program) throws FalseProgramException {
-		return this.contained;
+	public T read(Ship ship, World world, Program<?,?> program) throws FalseProgramException {
+		return this.value;
 	}
 
 	

@@ -7,20 +7,20 @@ import asteroids.part3.programs.SourceLocation;
 
 public class StringStatement<F, E> extends Statement<E,F> {
 	
-	String value;
+	String statement;
 	
-	public StringStatement(String value, SourceLocation sourceLocation) {
+	public StringStatement(String statement, SourceLocation sourceLocation) {
 		super(sourceLocation);
-		this.value = value;
+		this.statement = statement;
 	}
 	
-	public String getValue() {
-		return this.value;
+	public String getStatement() {
+		return this.statement;
 	}
 
 	public void execute(Ship ship,World world, Program<F,?> program, double deltaT) throws BreakException, FalseProgramException, NoMoreTimeException {
 		doStuff(ship, world, program, deltaT); 
-		switch (getValue()) {
+		switch (getStatement()) {
            case "break":  		throw new BreakException();
            case "thrust_on": 	program.setConsumedTime(program.getConsumedTime()+0.2);
 			 					ship.toggleThruster();
