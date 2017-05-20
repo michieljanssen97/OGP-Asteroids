@@ -22,10 +22,7 @@ public class Program<F,S> {
 	private double consumedTime = 0;
 	private boolean isInWhileLoop;
 	private boolean isInFunction = false;
-	private HashMap<String,Boolean> booleanVariables = new HashMap<>();
-	private HashMap<String,Double> doubleVariables = new HashMap<>();
-	private HashMap<String,Entity> entityVariables = new HashMap<>();
-	private HashSet<String> allVariables = new HashSet<>();
+	private HashMap<String,Object> variables = new HashMap<>();
 	private List<Object> printedObjects = new ArrayList<>();
 
 	
@@ -40,10 +37,7 @@ public class Program<F,S> {
 	public  List<F> getFunctions() { 
 		return this.functions;
 	}
-	public HashMap<String,Boolean> getBooleanVariables() { return this.booleanVariables; }
-	public HashMap<String,Double> getDoubleVariables() { return this.doubleVariables;}
-	public HashMap<String,Entity> getEntityVariables() { return this.entityVariables; }
-	public HashSet<String> getAllVariables() { return this.allVariables; }
+	public HashMap<String, Object> getVariables() { return this.variables; }
 	public List<Object> getPrintedObjects() {return this.printedObjects;}
 	
 	public boolean getIsInFunction() {

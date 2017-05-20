@@ -23,28 +23,10 @@ public class Assignment<E> extends Statement {
 	public void execute(Ship ship,World world, Program program, double deltaT) throws FalseProgramException, BreakException, NoMoreTimeException {
 		doStuff(ship, world, program, deltaT); 
 		if (getExpression() instanceof Expression){
-			 Object assignmentExpr = getExpression().read(ship, world, program);
-
-			 switch (assignmentExpr.getValue().getClass().getSimpleName()){
+			 Object assignedValue = getExpression().read(ship, world, program);
 			 
-			 case "Boolean": 	if ((!(program.getAllVariables().contains(getVariableName()))) || (program.getBooleanVariables().containsKey(getVariableName()))) {
-				 					program.getBooleanVariables().put(getVariableName(), (Boolean) assignmentExpr.getValue());
-				 					program.getAllVariables().add(getVariableName());
-				 					break;
-			 					}
-				 
-			 case "Entity":		if ((!(program.getAllVariables().contains(getVariableName()))) || (program.getEntityVariables().containsKey(getVariableName()))) {
-				 					program.getEntityVariables().put(getVariableName(), (Entity) assignmentExpr.getValue());
-				 					program.getAllVariables().add(getVariableName());
-				 					break;
-			 					}	
-				 
-			 case "Double":		if ((!(program.getAllVariables().contains(getVariableName()))) || (program.getDoubleVariables().containsKey(getVariableName()))) {
-				 					program.getDoubleVariables().put(getVariableName(), (Double) assignmentExpr.getValue());
-				 					program.getAllVariables().add(getVariableName());
-				 					break;
-								}
-			 default: throw new FalseProgramException("Wrong type");
+			 if (!(program.getVariables().containsKey(getVariableName()))) {
+				 program.getVariables().put(getVariableName(), assignedValue.getClass().cast(assignedValue));
 			 }
 		 }
 		 else
