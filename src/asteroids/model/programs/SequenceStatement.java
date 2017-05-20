@@ -7,25 +7,25 @@ import asteroids.model.Ship;
 import asteroids.model.World;
 import asteroids.part3.programs.SourceLocation;
 
-public class SequenceStatement extends Statement {
+public class SequenceStatement<F, E> extends Statement<E,F> {
 
-	private List<Statement> statements;
+	private List<Statement<E,F>> statements;
 	
-	public List<Statement> getStatements() {
+	public List<Statement<E,F>> getStatements() {
 		return this.statements;
 	}
 	
-	public SequenceStatement(List<Statement> statements, SourceLocation sourceLocation) { 
+	public SequenceStatement(List<Statement<E,F>> statements, SourceLocation sourceLocation) { 
 		super(sourceLocation);
 		this.statements = statements;
 	}
 	
-	public void execute(Ship ship,World world, Program program, double deltaT) throws BreakException, NoMoreTimeException, FalseProgramException, FalseReturnException {
+	public void execute(Ship ship,World world, Program<F,?> program, double deltaT) throws BreakException, NoMoreTimeException, FalseProgramException, FalseReturnException {
 		doStuff(ship, world, program, deltaT); 
 		int correctLocation = 0;
-		 List<Statement> newList = getStatements();
+		 List<Statement<E,F>> newList = getStatements();
 		 if (program.getEndingSourceLocation() == null){
-			 for (Statement currentStatement : newList) {
+			 for (Statement<E,F> currentStatement : newList) {
 				 currentStatement.execute(ship, world, program, deltaT);
 			 }
 		 } else {	 

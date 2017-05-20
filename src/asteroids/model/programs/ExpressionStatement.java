@@ -5,7 +5,7 @@ import asteroids.model.Ship;
 import asteroids.model.World;
 import asteroids.part3.programs.SourceLocation;
 
-public class ExpressionStatement<E> extends Statement {
+public class ExpressionStatement<E, F> extends Statement<E,F> {
 
 	public ExpressionStatement(Expression<?> expression, String stating, SourceLocation sourceLocation){
 		super(sourceLocation);
@@ -23,7 +23,7 @@ public class ExpressionStatement<E> extends Statement {
 		this.expression = expression;
 	}
 
-	public void execute(Ship ship,World world, Program program, double deltaT) throws FalseProgramException, FalseReturnException {
+	public void execute(Ship ship,World world, Program<F,?> program, double deltaT) throws FalseProgramException, FalseReturnException {
 		 if (getStating().equals("print")) {
 			Object expressionResult = getExpression().read(ship, world, program);
 			program.getPrintedObjects().add(expressionResult);

@@ -1,12 +1,11 @@
 package asteroids.model.programs;
 
-import asteroids.model.Entity;
 import asteroids.model.Program;
 import asteroids.model.Ship;
 import asteroids.model.World;
 import asteroids.part3.programs.SourceLocation;
 
-public class Assignment<E> extends Statement {
+public class Assignment<E, F> extends Statement<E,F> {
 	
 	public Assignment(String variableName, Expression<?> value, SourceLocation sourceLocation){
 		super(sourceLocation);
@@ -20,13 +19,13 @@ public class Assignment<E> extends Statement {
 	public String getVariableName() {return this.variableName;}
 	public Expression<?> getExpression() {return this.value;}
 	
-	public void execute(Ship ship,World world, Program program, double deltaT) throws FalseProgramException, BreakException, NoMoreTimeException {
+	public void execute(Ship ship,World world, Program<F,?> program, double deltaT) throws FalseProgramException, BreakException, NoMoreTimeException {
 		doStuff(ship, world, program, deltaT); 
 		if (getExpression() instanceof Expression){
 			 Object assignedValue = getExpression().read(ship, world, program);
 			 
 			 if (!(program.getVariables().containsKey(getVariableName()))) {
-				 program.getVariables().put(getVariableName(), assignedValue.getClass().cast(assignedValue));
+				 program.getVariables().put(getVariableName(), assignedValue);
 			 }
 		 }
 		 else

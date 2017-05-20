@@ -5,7 +5,7 @@ import asteroids.model.Ship;
 import asteroids.model.World;
 import asteroids.part3.programs.SourceLocation;
 
-public class IfStatement<E,S,F> extends Statement {
+public class IfStatement<E,S,F> extends Statement<E,F> {
 
 	public IfStatement(Expression<?> condition, Statement<E,F> ifBody, Statement<E,F> elseBody, SourceLocation sourceLocation) {
 		super(sourceLocation);
@@ -22,7 +22,7 @@ public class IfStatement<E,S,F> extends Statement {
 	public Statement<E,F> getIfBody() { return this.ifBody ;}
 	public Statement<E,F> getElseBody() { return this.elseBody; }
 	
-	public void execute(Ship ship,World world, Program program, double deltaT) throws FalseProgramException, BreakException, NoMoreTimeException, FalseReturnException {
+	public void execute(Ship ship,World world, Program<F,?> program, double deltaT) throws FalseProgramException, BreakException, NoMoreTimeException, FalseReturnException {
 		 doStuff(ship, world, program, deltaT);
 
 		 if ((boolean) getCondition().read(ship, world, program)) {

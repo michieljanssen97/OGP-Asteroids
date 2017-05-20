@@ -1,12 +1,9 @@
 package asteroids.model.programs;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import asteroids.model.*;
 import asteroids.part3.programs.SourceLocation;
 
-public class ObjectExpression extends Expression {
+public class ObjectExpression<T> extends Expression<T> {
 	
 	String objectName;
 	
@@ -21,7 +18,7 @@ public class ObjectExpression extends Expression {
 				.orElse(null);
 	}
 
-	public Object read(Ship ship, World world, Program program) throws FalseProgramException {
+	public Object read(Ship ship, World world, Program<?,?> program) throws FalseProgramException {
 		switch(objectName) {		
 			case "null":	return null;
 			case "self":	return ship;

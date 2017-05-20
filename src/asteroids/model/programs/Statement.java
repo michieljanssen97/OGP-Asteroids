@@ -1,9 +1,5 @@
 package asteroids.model.programs;
 
-import java.util.List;
-import java.util.concurrent.ExecutionException;
-
-import asteroids.model.Entity;
 import asteroids.model.Program;
 import asteroids.model.Ship;
 import asteroids.model.World;
@@ -21,7 +17,7 @@ public abstract class Statement<E,F> {
 		 return this.sourceLocation;
 	 }
 
-	 public void doStuff(Ship ship,World world, Program program, double deltaT) throws NoMoreTimeException {
+	 public void doStuff(Ship ship,World world, Program<F,?> program, double deltaT) throws NoMoreTimeException {
 		 double toRound = (deltaT + program.getExtraTime())*100000.0;
 		 toRound = Math.round(toRound);
 		 deltaT = (toRound)/100000.0;
@@ -39,7 +35,7 @@ public abstract class Statement<E,F> {
 			 throw new NoMoreTimeException();
 		 }
 	 }
-	 
-	public abstract void execute(Ship ship,World world, Program program, double deltaT) throws FalseProgramException, BreakException, NoMoreTimeException, FalseReturnException;
-	
+
+	public abstract void execute(Ship ship, World world, Program<F,?> program, double deltaT)
+			throws FalseProgramException, BreakException, NoMoreTimeException, FalseReturnException;
 }

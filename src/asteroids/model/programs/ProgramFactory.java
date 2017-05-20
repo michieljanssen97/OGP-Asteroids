@@ -10,7 +10,7 @@ import asteroids.part3.programs.SourceLocation;
 public class ProgramFactory<E, S, F, P> implements IProgramFactory<Expression, Statement, Function, Program>{
 
 	@Override
-	public Program<Function, Statement<E,F>> createProgram(List<Function> functions, Statement main) {
+	public Program createProgram(List<Function> functions, Statement main) {
 		return new Program<Function, Statement<E,F>>(functions,main);
 	}
 
@@ -21,27 +21,27 @@ public class ProgramFactory<E, S, F, P> implements IProgramFactory<Expression, S
 
 	@Override
 	public Statement createAssignmentStatement(String variableName, Expression value, SourceLocation sourceLocation) {
-		return new Assignment(variableName, value, sourceLocation);
+		return new Assignment<E,F>(variableName, value, sourceLocation);
 	}
 
 	@Override
 	public Statement createWhileStatement(Expression condition, Statement body, SourceLocation sourceLocation) {
-		return new WhileStatement(condition, body, sourceLocation);
+		return new WhileStatement<E,F>(condition, body, sourceLocation);
 	}
 
 	@Override
 	public Statement createBreakStatement(SourceLocation sourceLocation) {
-		return new StringStatement("break",sourceLocation);
+		return new StringStatement<E,F>("break",sourceLocation);
 	}
 
 	@Override
 	public Statement createReturnStatement(Expression value, SourceLocation sourceLocation) {
-		return new ExpressionStatement(value, "return", sourceLocation);
+		return new ExpressionStatement<E,F>(value, "return", sourceLocation);
 	}
 
 	@Override
 	public Statement createIfStatement(Expression condition, Statement ifBody, Statement elseBody, SourceLocation sourceLocation) {
-		return new IfStatement(condition, ifBody, elseBody, sourceLocation);
+		return new IfStatement<E,S,F>(condition, ifBody, elseBody, sourceLocation);
 	}
 
 	@Override
@@ -147,7 +147,7 @@ public class ProgramFactory<E, S, F, P> implements IProgramFactory<Expression, S
 
 	@Override
 	public Expression createGetRadiusExpression(Expression e, SourceLocation location) {
-		return new SingleExpression<Expression>(e, "getradius", location);
+		return new SingleExpression(e, "getradius", location);
 	}
 
 	@Override
@@ -157,27 +157,27 @@ public class ProgramFactory<E, S, F, P> implements IProgramFactory<Expression, S
 
 	@Override
 	public Expression createEqualityExpression(Expression e1, Expression e2, SourceLocation location) {
-		return new DoubleExpression<Expression>(e1,e2,"==", location);
+		return new DoubleExpression(e1,e2,"==", location);
 	}
 
 	@Override
 	public Expression createAdditionExpression(Expression e1, Expression e2, SourceLocation location) {
-		return new DoubleExpression<Expression>(e1,e2,"+", location);
+		return new DoubleExpression(e1,e2,"+", location);
 	}
 
 	@Override
 	public Expression createMultiplicationExpression(Expression e1, Expression e2, SourceLocation location) {
-		return new DoubleExpression<Expression>(e1,e2,"*", location);
+		return new DoubleExpression(e1,e2,"*", location);
 	}
 
 	@Override
 	public Expression createSqrtExpression(Expression e, SourceLocation location) {
-		return new SingleExpression<Expression>(e, "sqrt", location);
+		return new SingleExpression(e, "sqrt", location);
 	}
 
 	@Override
 	public Expression createGetDirectionExpression(SourceLocation location) {
-		return new SingleExpression<Expression>(null, "getdir", location);
+		return new SingleExpression<Double>(null, "getdir", location);
 	}
 
 	@Override

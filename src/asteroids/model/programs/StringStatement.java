@@ -5,7 +5,7 @@ import asteroids.model.Ship;
 import asteroids.model.World;
 import asteroids.part3.programs.SourceLocation;
 
-public class StringStatement<F> extends Statement {
+public class StringStatement<F, E> extends Statement<E,F> {
 	
 	String value;
 	
@@ -18,7 +18,7 @@ public class StringStatement<F> extends Statement {
 		return this.value;
 	}
 
-	public void execute(Ship ship,World world, Program program, double deltaT) throws BreakException, FalseProgramException, NoMoreTimeException {
+	public void execute(Ship ship,World world, Program<F,?> program, double deltaT) throws BreakException, FalseProgramException, NoMoreTimeException {
 		doStuff(ship, world, program, deltaT); 
 		switch (getValue()) {
            case "break":  		throw new BreakException();

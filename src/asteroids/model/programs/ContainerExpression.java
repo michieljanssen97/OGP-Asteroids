@@ -1,12 +1,9 @@
 package asteroids.model.programs;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import asteroids.model.*;
 import asteroids.part3.programs.SourceLocation;
 
-public class ContainerExpression extends Expression {
+public class ContainerExpression<T> extends Expression<T> {
 	
 	Object contained;
 	
@@ -19,7 +16,7 @@ public class ContainerExpression extends Expression {
 	public SourceLocation getSourceLocation() { return this.sourceLocation; }
 	
 	
-	public Object read(Ship ship, World world, Program program) throws FalseProgramException {
+	public Object read(Ship ship, World world, Program<?,?> program) throws FalseProgramException {
 		return this.contained;
 	}
 
