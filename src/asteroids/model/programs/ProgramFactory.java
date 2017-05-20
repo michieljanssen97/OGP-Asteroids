@@ -21,7 +21,7 @@ public class ProgramFactory<E, S, F, P> implements IProgramFactory<Expression, S
 
 	@Override
 	public Statement createAssignmentStatement(String variableName, Expression value, SourceLocation sourceLocation) {
-		return new Assignment(variableName, value, "assignment", sourceLocation);
+		return new Assignment(variableName, value, sourceLocation);
 	}
 
 	@Override

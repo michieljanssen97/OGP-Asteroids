@@ -8,18 +8,15 @@ import asteroids.part3.programs.SourceLocation;
 
 public class Assignment<E> extends Statement {
 	
-	public Assignment(String variableName, Expression<?> value, String operator, SourceLocation sourceLocation){
+	public Assignment(String variableName, Expression<?> value, SourceLocation sourceLocation){
 		super(sourceLocation);
 		this.value = value;
-		this.operator = operator;
 		this.variableName = variableName;
 	}
 	
 	private Expression<?> value;
-	private String operator;
 	private String variableName;
 
-	public String getOperator() {return this.operator;}
 	public String getVariableName() {return this.variableName;}
 	public Expression<?> getValue() {return this.value;}
 	
