@@ -26,7 +26,7 @@ public class ProgramFactory<E, S, F, P> implements IProgramFactory<Expression, S
 
 	@Override
 	public Statement createWhileStatement(Expression condition, Statement body, SourceLocation sourceLocation) {
-		return new WhileStatement(condition, body, sourceLocation);
+		return new IfStatement(condition, body,"while", sourceLocation);
 	}
 
 	@Override
@@ -41,7 +41,7 @@ public class ProgramFactory<E, S, F, P> implements IProgramFactory<Expression, S
 
 	@Override
 	public Statement createIfStatement(Expression condition, Statement ifBody, Statement elseBody, SourceLocation sourceLocation) {
-		return new IfStatement(condition, ifBody, elseBody, sourceLocation);
+		return new WhileStatement(condition,ifBody, elseBody,"if", sourceLocation);
 	}
 
 	@Override

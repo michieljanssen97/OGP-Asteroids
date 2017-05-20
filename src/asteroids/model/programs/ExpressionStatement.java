@@ -24,21 +24,22 @@ public class ExpressionStatement<E> extends Statement {
 	}
 
 	public void execute(Ship ship,World world, Program program, double deltaT) throws FalseProgramException, FalseReturnException {
-		 if (getStating().equals("print")) {
-			 Object expressionResult = getExpression().read(ship, world, program).getValue();
-			program.getPrintedObjects().add(expressionResult);
-			System.out.println(expressionResult);
-			
-		 } else if(getStating().equals("turn")){
+		 if (getStating().equals("print")){
+			program.getPrintedObjects().add(getExpression().read(ship, world, program).getValue());
+			System.out.println(getExpression().read(ship, world, program).getValue());
+		 }
+		 else if(getStating().equals("turn")){
 			 program.setConsumedTime(program.getConsumedTime()+0.2);
-			 Double angle = (Double) getExpression().read(ship, world, program).getValue();
+			 Expression<Double> angle = (Expression<Double>) getExpression().read(ship, world, program);
 			 try {
-				 ship.turn(angle);
+				 ship.turn(angle.getValue());
 			 } catch (AssertionError e){
 				 throw new IllegalArgumentException();
 			 }
-		 } else if(getStating().equals("return")){
-			 if (!program.getIsInFunction()){
+		 }else if(getStating().equals("return")){
+			 if (program.getIsInFunction()){
+				 
+			 }else {
 				 throw new FalseReturnException("Return outside function body");
 			 }
 		 }
