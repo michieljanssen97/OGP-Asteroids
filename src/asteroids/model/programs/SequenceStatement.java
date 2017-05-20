@@ -20,7 +20,7 @@ public class SequenceStatement extends Statement {
 		this.statements = statements;
 	}
 	
-	public void execute(Ship ship,World world, Program program, double deltaT) throws FalseProgramException, BreakException, NoMoreTimeException, FalseReturnException {
+	public void execute(Ship ship,World world, Program program, double deltaT) throws BreakException, NoMoreTimeException, FalseProgramException, FalseReturnException {
 		doStuff(ship, world, program, deltaT); 
 		int correctLocation = 0;
 		 List<Statement> newList = getStatements();

@@ -19,10 +19,10 @@ public class DoubleExpression<E> extends Expression {
 	public String getOperator() {return this.operator;}
 	
 	public Expression<?> getLeftValue(){
-		return (this.left);
+		return this.left;
 	}
 	public Expression<?> getRightValue(){
-		return (this.right);
+		return this.right;
 	}
 	
 	public void setLeftValue(Expression<?> newLeftValue){
@@ -35,10 +35,10 @@ public class DoubleExpression<E> extends Expression {
 	
 	public Object execute(Ship ship, World world,Program program) throws FalseProgramException{
 		switch (getOperator()) {
-			case "+":		return getLeftValue().read(ship, world, program) + getRightValue().read(ship, world, program);	
-			case "*":		return getLeftValue().read(ship, world, program) * getRightValue().read(ship, world, program);	    	
-			case "<":		return getLeftValue().read(ship, world, program) < getRightValue().read(ship, world, program);	
-			case "==":		return getLeftValue().read(ship, world, program) == getRightValue().read(ship, world, program);
+			case "+":		return (Double) getLeftValue().read(ship, world, program) + (Double) getRightValue().read(ship, world, program);	
+			case "*":		return (Double) getLeftValue().read(ship, world, program) * (Double) getRightValue().read(ship, world, program);	    	
+			case "<":		return (Double) getLeftValue().read(ship, world, program) < (Double) getRightValue().read(ship, world, program);	
+			case "==":		return (Double) getLeftValue().read(ship, world, program) == (Double) getRightValue().read(ship, world, program);
 			default:		throw new FalseProgramException("Double expression is not correct declared");
 		}
 	}

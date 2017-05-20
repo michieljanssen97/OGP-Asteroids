@@ -13,7 +13,7 @@ public class Expression<T> {
 		this.value = value;
 	}
 	protected T value;
-	public T getValue() { return this.value; }
+	public Expression<?> getValue() { return (Expression<?>) this.value; }
 	public void setValue(T value) { this.value = value; }
 	private SourceLocation sourceLocation;
 	public SourceLocation getSourceLocation() { return this.sourceLocation; }

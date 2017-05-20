@@ -19,7 +19,7 @@ public class ObjectExpression extends Expression {
 	}
 
 	public Object read(Ship ship, World world, Program program) throws FalseProgramException {
-		switch((String) getValue()) {		
+		switch((String) getValue().read(ship, world, program)) {		
 			case "null":	return null;
 			case "self":	return ship;
 			case "ship":	return getClosest(ship, world, Ship.class);
