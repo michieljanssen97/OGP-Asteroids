@@ -25,13 +25,13 @@ public class ExpressionStatement<E> extends Statement {
 
 	public void execute(Ship ship,World world, Program program, double deltaT) throws FalseProgramException, FalseReturnException {
 		 if (getStating().equals("print")) {
-			 Object expressionResult = getExpression().read(ship, world, program).getValue();
+			Object expressionResult = getExpression().read(ship, world, program);
 			program.getPrintedObjects().add(expressionResult);
 			System.out.println(expressionResult);
 			
 		 } else if(getStating().equals("turn")){
 			 program.setConsumedTime(program.getConsumedTime()+0.2);
-			 Double angle = (Double) getExpression().read(ship, world, program).getValue();
+			 Double angle = (Double) getExpression().read(ship, world, program);
 			 try {
 				 ship.turn(angle);
 			 } catch (AssertionError e){

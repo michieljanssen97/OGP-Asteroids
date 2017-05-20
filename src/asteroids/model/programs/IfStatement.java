@@ -23,15 +23,15 @@ public class IfStatement<E,S,F> extends Statement {
 	public Statement<E,F> getElseBody() { return this.elseBody; }
 	
 	public void execute(Ship ship,World world, Program program, double deltaT) throws FalseProgramException, BreakException, NoMoreTimeException, FalseReturnException {
-		doStuff(ship, world, program, deltaT);
+		 doStuff(ship, world, program, deltaT);
 
-			 if ((boolean) getCondition().read(ship, world, program).getValue()) {
-				 getIfBody().execute(ship, world, program, deltaT);
+		 if ((boolean) getCondition().read(ship, world, program)) {
+			 getIfBody().execute(ship, world, program, deltaT);
 
-			 } else {
-				 if (getElseBody() != null){
-					 getElseBody().execute(ship, world, program, deltaT); 
-				 }
+		 } else {
+			 if (getElseBody() != null){
+				 getElseBody().execute(ship, world, program, deltaT); 
 			 }
-		}
+		 }
+	}
 }

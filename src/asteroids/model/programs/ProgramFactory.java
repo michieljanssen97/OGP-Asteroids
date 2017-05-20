@@ -87,42 +87,42 @@ public class ProgramFactory<E, S, F, P> implements IProgramFactory<Expression, S
 
 	@Override
 	public Expression createNullExpression(SourceLocation location) {
-		return new SingleExpression<Expression>(null, "null", location);
+		return new ObjectExpression("null", location);
 	}
 
 	@Override
 	public Expression createSelfExpression(SourceLocation location) {
-		return new SingleExpression<Expression>(null, "self", location);
+		return new ObjectExpression("self", location);
 	}
 
 	@Override
 	public Expression createShipExpression(SourceLocation location) {
-		return new SingleExpression<Expression>(null, "ship", location);
+		return new ObjectExpression("ship", location);
 	}
 
 	@Override
 	public Expression createAsteroidExpression(SourceLocation location) {
-		return new SingleExpression<Expression>(null, "asteroid", location);
+		return new ObjectExpression("asteroid", location);
 	}
 
 	@Override
 	public Expression createPlanetoidExpression(SourceLocation location) {
-		return new SingleExpression<Expression>(null, "planetoid", location);
+		return new ObjectExpression("planetoid", location);
 	}
 
 	@Override
 	public Expression createBulletExpression(SourceLocation location) {
-		return new SingleExpression<Expression>(null, "bullet", location);
+		return new ObjectExpression("bullet", location);
 	}
 
 	@Override
 	public Expression createPlanetExpression(SourceLocation location) {
-		return new SingleExpression<Expression>(null, "planet", location);
+		return new ObjectExpression("planet", location);
 	}
 
 	@Override
 	public Expression createAnyExpression(SourceLocation location) {
-		return new SingleExpression<Expression>(null, "any", location);
+		return new ObjectExpression("any", location);
 	}
 
 	@Override

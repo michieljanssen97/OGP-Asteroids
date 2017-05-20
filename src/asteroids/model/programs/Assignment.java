@@ -18,12 +18,12 @@ public class Assignment<E> extends Statement {
 	private String variableName;
 
 	public String getVariableName() {return this.variableName;}
-	public Expression<?> getValue() {return this.value;}
+	public Expression<?> getExpression() {return this.value;}
 	
 	public void execute(Ship ship,World world, Program program, double deltaT) throws FalseProgramException, BreakException, NoMoreTimeException {
 		doStuff(ship, world, program, deltaT); 
-		if (getValue() instanceof Expression){
-			 Expression<?> assignmentExpr = ((Expression<?>) getValue().getValue()).read(ship, world, program);
+		if (getExpression() instanceof Expression){
+			 Object assignmentExpr = getExpression().read(ship, world, program);
 
 			 switch (assignmentExpr.getValue().getClass().getSimpleName()){
 			 
