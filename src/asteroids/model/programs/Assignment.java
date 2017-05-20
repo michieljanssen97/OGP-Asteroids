@@ -20,12 +20,12 @@ public class Assignment<E> extends Statement {
 	public String getVariableName() {return this.variableName;}
 	public Expression<?> getExpression() {return this.value;}
 	
-	public void execute(Ship ship,World world, Program program, double deltaT) throws FalseProgramException, BreakException, NoMoreTimeException {
+	public void execute(Ship ship,World world, Program program, double deltaT) {
 		doStuff(ship, world, program, deltaT); 
 		if (getExpression() instanceof Expression){
 			 Object assignmentExpr = getExpression().read(ship, world, program);
 
-			 switch (assignmentExpr.getValue().getClass().getSimpleName()){
+			 switch (Object.getClass().getSimpleName()){
 			 
 			 case "Boolean": 	if ((!(program.getAllVariables().contains(getVariableName()))) || (program.getBooleanVariables().containsKey(getVariableName()))) {
 				 					program.getBooleanVariables().put(getVariableName(), (Boolean) assignmentExpr.getValue());
@@ -44,11 +44,11 @@ public class Assignment<E> extends Statement {
 				 					program.getAllVariables().add(getVariableName());
 				 					break;
 								}
-			 default: throw new FalseProgramException("Wrong type");
+			 default: throw new ProgramException.FalseProgram("Wrong type");
 			 }
 		 }
 		 else
-			 throw new FalseProgramException("Not a correct assignment");
+			 throw new ProgramException.FalseProgram("Not a correct assignment");
 
 	}	 
 }
