@@ -21,7 +21,6 @@ public abstract class Statement<E,F> {
 		 return this.sourceLocation;
 	 }
 
-	
 	 public void doStuff(Ship ship,World world, Program program, double deltaT) throws NoMoreTimeException {
 		 double toRound = (deltaT + program.getExtraTime())*100000.0;
 		 toRound = Math.round(toRound);

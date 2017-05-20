@@ -6,7 +6,7 @@ import java.util.Set;
 import asteroids.model.*;
 import asteroids.part3.programs.SourceLocation;
 
-public abstract class Expression<T> {
+public class Expression<T> {
 	
 	public Expression(T value, SourceLocation sourceLocation) {
 		this.sourceLocation = sourceLocation;
@@ -34,15 +34,14 @@ public abstract class Expression<T> {
 			else throw new FalseProgramException("No such type");
 			
 		} else if (this.getValue() instanceof Expression) {
-			return this.getValue().execute(ship, world);
+			return this.execute(ship, world, program);
 		} else {
 			return this;
 		}
 
 	}
-	
-	public abstract Expression<?> execute(Ship ship, World world);
-	
-	
+	private Expression<?> execute(Ship ship, World world, Program program) {
+		return this.getValue().execute(ship, world, program);
+	}
 	
 }
