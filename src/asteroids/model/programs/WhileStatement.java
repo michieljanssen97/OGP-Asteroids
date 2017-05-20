@@ -20,7 +20,7 @@ public class WhileStatement<E, F> extends Statement {
 	public Expression<?> getCondition() {return this.condition;}	
 	
 	public void execute(Ship ship,World world, Program program, double deltaT) throws FalseProgramException, BreakException, NoMoreTimeException, FalseReturnException {
-		while ((Boolean) getCondition().read(ship, world, program).getValue()){
+		while ((Boolean) getCondition().read(ship, world, program)){
 			 try {
 				 body.execute(ship, world, program, deltaT);
 			 } catch (BreakException e) {
