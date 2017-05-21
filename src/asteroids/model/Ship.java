@@ -6,7 +6,6 @@ import java.util.Set;
 
 import asteroids.model.programs.FalseProgramException;
 import asteroids.model.programs.FalseReturnException;
-import asteroids.util.ModelException;
 import be.kuleuven.cs.som.annotate.*;
 
 /**

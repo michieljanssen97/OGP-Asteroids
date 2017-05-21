@@ -10,7 +10,7 @@ import asteroids.model.programs.BreakException;
 import asteroids.model.programs.FalseProgramException;
 import asteroids.model.programs.FalseReturnException;
 import asteroids.model.programs.NoMoreTimeException;
-import asteroids.model.programs.Statement;
+import asteroids.model.programs.statements.Statement;
 import asteroids.part3.programs.SourceLocation;
 
 public class Program<F,S> {
@@ -22,10 +22,7 @@ public class Program<F,S> {
 	private double consumedTime = 0;
 	private boolean isInWhileLoop;
 	private boolean isInFunction = false;
-	private HashMap<String,Boolean> booleanVariables = new HashMap<>();
-	private HashMap<String,Double> doubleVariables = new HashMap<>();
-	private HashMap<String,Entity> entityVariables = new HashMap<>();
-	private HashSet<String> allVariables = new HashSet<>();
+	private HashMap<String,Object> variables = new HashMap<>();
 	private List<Object> printedObjects = new ArrayList<>();
 
 	
@@ -40,10 +37,7 @@ public class Program<F,S> {
 	public  List<F> getFunctions() { 
 		return this.functions;
 	}
-	public HashMap<String,Boolean> getBooleanVariables() { return this.booleanVariables; }
-	public HashMap<String,Double> getDoubleVariables() { return this.doubleVariables;}
-	public HashMap<String,Entity> getEntityVariables() { return this.entityVariables; }
-	public HashSet<String> getAllVariables() { return this.allVariables; }
+	public HashMap<String, Object> getVariables() { return this.variables; }
 	public List<Object> getPrintedObjects() {return this.printedObjects;}
 	
 	public boolean getIsInFunction() {
@@ -82,15 +76,12 @@ public class Program<F,S> {
 	}
 	
 	public void execute(double deltaT, Ship ship, World world) throws FalseProgramException, FalseReturnException {
-		while (true) {
-			try {
-				getMain().execute(ship, world, this, deltaT);
-			} catch (NoMoreTimeException e) {
-				break;
-			} catch (BreakException ex) { throw new FalseProgramException("Break is not in a while");};
-				break;
-			}
-	
+		try {
+			getMain().execute(ship, world, this, deltaT);
+		} catch (NoMoreTimeException e) {
+		} catch (BreakException ex) { 
+			throw new FalseProgramException("Break is not in a while");
+		}
 	}
 }
 

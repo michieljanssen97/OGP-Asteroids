@@ -11,6 +11,9 @@ import asteroids.model.Planetoid;
 import asteroids.model.Ship;
 import asteroids.model.World;
 import asteroids.model.programs.*;
+import asteroids.model.programs.expressions.Expression;
+import asteroids.model.programs.statements.FunctionStatement;
+import asteroids.model.programs.statements.Statement;
 import asteroids.part2.CollisionListener;
 import asteroids.model.Program;
 import asteroids.part3.programs.IProgramFactory;
@@ -511,7 +514,7 @@ public class Facade implements asteroids.part3.facade.IFacade {
 
 	@Override
 	public IProgramFactory<?, ?, ?, ? extends Program> createProgramFactory() throws ModelException {
-		ProgramFactory<?,?,?,? extends Program> factory = new ProgramFactory<Expression, Statement, Function, Program>();
+		ProgramFactory<?,?,?,? extends Program> factory = new ProgramFactory<Expression, Statement, FunctionStatement, Program>();
 		return factory;
 	}
 

@@ -1,10 +1,14 @@
-package asteroids.model.programs;
+package asteroids.model.programs.statements;
 
 import java.util.List;
 
 import asteroids.model.Program;
 import asteroids.model.Ship;
 import asteroids.model.World;
+import asteroids.model.programs.BreakException;
+import asteroids.model.programs.FalseProgramException;
+import asteroids.model.programs.FalseReturnException;
+import asteroids.model.programs.NoMoreTimeException;
 import asteroids.part3.programs.SourceLocation;
 
 public class SequenceStatement extends Statement {
@@ -20,8 +24,9 @@ public class SequenceStatement extends Statement {
 		this.statements = statements;
 	}
 	
-	public void execute(Ship ship,World world, Program program, double deltaT) throws FalseProgramException, BreakException, NoMoreTimeException, FalseReturnException {
-		doStuff(ship, world, program, deltaT); 
+	public void execute(Ship ship,World world, Program program, double deltaT) throws BreakException, NoMoreTimeException, FalseProgramException, FalseReturnException {
+		checkTimeLeft(ship, world, program, deltaT);
+		
 		int correctLocation = 0;
 		 List<Statement> newList = getStatements();
 		 if (program.getEndingSourceLocation() == null){
@@ -35,7 +40,9 @@ public class SequenceStatement extends Statement {
 						 correctLocation = i;
 					 }
 				 }
-			 }for (int i = 0 ; i < newList.size() ; i++) {
+			 } 
+			 
+			 for (int i = 0 ; i < newList.size() ; i++) {
 				 if (i>=correctLocation) {
 					 newList.get(i).execute(ship, world, program, deltaT);
 				 }
