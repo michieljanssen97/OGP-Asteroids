@@ -40,10 +40,6 @@ public class AssignmentStatement extends Statement {
 					 program.getVariables().put(getVariableName(), assignedValue);
 				 }
 			 } else {
-				 System.out.print("contains: ");
-				 System.out.println(!(program.getVariables().containsKey(getVariableName())));
-				 System.out.print("foo: ");
-				 System.out.println(Arrays.asList(Boolean.class, Double.class, Entity.class).contains(assignedValue.getClass()));
 				 throw new FalseProgramException("Not a correct assignment");
 			 }
 		 }

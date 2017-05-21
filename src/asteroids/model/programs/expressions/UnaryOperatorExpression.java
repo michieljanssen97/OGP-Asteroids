@@ -9,15 +9,16 @@ import asteroids.part3.programs.SourceLocation;
 
 public class UnaryOperatorExpression<T> extends Expression<T> {
 	
-	public UnaryOperatorExpression(Expression<T> value, String operator, SourceLocation sourceLocation) {
+	protected Expression<?> value;
+	private String operator;
+	
+	public UnaryOperatorExpression(Expression<?> value, String operator, SourceLocation sourceLocation) {
 		super(sourceLocation);
 		this.operator = operator;
+		this.value = value;
 	}
 	
-	protected Expression<T> value;
-	public Expression<T> getValue() { return this.value; }
-	
-	private String operator;
+	public Expression<?> getValue() { return this.value; }
 	public String getOperator() {return this.operator;}
 	
 	public Entity getEntityOrThrowError(Ship ship, World world, Program program) throws FalseProgramException {
