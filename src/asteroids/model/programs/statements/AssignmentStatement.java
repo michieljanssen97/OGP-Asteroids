@@ -12,9 +12,9 @@ import asteroids.model.programs.NoMoreTimeException;
 import asteroids.model.programs.expressions.Expression;
 import asteroids.part3.programs.SourceLocation;
 
-public class Assignment extends Statement {
+public class AssignmentStatement extends Statement {
 	
-	public Assignment(String variableName, Expression<?> value, SourceLocation sourceLocation){
+	public AssignmentStatement(String variableName, Expression<?> value, SourceLocation sourceLocation){
 		super(sourceLocation);
 		this.value = value;
 		this.variableName = variableName;
@@ -27,7 +27,8 @@ public class Assignment extends Statement {
 	public Expression<?> getExpression() {return this.value;}
 	
 	public void execute(Ship ship, World world, Program program, double deltaT) throws FalseProgramException, BreakException, NoMoreTimeException {
-		doStuff(ship, world, program, deltaT); 
+		checkTimeLeft(ship, world, program, deltaT);
+		
 		if (getExpression() instanceof Expression){
 			 Object assignedValue = getExpression().read(ship, world, program);
 			 

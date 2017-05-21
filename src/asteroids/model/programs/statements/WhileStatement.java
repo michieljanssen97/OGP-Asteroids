@@ -26,6 +26,7 @@ public class WhileStatement extends Statement {
 	
 	public void execute(Ship ship, World world, Program program, double deltaT)
 			throws FalseProgramException, BreakException, NoMoreTimeException, FalseReturnException {
+		checkTimeLeft(ship, world, program, deltaT);
 		while ((Boolean) getCondition().read(ship, world, program)){
 			 try {
 				 body.execute(ship, world, program, deltaT);

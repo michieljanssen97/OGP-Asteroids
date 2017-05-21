@@ -5,6 +5,7 @@ import asteroids.model.Ship;
 import asteroids.model.World;
 import asteroids.model.programs.FalseProgramException;
 import asteroids.model.programs.FalseReturnException;
+import asteroids.model.programs.NoMoreTimeException;
 import asteroids.model.programs.expressions.Expression;
 import asteroids.part3.programs.SourceLocation;
 
@@ -26,8 +27,9 @@ public class ExpressionStatement extends Statement {
 		this.expression = expression;
 	}
 
-	public void execute(Ship ship,World world, Program program, double deltaT) throws FalseProgramException, FalseReturnException {
-		 switch(getStating()) {
+	public void execute(Ship ship,World world, Program program, double deltaT) throws FalseProgramException, FalseReturnException, NoMoreTimeException {
+		checkTimeLeft(ship, world, program, deltaT);
+		switch(getStating()) {
 			 case "print":  Object expressionResult = getExpression().read(ship, world, program);
 							program.getPrintedObjects().add(expressionResult);
 							System.out.println(expressionResult);

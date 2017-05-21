@@ -76,15 +76,11 @@ public class Program<F,S> {
 	}
 	
 	public void execute(double deltaT, Ship ship, World world) throws FalseProgramException, FalseReturnException {
-		while (true) {
-			try {
-				getMain().execute(ship, world, this, deltaT);
-			} catch (NoMoreTimeException e) {
-				break;
-			} catch (BreakException ex) { 
-				throw new FalseProgramException("Break is not in a while");
-			}
-			break;
+		try {
+			getMain().execute(ship, world, this, deltaT);
+		} catch (NoMoreTimeException e) {
+		} catch (BreakException ex) { 
+			throw new FalseProgramException("Break is not in a while");
 		}
 	}
 }

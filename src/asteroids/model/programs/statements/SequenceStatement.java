@@ -25,7 +25,8 @@ public class SequenceStatement extends Statement {
 	}
 	
 	public void execute(Ship ship,World world, Program program, double deltaT) throws BreakException, NoMoreTimeException, FalseProgramException, FalseReturnException {
-		doStuff(ship, world, program, deltaT); 
+		checkTimeLeft(ship, world, program, deltaT);
+		
 		int correctLocation = 0;
 		 List<Statement> newList = getStatements();
 		 if (program.getEndingSourceLocation() == null){
@@ -39,7 +40,9 @@ public class SequenceStatement extends Statement {
 						 correctLocation = i;
 					 }
 				 }
-			 }for (int i = 0 ; i < newList.size() ; i++) {
+			 } 
+			 
+			 for (int i = 0 ; i < newList.size() ; i++) {
 				 if (i>=correctLocation) {
 					 newList.get(i).execute(ship, world, program, deltaT);
 				 }

@@ -2694,7 +2694,7 @@ public class Part3TestFull {
   @Test
   public void testGetVX_LegalCase() throws ModelException {
     max_score += 3;
-    String code = "print getvx self ; ";
+    String code = "print getvx asteroid ; ";
     Program program = ProgramParser.parseProgramFromString(code, programFactory);
     facade.loadProgramOnShip(ship1, program);
     List<Object> results = facade.executeProgram(ship1, 1.0);

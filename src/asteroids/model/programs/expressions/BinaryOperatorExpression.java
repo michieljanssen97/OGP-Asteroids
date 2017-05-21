@@ -6,10 +6,10 @@ import asteroids.model.World;
 import asteroids.model.programs.FalseProgramException;
 import asteroids.part3.programs.SourceLocation;
 
-public class DoubleExpression<T> extends Expression<T> {
+public class BinaryOperatorExpression<T> extends Expression<T> {
 	
-	public DoubleExpression(Expression<T> left, Expression<T> right, String operator, SourceLocation sourceLocation) {
-		super(null, sourceLocation);
+	public BinaryOperatorExpression(Expression<T> left, Expression<T> right, String operator, SourceLocation sourceLocation) {
+		super(sourceLocation);
 		this.left = left;
 		this.right = right;
 		this.operator = operator;

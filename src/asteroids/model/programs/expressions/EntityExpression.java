@@ -4,12 +4,12 @@ import asteroids.model.*;
 import asteroids.model.programs.FalseProgramException;
 import asteroids.part3.programs.SourceLocation;
 
-public class ObjectExpression<T> extends Expression<T> {
+public class EntityExpression<T> extends Expression<T> {
 	
 	String objectName;
 	
-	public ObjectExpression(String objectName, SourceLocation sourceLocation) {
-		super(null, sourceLocation);
+	public EntityExpression(String objectName, SourceLocation sourceLocation) {
+		super(sourceLocation);
 		this.objectName = objectName;
 	}
 
@@ -23,7 +23,7 @@ public class ObjectExpression<T> extends Expression<T> {
 	@SuppressWarnings("unchecked")
 	public T read(Ship ship, World world, Program program) throws FalseProgramException {
 		switch(objectName) {		
-			case "null":	return (T) null;
+			case "null":	return null;
 			case "self":	return (T) ship;
 			case "ship":	return (T) getClosest(ship, world, Ship.class);
 			case "asteroid": return (T) getClosest(ship, world, Asteroid.class);

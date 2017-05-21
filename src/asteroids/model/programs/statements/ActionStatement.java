@@ -8,11 +8,11 @@ import asteroids.model.programs.FalseProgramException;
 import asteroids.model.programs.NoMoreTimeException;
 import asteroids.part3.programs.SourceLocation;
 
-public class StringStatement extends Statement {
+public class ActionStatement extends Statement {
 	
 	String statement;
 	
-	public StringStatement(String statement, SourceLocation sourceLocation) {
+	public ActionStatement(String statement, SourceLocation sourceLocation) {
 		super(sourceLocation);
 		this.statement = statement;
 	}
@@ -22,7 +22,8 @@ public class StringStatement extends Statement {
 	}
 
 	public void execute(Ship ship, World world, Program program, double deltaT) throws BreakException, FalseProgramException, NoMoreTimeException {
-		doStuff(ship, world, program, deltaT); 
+		checkTimeLeft(ship, world, program, deltaT);
+		
 		switch (getStatement()) {
            case "break":  		throw new BreakException();
            case "thrust_on": 	program.setConsumedTime(program.getConsumedTime()+0.2);
@@ -36,7 +37,7 @@ public class StringStatement extends Statement {
 			 					break;
            case "skip":			program.setConsumedTime(program.getConsumedTime()+0.2);
            						break;
-           default: 			throw new FalseProgramException("Illegal string statement");
+           default: 			throw new FalseProgramException("Illegal statement");
 		 }
 	}
 

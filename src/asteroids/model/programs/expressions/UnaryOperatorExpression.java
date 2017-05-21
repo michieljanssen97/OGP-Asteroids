@@ -7,17 +7,20 @@ import asteroids.model.World;
 import asteroids.model.programs.FalseProgramException;
 import asteroids.part3.programs.SourceLocation;
 
-public class SingleExpression<T> extends Expression<T> {
+public class UnaryOperatorExpression<T> extends Expression<T> {
 	
-	public SingleExpression(Expression<T> value, String operator, SourceLocation sourceLocation) {
-		super(value, sourceLocation);
+	public UnaryOperatorExpression(Expression<T> value, String operator, SourceLocation sourceLocation) {
+		super(sourceLocation);
 		this.operator = operator;
 	}
+	
+	protected Expression<T> value;
+	public Expression<T> getValue() { return this.value; }
 	
 	private String operator;
 	public String getOperator() {return this.operator;}
 	
-	public Entity getEntityOrThrowError(Ship ship, World world, Program<?,?> program) throws FalseProgramException {
+	public Entity getEntityOrThrowError(Ship ship, World world, Program program) throws FalseProgramException {
 		Entity entity = (Entity) getValue().read(ship, world, program);
 		if (entity == null){
    		  throw new FalseProgramException("Cannot calculate on a null entity");}
@@ -26,7 +29,7 @@ public class SingleExpression<T> extends Expression<T> {
 		}
 	}
 	
-	public T read(Ship ship, World world, Program<?,?> program) throws FalseProgramException {
+	public T read(Ship ship, World world, Program program) throws FalseProgramException {
 		Object result = null;
 		switch (getOperator()) {
 	        case "-":  	 	  result = (-1) * ( (Double) getValue().read(ship, world, program)); break;

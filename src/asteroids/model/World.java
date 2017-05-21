@@ -496,7 +496,6 @@ public class World implements ICollidable {
 
 	@Override
 	public boolean isDestroyed() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 	

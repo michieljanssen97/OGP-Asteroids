@@ -11,14 +11,10 @@ public class VariableExpression extends Expression {
 	String varname;
 	
 	public VariableExpression(String varname, SourceLocation sourceLocation) {
-		super(null, sourceLocation);
+		super(sourceLocation);
 		this.varname = varname;
 	}
-	
-	private SourceLocation sourceLocation;
-	public SourceLocation getSourceLocation() { return this.sourceLocation; }
-	
-	
+
 	public Object read(Ship ship, World world, Program program) throws FalseProgramException {
 		if (program.getVariables().containsKey(this.varname)) {
 			 return program.getVariables().get(this.varname);
