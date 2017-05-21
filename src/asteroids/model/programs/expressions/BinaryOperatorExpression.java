@@ -29,14 +29,17 @@ public class BinaryOperatorExpression<T> extends Expression<T> {
 	
 	public T read(Ship ship, World world, Program program) throws FalseProgramException{
 		Object result;
+		T x = getLeftValue().read(ship, world, program);
+		T y = getRightValue().read(ship, world, program);
+		
 		switch (getOperator()) {
-			case "+":		result = (Double) getLeftValue().read(ship, world, program) + (Double) getRightValue().read(ship, world, program);	
+			case "+":		result = (Double) x + (Double) y;
 							break;
-			case "*":		result = (Double) getLeftValue().read(ship, world, program) * (Double) getRightValue().read(ship, world, program);	    	
+			case "*":		result = (Double) x * (Double) y; 	
 							break;
-			case "<":		result = (Double) getLeftValue().read(ship, world, program) < (Double) getRightValue().read(ship, world, program);	
+			case "<":		result = (Double) x < (Double) y;
 							break;
-			case "==":		result = getLeftValue().read(ship, world, program) == getRightValue().read(ship, world, program);
+			case "==":		result = (x == y);
 							break;
 			default:		throw new FalseProgramException("Double expression is not correct declared");
 		}
