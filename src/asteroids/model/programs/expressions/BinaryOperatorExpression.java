@@ -8,17 +8,17 @@ import asteroids.part3.programs.SourceLocation;
 
 public class BinaryOperatorExpression<T> extends Expression<T> {
 	
+	private Expression<T> left;
+	private Expression<T> right;
+	private String operator;
+	public String getOperator() {return this.operator;}
+	
 	public BinaryOperatorExpression(Expression<T> left, Expression<T> right, String operator, SourceLocation sourceLocation) {
 		super(sourceLocation);
 		this.left = left;
 		this.right = right;
 		this.operator = operator;
 	}
-	
-	private Expression<T> left;
-	private Expression<T> right;
-	private String operator;
-	public String getOperator() {return this.operator;}
 	
 	public Expression<T> getLeftValue(){
 		return this.left;

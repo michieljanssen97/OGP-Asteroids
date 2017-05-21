@@ -11,16 +11,17 @@ import asteroids.part3.programs.SourceLocation;
 
 public class ExpressionStatement extends Statement {
 
+	private Expression<?> expression;
+	private String stating;
+	
 	public ExpressionStatement(Expression<?> expression, String stating, SourceLocation sourceLocation){
 		super(sourceLocation);
 		this.expression = expression;
 		this.stating = stating;
 	}
-	private Expression<?> expression;
-	private String stating;
+	
 	
 	public String getStating() {return this.stating;}
-
 	public Expression<?> getExpression() {return this.expression;}
 	
 	public void setExpression(Expression<?> expression) {

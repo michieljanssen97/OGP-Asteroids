@@ -12,16 +12,15 @@ import asteroids.part3.programs.SourceLocation;
 
 public class IfStatement extends Statement {
 
+	private Expression<?> condition;
+	private Statement ifBody;
+	private Statement elseBody;
+	
 	public IfStatement(Expression<?> condition, Statement ifBody, Statement elseBody, SourceLocation sourceLocation) {
 		super(sourceLocation);
 		this.condition = condition;
 		this.ifBody = ifBody;
 		this.elseBody = elseBody;	}
-	
-	private Expression<?> condition;
-	private Statement ifBody;
-	private Statement elseBody;
-
 	
 	public Expression<?> getCondition() { return this.condition;}	
 	public Statement getIfBody() { return this.ifBody ;}

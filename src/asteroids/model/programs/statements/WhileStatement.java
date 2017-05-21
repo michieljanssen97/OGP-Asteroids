@@ -12,15 +12,15 @@ import asteroids.part3.programs.SourceLocation;
 
 public class WhileStatement extends Statement {
 
+	private Expression<?> condition;
+	private Statement body;
+	
 	public WhileStatement(Expression<?> condition, Statement body, SourceLocation sourceLocation) {
 		super(sourceLocation);
 		this.condition = condition;
 		this.body = body;
 	}
 
-	private Expression<?> condition;
-	private Statement body;
-	
 	public Statement getBody() {return this.body;}
 	public Expression<?> getCondition() {return this.condition;}
 	

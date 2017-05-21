@@ -14,15 +14,15 @@ import asteroids.part3.programs.SourceLocation;
 
 public class AssignmentStatement extends Statement {
 	
+	private Expression<?> value;
+	private String variableName;
+	
 	public AssignmentStatement(String variableName, Expression<?> value, SourceLocation sourceLocation){
 		super(sourceLocation);
 		this.value = value;
 		this.variableName = variableName;
 	}
 	
-	private Expression<?> value;
-	private String variableName;
-
 	public String getVariableName() {return this.variableName;}
 	public Expression<?> getExpression() {return this.value;}
 	
