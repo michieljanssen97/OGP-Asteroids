@@ -11,7 +11,7 @@ public class ProgramFactory<E, S, F, P> implements IProgramFactory<Expression, S
 
 	@Override
 	public Program createProgram(List<Function> functions, Statement main) {
-		return new Program<Function, Statement<E,F>>(functions,main);
+		return new Program<Function, Statement>(functions,main);
 	}
 
 	@Override
@@ -21,27 +21,27 @@ public class ProgramFactory<E, S, F, P> implements IProgramFactory<Expression, S
 
 	@Override
 	public Statement createAssignmentStatement(String variableName, Expression value, SourceLocation sourceLocation) {
-		return new Assignment<E,F>(variableName, value, sourceLocation);
+		return new Assignment(variableName, value, sourceLocation);
 	}
 
 	@Override
 	public Statement createWhileStatement(Expression condition, Statement body, SourceLocation sourceLocation) {
-		return new WhileStatement<E,F>(condition, body, sourceLocation);
+		return new WhileStatement(condition, body, sourceLocation);
 	}
 
 	@Override
 	public Statement createBreakStatement(SourceLocation sourceLocation) {
-		return new StringStatement<E,F>("break",sourceLocation);
+		return new StringStatement("break",sourceLocation);
 	}
 
 	@Override
 	public Statement createReturnStatement(Expression value, SourceLocation sourceLocation) {
-		return new ExpressionStatement<E,F>(value, "return", sourceLocation);
+		return new ExpressionStatement(value, "return", sourceLocation);
 	}
 
 	@Override
 	public Statement createIfStatement(Expression condition, Statement ifBody, Statement elseBody, SourceLocation sourceLocation) {
-		return new IfStatement<E,S,F>(condition, ifBody, elseBody, sourceLocation);
+		return new IfStatement(condition, ifBody, elseBody, sourceLocation);
 	}
 
 	@Override
@@ -56,12 +56,12 @@ public class ProgramFactory<E, S, F, P> implements IProgramFactory<Expression, S
 
 	@Override
 	public Expression createReadVariableExpression(String variableName, SourceLocation sourceLocation) {
-		return new ContainerExpression<String>(variableName, sourceLocation);
+		return new VariableExpression(variableName, sourceLocation);
 	}
 
 	@Override
 	public Expression createReadParameterExpression(String parameterName, SourceLocation sourceLocation) {
-		return new ContainerExpression<String>(parameterName, sourceLocation);
+		return new VariableExpression(parameterName, sourceLocation);
 	}
 
 	@Override
@@ -87,22 +87,22 @@ public class ProgramFactory<E, S, F, P> implements IProgramFactory<Expression, S
 
 	@Override
 	public Expression createNullExpression(SourceLocation location) {
-		return new ObjectExpression<String>("null", location);
+		return new ObjectExpression<>("null", location);
 	}
 
 	@Override
 	public Expression createSelfExpression(SourceLocation location) {
-		return new ObjectExpression<String>("self", location);
+		return new ObjectExpression<Ship>("self", location);
 	}
 
 	@Override
 	public Expression createShipExpression(SourceLocation location) {
-		return new ObjectExpression<String>("ship", location);
+		return new ObjectExpression<Ship>("ship", location);
 	}
 
 	@Override
 	public Expression createAsteroidExpression(SourceLocation location) {
-		return new ObjectExpression<String>("asteroid", location);
+		return new ObjectExpression<Asteroid>("asteroid", location);
 	}
 
 	@Override

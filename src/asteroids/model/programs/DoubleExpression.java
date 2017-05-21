@@ -26,7 +26,7 @@ public class DoubleExpression<T> extends Expression<T> {
 		return this.right;
 	}
 	
-	public T read(Ship ship, World world, Program<?,?> program) throws FalseProgramException{
+	public T read(Ship ship, World world, Program program) throws FalseProgramException{
 		Object result;
 		switch (getOperator()) {
 			case "+":		result = (Double) getLeftValue().read(ship, world, program) + (Double) getRightValue().read(ship, world, program);	

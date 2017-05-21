@@ -5,7 +5,7 @@ import asteroids.model.Ship;
 import asteroids.model.World;
 import asteroids.part3.programs.SourceLocation;
 
-public abstract class Statement<E,F> {
+public abstract class Statement {
 	
 	 public Statement(SourceLocation sourceLocation) {
 	  this.sourceLocation = sourceLocation;
@@ -17,7 +17,7 @@ public abstract class Statement<E,F> {
 		 return this.sourceLocation;
 	 }
 
-	 public void doStuff(Ship ship,World world, Program<F,?> program, double deltaT) throws NoMoreTimeException {
+	 public void doStuff(Ship ship,World world, Program program, double deltaT) throws NoMoreTimeException {
 		 double toRound = (deltaT + program.getExtraTime())*100000.0;
 		 toRound = Math.round(toRound);
 		 deltaT = (toRound)/100000.0;
@@ -36,6 +36,6 @@ public abstract class Statement<E,F> {
 		 }
 	 }
 
-	public abstract void execute(Ship ship, World world, Program<F,?> program, double deltaT)
+	public abstract void execute(Ship ship, World world, Program program, double deltaT)
 			throws FalseProgramException, BreakException, NoMoreTimeException, FalseReturnException;
 }

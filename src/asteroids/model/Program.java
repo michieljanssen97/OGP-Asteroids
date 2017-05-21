@@ -81,10 +81,11 @@ public class Program<F,S> {
 				getMain().execute(ship, world, this, deltaT);
 			} catch (NoMoreTimeException e) {
 				break;
-			} catch (BreakException ex) { throw new FalseProgramException("Break is not in a while");};
-				break;
+			} catch (BreakException ex) { 
+				throw new FalseProgramException("Break is not in a while");
 			}
-	
+			break;
+		}
 	}
 }
 
