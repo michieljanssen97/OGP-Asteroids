@@ -16,6 +16,4 @@ public class ContainerExpression<T> extends Expression<T> {
 	public T read(Ship ship, World world, Program program) throws FalseProgramException {
 		return this.value;
 	}
-
-	
 }
