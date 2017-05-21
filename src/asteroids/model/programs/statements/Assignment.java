@@ -1,4 +1,4 @@
-package asteroids.model.programs;
+package asteroids.model.programs.statements;
 
 import java.util.Arrays;
 
@@ -6,6 +6,10 @@ import asteroids.model.Entity;
 import asteroids.model.Program;
 import asteroids.model.Ship;
 import asteroids.model.World;
+import asteroids.model.programs.BreakException;
+import asteroids.model.programs.FalseProgramException;
+import asteroids.model.programs.NoMoreTimeException;
+import asteroids.model.programs.expressions.Expression;
 import asteroids.part3.programs.SourceLocation;
 
 public class Assignment extends Statement {
@@ -27,10 +31,18 @@ public class Assignment extends Statement {
 		if (getExpression() instanceof Expression){
 			 Object assignedValue = getExpression().read(ship, world, program);
 			 
-			 if (!(program.getVariables().containsKey(getVariableName())) 
-					 && Arrays.asList(Boolean.class, Double.class, Entity.class).contains(assignedValue.getClass())) {
-				 program.getVariables().put(getVariableName(), assignedValue);
+			 if (Arrays.asList(Boolean.class, Double.class, Entity.class).contains(assignedValue.getClass())) {
+				 if (program.getVariables().containsKey(getVariableName()) 
+						 && program.getVariables().get(getVariableName()).getClass() == assignedValue.getClass()) {
+					 program.getVariables().replace(getVariableName(), assignedValue);
+				 } else {
+					 program.getVariables().put(getVariableName(), assignedValue);
+				 }
 			 } else {
+				 System.out.print("contains: ");
+				 System.out.println(!(program.getVariables().containsKey(getVariableName())));
+				 System.out.print("foo: ");
+				 System.out.println(Arrays.asList(Boolean.class, Double.class, Entity.class).contains(assignedValue.getClass()));
 				 throw new FalseProgramException("Not a correct assignment");
 			 }
 		 }

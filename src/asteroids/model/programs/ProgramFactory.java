@@ -3,6 +3,19 @@ package asteroids.model.programs;
 import java.util.List;
 
 import asteroids.model.*;
+import asteroids.model.programs.expressions.ContainerExpression;
+import asteroids.model.programs.expressions.DoubleExpression;
+import asteroids.model.programs.expressions.Expression;
+import asteroids.model.programs.expressions.ObjectExpression;
+import asteroids.model.programs.expressions.SingleExpression;
+import asteroids.model.programs.expressions.VariableExpression;
+import asteroids.model.programs.statements.Assignment;
+import asteroids.model.programs.statements.ExpressionStatement;
+import asteroids.model.programs.statements.IfStatement;
+import asteroids.model.programs.statements.SequenceStatement;
+import asteroids.model.programs.statements.Statement;
+import asteroids.model.programs.statements.StringStatement;
+import asteroids.model.programs.statements.WhileStatement;
 import asteroids.part3.programs.IProgramFactory;
 import asteroids.part3.programs.SourceLocation;
 

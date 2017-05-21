@@ -3,6 +3,7 @@ package asteroids.model.programs;
 import asteroids.model.Program;
 import asteroids.model.Ship;
 import asteroids.model.World;
+import asteroids.model.programs.statements.Statement;
 import asteroids.part3.programs.SourceLocation;
 
 public class Function extends Statement {

@@ -1,6 +1,7 @@
-package asteroids.model.programs;
+package asteroids.model.programs.expressions;
 
 import asteroids.model.*;
+import asteroids.model.programs.FalseProgramException;
 import asteroids.part3.programs.SourceLocation;
 
 public abstract class Expression<T> {

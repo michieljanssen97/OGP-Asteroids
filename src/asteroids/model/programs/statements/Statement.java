@@ -1,8 +1,12 @@
-package asteroids.model.programs;
+package asteroids.model.programs.statements;
 
 import asteroids.model.Program;
 import asteroids.model.Ship;
 import asteroids.model.World;
+import asteroids.model.programs.BreakException;
+import asteroids.model.programs.FalseProgramException;
+import asteroids.model.programs.FalseReturnException;
+import asteroids.model.programs.NoMoreTimeException;
 import asteroids.part3.programs.SourceLocation;
 
 public abstract class Statement {

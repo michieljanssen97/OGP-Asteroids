@@ -1,8 +1,9 @@
-package asteroids.model.programs;
+package asteroids.model.programs.expressions;
 
 import java.util.Arrays;
 
 import asteroids.model.*;
+import asteroids.model.programs.FalseProgramException;
 import asteroids.part3.programs.SourceLocation;
 
 public class VariableExpression extends Expression {

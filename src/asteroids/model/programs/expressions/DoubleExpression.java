@@ -1,8 +1,9 @@
-package asteroids.model.programs;
+package asteroids.model.programs.expressions;
 
 import asteroids.model.Program;
 import asteroids.model.Ship;
 import asteroids.model.World;
+import asteroids.model.programs.FalseProgramException;
 import asteroids.part3.programs.SourceLocation;
 
 public class DoubleExpression<T> extends Expression<T> {

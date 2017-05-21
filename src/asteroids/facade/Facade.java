@@ -11,6 +11,8 @@ import asteroids.model.Planetoid;
 import asteroids.model.Ship;
 import asteroids.model.World;
 import asteroids.model.programs.*;
+import asteroids.model.programs.expressions.Expression;
+import asteroids.model.programs.statements.Statement;
 import asteroids.part2.CollisionListener;
 import asteroids.model.Program;
 import asteroids.part3.programs.IProgramFactory;
