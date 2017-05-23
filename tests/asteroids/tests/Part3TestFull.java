@@ -1744,7 +1744,7 @@ public class Part3TestFull {
         Program program = ProgramParser.parseProgramFromString(code, programFactory);
         facade.loadProgramOnShip(ship1, program);
         facade.executeProgram(ship1, 0.3);
-        //fail();
+        fail();
       } catch (ModelException exc) {
         score += 3;
       }
@@ -2694,7 +2694,7 @@ public class Part3TestFull {
   @Test
   public void testGetVX_LegalCase() throws ModelException {
     max_score += 3;
-    String code = "print getvx asteroid ; ";
+    String code = "print getvx self ; ";
     Program program = ProgramParser.parseProgramFromString(code, programFactory);
     facade.loadProgramOnShip(ship1, program);
     List<Object> results = facade.executeProgram(ship1, 1.0);
