@@ -96,7 +96,7 @@ public class TestShip {
 	public void testBullets() throws NullPointerException {
 		world = new World(1000, 1000);
 		ship = new Ship(100, 100, 10, 0, 50, Math.PI, 1.1E18);
-		ship.makePartOfWorld(world);
+		ship.changeOwner(world);
 		assertTrue(ship.isPartOfWorld());
 		Bullet bullet1 = new Bullet(100, 100, 2, 2, 3);
 		Bullet bullet2 = new Bullet(100, 101, 2, 2, 3);
@@ -117,7 +117,7 @@ public class TestShip {
 		EPSILON = 1E6;
 		world = new World(1000, 1000);
 		ship = new Ship(100, 100, 10, 0, 50, Math.PI, 1.1E18);
-		ship.makePartOfWorld(world);
+		ship.changeOwner(world);
 		Bullet bullet1 = new Bullet(100, 100, 2, 2, 3);
 		Bullet bullet2 = new Bullet(100, 101, 2, 2, 5);
 		ship.loadBullets(bullet1);

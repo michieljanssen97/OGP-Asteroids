@@ -49,13 +49,13 @@ public class TestBullet {
 	public void testBulletAssociations() {
 		ship = new Ship(25, 75, 1, 2, 11, 0, 1.0E20);
 		world = new World(100, 100);
-		assertTrue(bullet.canBePartOfShip() && bullet.canBePartOfWorld());
-		bullet.makePartOfShip(ship);
-		assertFalse(bullet.canBePartOfShip() && bullet.canBePartOfWorld());
+		assertTrue(bullet.canHaveAsOwner(ship) && bullet.canHaveAsOwner(world));
+		bullet.changeOwner(ship);
+		assertFalse(bullet.canHaveAsOwner(ship) && bullet.canHaveAsOwner(world));
 		assertTrue(bullet.isPartOfShip());
 		bullet.removeFromShip();
 		assertEquals(bullet.getShip(), null);
-		bullet.makePartOfWorld(world);
+		bullet.changeOwner(world);
 		assertTrue(bullet.isPartOfWorld());
 	}
 	

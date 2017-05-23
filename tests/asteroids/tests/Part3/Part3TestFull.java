@@ -1,4 +1,4 @@
-package asteroids.tests;
+package asteroids.tests.Part3;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;

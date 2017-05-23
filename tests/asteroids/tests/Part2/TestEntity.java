@@ -23,12 +23,12 @@ public class TestEntity {
 	@Test
 	public void testWorldAssociations() {
 		world = new World(100, 100);
-		assertTrue(entity.canBePartOfWorld());
+		assertTrue(entity.canHaveAsOwner(world));
 		assertFalse(entity.isPartOfWorld());
-		entity.makePartOfWorld(world);
-		assertFalse(entity.canBePartOfWorld());
+		entity.changeOwner(world);
+		assertFalse(entity.canHaveAsOwner(world));
 		assertTrue(entity.isPartOfWorld());
-		entity.removeFromWorld();
+		entity.disown();
 		assertEquals(entity.getWorld(), null);
 	}
 	

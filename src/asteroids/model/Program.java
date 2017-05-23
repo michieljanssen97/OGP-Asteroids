@@ -118,8 +118,6 @@ public class Program<F,S> {
 		for (int i=0; i < parameters.size(); i++) {
 			getCurrentScope().put("$"+(i+1), parameters.get(i));
 		}
-		System.out.println("Enter");
-
 	}
 	
 	public void exitFunction() {
@@ -127,7 +125,6 @@ public class Program<F,S> {
 			functionScopes.remove(getCurrentFunction());
 			callStack.remove(callStack.size()-1);
 		}
-		System.out.println("Exit");
 	}
 	
 	public double getExtraTime() {

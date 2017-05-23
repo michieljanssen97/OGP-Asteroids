@@ -486,14 +486,24 @@ public class World implements ICollidable {
 		}
 	}
 
-	@Override
 	public void collide(World world) {
 		// Shouldn't happen
 	}
 
-	@Override
 	public boolean isDestroyed() {
 		return false;
+	}
+
+	public double[] getCollisionPosition(ICollidable collidable) {
+		return collidable.getCollisionPosition(this);
+	}
+	
+	public void collide(ICollidable collidable) {
+		collidable.collide(this);
+	}
+
+	public double getTimeToCollision(ICollidable collidable) {
+		return collidable.getTimeToCollision(this);
 	}
 	
 }

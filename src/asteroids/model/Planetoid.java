@@ -85,8 +85,5 @@ public class Planetoid extends MinorPlanet {
 			entity.collide(this);
 		}
 	}
-	
-	public void collide (World world) {
-		world.defaultCollide(this);
-	}
+
 }

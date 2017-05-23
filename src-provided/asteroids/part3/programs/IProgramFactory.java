@@ -2,7 +2,7 @@ package asteroids.part3.programs;
 
 import java.util.List;
 
-import asteroids.tests.Part3TestFull;
+import asteroids.tests.Part3.Part3TestFull;
 
 /**
  * A program factory is used by the parser ({@link ProgramParser}) to construct

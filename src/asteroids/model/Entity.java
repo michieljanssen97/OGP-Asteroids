@@ -77,10 +77,16 @@ public abstract class Entity implements ICollidable, IOwnable {
 		this.isTerminated = true;
 	}
 	
+	/**
+	 * Marks this entity as destroyed
+	 */
 	public void destroy() {
 		this.isDestroyed = true;
 	}
 	
+	/**
+	 * Returns a boolean indicating whether this entity is destroyed
+	 */
 	public boolean isDestroyed() {
 		return this.isDestroyed;
 	}
@@ -100,6 +106,9 @@ public abstract class Entity implements ICollidable, IOwnable {
 	 */
 	public double getMinDensity() {return 0;}
 	
+	/**
+	 * Returns the owner of this entity
+	 */
 	public Object getOwner() {
 		return this.world;
 	}
@@ -333,6 +342,7 @@ public abstract class Entity implements ICollidable, IOwnable {
 		return this.mass;
 	}
 	
+	//TODO ?
 	protected boolean isValidMass(double mass){return true;};
 	
 	/**
@@ -356,10 +366,16 @@ public abstract class Entity implements ICollidable, IOwnable {
 		}
 	}
 
+	/**
+	 * Returns the world this entity is associated with
+	 */
 	public World getWorld() {
 		return this.world;
 	}
 	
+	/**
+	 * Returns a boolean indicating whether this entity is associated with a world
+	 */
 	public boolean isPartOfWorld() {
 		return !(this.world==null);
 	}
@@ -419,6 +435,7 @@ public abstract class Entity implements ICollidable, IOwnable {
 		}
 	}
 	
+	//TODO
 	public double getDistanceBetween(World world) throws NullPointerException {
 		if (world == null) {
 			throw new NullPointerException();
@@ -577,24 +594,10 @@ public abstract class Entity implements ICollidable, IOwnable {
 	}
 	
 	/**
-	 * Helper function to use the correct getCollisionPosition function
-	 * 
-	 * @param collidable
-	 * @invar Collidable must be a valid ICollidable
-	 * 		  | !(collidable == null) == true
-	 * @post Returns the getCollisionPosition function associated with the given ICollidable
-	 * 		 | if (ICollidable instanceof Entity)
-	 * 		 | 		result == getCollisionPosition((Entity) collidable)
-	 * 		 | else if (ICollidable instanceof World)
-	 * 		 | 		result == getCollisionPosition((World) collidable)
-	 * 		 | else 
-	 * 		 | 		result == null
+	 * returns the position of a possible collision between this entity and the given ICollidableµ
 	 */
-	@Override
 	public double[] getCollisionPosition(ICollidable collidable) {
-		if (collidable instanceof Entity) {return this.getCollisionPosition((Entity) collidable);}
-		else if (collidable instanceof World) {return this.getCollisionPosition((World) collidable);}
-		else {return null;}
+		return collidable.getCollisionPosition(this);
 	}
 	
 	/**
@@ -709,6 +712,7 @@ public abstract class Entity implements ICollidable, IOwnable {
 		}
 	}
 	
+	//TODO ?
 	public double[] explosionPosition(Entity other){
 		double thisposX = this.getPositionX(); 
 		double thisposY = this.getPositionY(); 
@@ -860,6 +864,19 @@ public abstract class Entity implements ICollidable, IOwnable {
 		}
 	}
 	
+	/**
+	 * Collide with the given ICollidable
+	 */
+	public void collide(ICollidable collidable) {
+		collidable.collide(this);
+	}
+	
+	/**
+	 * Collide with the given World
+	 */
+	public void collide(World world) {
+		world.defaultCollide(this);
+	}
 	
 	//TODO Fix comment
 	/**
@@ -900,5 +917,4 @@ public abstract class Entity implements ICollidable, IOwnable {
 		entity.setVelocity(newVelocityX1, newVelocityY1);
 		this.setVelocity(newVelocityX2, newVelocityY2);
 	}
-
 }

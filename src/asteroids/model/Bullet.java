@@ -24,9 +24,20 @@ public class Bullet extends Entity {
 		super(x, y, xVelocity, yVelocity, radius);
 	}
 	
+	/**
+	 * Returns the minimum radius for this bullet
+	 */
 	public double getMinRadius() {return 1;}
+	
+	/**
+	 * Returns the minimum density for this bullet
+	 */
 	public double getMinDensity() {return 7.8E12;}
 	
+	/**
+	 * Terminates this bullet and removes any associations with a ship
+	 * @See implementation
+	 */
 	public void terminate() {
 		if (isPartOfShip()) {
 			ship.removeBullet(this);
@@ -79,11 +90,20 @@ public class Bullet extends Entity {
 	 * Returns the source of the bullet.
 	 */
 	@Basic
-	public Ship getSource(){return this.source;}
+	public Ship getSource(){
+		return this.source;
+	}
 
-	public Ship getShip(){return this.ship;}
+	/**
+	 * Returns the ship associated with this bullet or null if no associations exist
+	 */
+	public Ship getShip(){
+		return this.ship;
+	}
 	
-	@Override
+	/**
+	 * Returns the owner (a ship or a world) of this bullet, if none returns null 
+	 */
 	public Object getOwner() {
 		if (world != null) {
 			return world;
@@ -93,13 +113,17 @@ public class Bullet extends Entity {
 		return null;
 	}
 	
+	/**
+	 * Returns a boolean indicating if this bullet can have the given object as owner
+	 * @see implementation
+	 */
 	public boolean canHaveAsOwner(Object object) {
 		return !isOwned() && object != null;
 		
 	}
 	
 	/**
-	 * Make a bullet part of a ship.
+	 * Sets the owner and source of this bullet to the given ship
 	 * @see implementation
 	 */
 	public void changeOwner(Ship ship) {
@@ -124,6 +148,9 @@ public class Bullet extends Entity {
 		return getOwner() instanceof Ship;
 	}
 	
+	/**
+	 * Collision between this bullet and an entity
+	 */
 	public void collide(Entity entity) {
 		if (entity instanceof Ship) {
 			if (getSource() == entity) {
@@ -143,17 +170,15 @@ public class Bullet extends Entity {
 		}
 	}
 	
+	/**
+	 * Collision between this bullet and a world
+	 */
 	public void collide(World world) {
 		world.defaultCollide(this);
 		if (Counter() == true){
 			world.removeEntity(this);
 			this.terminate();
 		}
-	}
-
-	@Override
-	public void changeOwner(Object object) {
-		
 	}
 	
 }

@@ -56,6 +56,7 @@ public class ExpressionStatement extends Statement {
 								 throw new FalseReturnException("Return outside function body");
 							} else {
 								Object returnValue = expression.read(ship, world, program, deltaT);
+								
 								String functionName = program.getCurrentFunction();
 								if (functionName.charAt(functionName.length()-2) == '*') {
 									functionName = functionName.substring(0, functionName.length()-2);

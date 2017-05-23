@@ -344,10 +344,5 @@ public class Ship extends Entity {
 		if (entity instanceof Ship) {defaultCollide(entity);}
 		else {entity.collide(this);}
 	}
-
-	@Override
-	public void collide(World world) {
-		world.defaultCollide(this);
-	}
 	
 }
