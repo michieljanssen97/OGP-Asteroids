@@ -8,6 +8,7 @@ import asteroids.model.programs.BreakException;
 import asteroids.model.programs.FalseProgramException;
 import asteroids.model.programs.FalseReturnException;
 import asteroids.model.programs.NoMoreTimeException;
+import asteroids.model.programs.expressions.Expression;
 import asteroids.model.programs.statements.FunctionStatement;
 import asteroids.model.programs.statements.Statement;
 import asteroids.part3.programs.SourceLocation;
@@ -22,12 +23,11 @@ public class Program<F,S> {
 	
 	private List<String> callStack = new ArrayList<>();
 	
-	private HashMap<String,Object> variables = new HashMap<>();
+	private HashMap<String,Object> globalVariables = new HashMap<>();
 	private HashMap<String,HashMap<String,Object>> functionScopes = new HashMap<>();
 	private HashMap<String,FunctionStatement> functions = new HashMap<>();
 	private List<Object> printedObjects = new ArrayList<>();
 
-	
 	public Program(List<FunctionStatement> functions, Statement main){
 		this.main = main;
 		
@@ -53,7 +53,7 @@ public class Program<F,S> {
 		return this.functions.containsKey(functionName);
 	}
 	
-	public HashMap<String, Object> getVariables() { return this.variables; }
+	public HashMap<String, Object> getGlobalVariables() { return this.globalVariables; }
 	
 	public HashMap<String, Object> getFunctionScope(String functionName) { 
 		return this.functionScopes.get(functionName);
@@ -63,7 +63,7 @@ public class Program<F,S> {
 		if (isInFunction()) {
 			return getFunctionScope(getCurrentFunction());
 		} else {
-			return getVariables();
+			return getGlobalVariables();
 		}
 	}
 	
@@ -74,8 +74,8 @@ public class Program<F,S> {
 	public Object getVariable(String variableName) throws FalseProgramException {
 		if (getCurrentScope().containsKey(variableName)) {
 			return getCurrentScope().get(variableName);
-		} else if (getVariables().containsKey(variableName)) { // Global scope
-			return this.variables.get(variableName);
+		} else if (getGlobalVariables().containsKey(variableName)) { // Global scope
+			return this.globalVariables.get(variableName);
 		} else {
 			throw new FalseProgramException("Variable doesn't exist");
 		}
@@ -107,9 +107,13 @@ public class Program<F,S> {
 		}
 	}
 	
-	public void enterFunction(String functionName) {
+	public void enterFunction(String functionName, List<Expression<?>> parameters) {
 		callStack.add(functionName);
 		functionScopes.put(functionName, new HashMap<String,Object>());
+		
+		for (int i=0; i < parameters.size(); i++) {
+			getCurrentScope().put("$"+(i+1), parameters.get(i));
+		}
 	}
 	
 	public void exitFunction() {
