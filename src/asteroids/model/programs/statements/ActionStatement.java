@@ -24,6 +24,10 @@ public class ActionStatement extends Statement {
 	public void execute(Ship ship, World world, Program program, double deltaT) throws BreakException, FalseProgramException, NoMoreTimeException {
 		checkTimeLeft(ship, world, program, deltaT);
 		
+		if (program.isInFunction()) {
+			throw new FalseProgramException("Cannot execute action statements in a function");
+		}
+		
 		switch (getStatement()) {
            case "break":  		throw new BreakException();
            case "thrust_on": 	program.setConsumedTime(program.getConsumedTime()+0.2);

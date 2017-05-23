@@ -8,6 +8,7 @@ import asteroids.model.Ship;
 import asteroids.model.World;
 import asteroids.model.programs.BreakException;
 import asteroids.model.programs.FalseProgramException;
+import asteroids.model.programs.FalseReturnException;
 import asteroids.model.programs.NoMoreTimeException;
 import asteroids.model.programs.expressions.Expression;
 import asteroids.part3.programs.SourceLocation;
@@ -26,18 +27,19 @@ public class AssignmentStatement extends Statement {
 	public String getVariableName() {return this.variableName;}
 	public Expression<?> getExpression() {return this.value;}
 	
-	public void execute(Ship ship, World world, Program program, double deltaT) throws FalseProgramException, BreakException, NoMoreTimeException {
+	public void execute(Ship ship, World world, Program program, double deltaT) throws FalseProgramException, BreakException, NoMoreTimeException, FalseReturnException {
 		checkTimeLeft(ship, world, program, deltaT);
 		
 		if (getExpression() instanceof Expression){
-			 Object assignedValue = getExpression().read(ship, world, program);
+			 Object assignedValue = getExpression().read(ship, world, program, deltaT);
 			 
 			 if (Arrays.asList(Boolean.class, Double.class, Entity.class).contains(assignedValue.getClass())) {
+		
 				 if (program.getVariables().containsKey(getVariableName()) 
 						 && program.getVariables().get(getVariableName()).getClass() == assignedValue.getClass()) {
 					 program.getVariables().replace(getVariableName(), assignedValue);
 				 } else {
-					 program.getVariables().put(getVariableName(), assignedValue);
+					 program.addVariable(getVariableName(), assignedValue);
 				 }
 			 } else {
 				 throw new FalseProgramException("Not a correct assignment");

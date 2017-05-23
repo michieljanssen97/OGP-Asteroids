@@ -21,7 +21,7 @@ public class EntityExpression<T> extends Expression<T> {
 	}
 
 	@SuppressWarnings("unchecked")
-	public T read(Ship ship, World world, Program program) throws FalseProgramException {
+	public T read(Ship ship, World world, Program program, Double deltaT) throws FalseProgramException {
 		switch(objectName) {		
 			case "null":	return null;
 			case "self":	return (T) ship;

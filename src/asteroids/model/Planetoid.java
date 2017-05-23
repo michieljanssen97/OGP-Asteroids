@@ -1,8 +1,6 @@
 package asteroids.model;
 
 import java.util.Random;
-import java.util.Set;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Planetoid extends MinorPlanet {

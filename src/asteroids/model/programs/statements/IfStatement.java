@@ -29,7 +29,7 @@ public class IfStatement extends Statement {
 	public void execute(Ship ship,World world, Program program, double deltaT) throws FalseProgramException, BreakException, NoMoreTimeException, FalseReturnException {
 		 checkTimeLeft(ship, world, program, deltaT);
 
-		 if ((boolean) getCondition().read(ship, world, program)) {
+		 if ((boolean) getCondition().read(ship, world, program, deltaT)) {
 			 getIfBody().execute(ship, world, program, deltaT);
 		 } else {
 			 if (getElseBody() != null) {

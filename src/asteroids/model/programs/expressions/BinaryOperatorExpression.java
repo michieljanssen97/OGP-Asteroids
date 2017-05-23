@@ -3,7 +3,10 @@ package asteroids.model.programs.expressions;
 import asteroids.model.Program;
 import asteroids.model.Ship;
 import asteroids.model.World;
+import asteroids.model.programs.BreakException;
 import asteroids.model.programs.FalseProgramException;
+import asteroids.model.programs.FalseReturnException;
+import asteroids.model.programs.NoMoreTimeException;
 import asteroids.part3.programs.SourceLocation;
 
 public class BinaryOperatorExpression<T> extends Expression<T> {
@@ -27,10 +30,10 @@ public class BinaryOperatorExpression<T> extends Expression<T> {
 		return this.right;
 	}
 	
-	public T read(Ship ship, World world, Program program) throws FalseProgramException{
+	public T read(Ship ship, World world, Program program, Double deltaT) throws FalseProgramException, NoMoreTimeException, BreakException, FalseReturnException{
 		Object result;
-		T x = getLeftValue().read(ship, world, program);
-		T y = getRightValue().read(ship, world, program);
+		T x = getLeftValue().read(ship, world, program, deltaT);
+		T y = getRightValue().read(ship, world, program, deltaT);
 		
 		switch (getOperator()) {
 			case "+":		result = (Double) x + (Double) y;

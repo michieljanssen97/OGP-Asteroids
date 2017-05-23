@@ -317,12 +317,12 @@ public class Ship extends Entity {
 		
 	}
 	
-	private Program program;
-	private void setProgram(Program newProgram){
+	private Program<?,?> program;
+	private void setProgram(Program<?,?> newProgram){
 		this.program = newProgram;
 	}
 	
-	public Program getProgram() {
+	public Program<?,?> getProgram() {
 		return this.program;
 	}
 
@@ -336,7 +336,7 @@ public class Ship extends Entity {
 		}
 	}
 
-	public void loadProgram(Program program) {
+	public void loadProgram(Program<?,?> program) {
 		setProgram(program);
 	}
 	

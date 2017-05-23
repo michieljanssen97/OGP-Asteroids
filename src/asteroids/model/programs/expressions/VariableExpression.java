@@ -8,19 +8,15 @@ import asteroids.part3.programs.SourceLocation;
 
 public class VariableExpression extends Expression {
 	
-	String varname;
+	String varName;
 	
 	public VariableExpression(String varname, SourceLocation sourceLocation) {
 		super(sourceLocation);
-		this.varname = varname;
+		this.varName = varname;
 	}
 
-	public Object read(Ship ship, World world, Program program) throws FalseProgramException {
-		if (program.getVariables().containsKey(this.varname)) {
-			 return program.getVariables().get(this.varname);
-		 } else {
-			 throw new FalseProgramException("Variable doesn't exist");
-		 }
+	public Object read(Ship ship, World world, Program program, Double DeltaT) throws FalseProgramException {
+		return program.getVariable(this.varName);
 	}
 
 	
