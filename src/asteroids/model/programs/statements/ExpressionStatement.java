@@ -32,25 +32,33 @@ public class ExpressionStatement extends Statement {
 	public void execute(Ship ship,World world, Program program, double deltaT) throws FalseProgramException, FalseReturnException, NoMoreTimeException, BreakException {
 		checkTimeLeft(ship, world, program, deltaT);
 		switch(getStating()) {
-			 case "print":  Object expressionResult = getExpression().read(ship, world, program, deltaT);
-							program.getPrintedObjects().add(expressionResult);
-							System.out.println(expressionResult);
-							break;
-			 case "turn":	program.setConsumedTime(program.getConsumedTime()+0.2);
-							Double angle = (Double) getExpression().read(ship, world, program, deltaT);
-							try {
-								ship.turn(angle);
-							} catch (AssertionError e){
-								throw new IllegalArgumentException();
+			 case "print":  if (!program.isInFunction()) {
+					 			Object expressionResult = getExpression().read(ship, world, program, deltaT);
+								program.getPrintedObjects().add(expressionResult);
+								System.out.println(expressionResult);
+								break;
+			 				} else {
+			 					throw new FalseReturnException("Turn in function body");
+			 				}
+			 case "turn":	if (!program.isInFunction()) {
+					 			program.setConsumedTime(program.getConsumedTime()+0.2);
+								Double angle = (Double) getExpression().read(ship, world, program, deltaT);
+								try {
+									ship.turn(angle);
+								} catch (AssertionError e){
+									throw new IllegalArgumentException();
+								}
+								break;
+			 				} else {
+			 					throw new FalseReturnException("Turn in function body");
 							}
-							break;
 			 case "return": if (!program.isInFunction()){
 								 throw new FalseReturnException("Return outside function body");
 							} else {
 								Object returnValue = expression.read(ship, world, program, deltaT);
 								program.getFunction(program.getCurrentFunction()).setReturnValue(returnValue);
+								break;
 							}
-			 				break;
 		 }
 	}
 }

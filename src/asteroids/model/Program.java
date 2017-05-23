@@ -23,7 +23,7 @@ public class Program<F,S> {
 	private List<String> callStack = new ArrayList<>();
 	
 	private HashMap<String,Object> variables = new HashMap<>();
-	private HashMap<String,HashMap<String,Object>> localVariableScopes = new HashMap<>();
+	private HashMap<String,HashMap<String,Object>> functionScopes = new HashMap<>();
 	private HashMap<String,FunctionStatement> functions = new HashMap<>();
 	private List<Object> printedObjects = new ArrayList<>();
 
@@ -49,29 +49,47 @@ public class Program<F,S> {
 		return this.functions.get(functionName);
 	}
 	
+	public Boolean functionExists(String functionName) {
+		return this.functions.containsKey(functionName);
+	}
+	
 	public HashMap<String, Object> getVariables() { return this.variables; }
 	
+	public HashMap<String, Object> getFunctionScope(String functionName) { 
+		return this.functionScopes.get(functionName);
+	}
+	
+	public HashMap<String, Object> getCurrentScope() {
+		if (isInFunction()) {
+			return getFunctionScope(getCurrentFunction());
+		} else {
+			return getVariables();
+		}
+	}
+	
+	public Boolean variableExists(String variableName) {
+		return (getCurrentScope().containsKey(variableName));
+	}
+	
 	public Object getVariable(String variableName) throws FalseProgramException {
-		if (this.variables.containsKey(variableName)) {
+		if (getCurrentScope().containsKey(variableName)) {
+			return getCurrentScope().get(variableName);
+		} else if (getVariables().containsKey(variableName)) { // Global scope
 			return this.variables.get(variableName);
 		} else {
 			throw new FalseProgramException("Variable doesn't exist");
 		}
 	}
 	
-	public void addVariable(String variableName, Object assignedValue) throws FalseProgramException {
-		if (this.variables.containsKey(variableName) || this.functions.containsKey(variableName)) {
-			throw new FalseProgramException("Variable already exists or variable name is a function");
-		} else {
-			this.variables.put(variableName, assignedValue);
+	public void addOrUpdateVariable(String variableName, Object assignedValue) throws FalseProgramException {
+		if (!isInFunction() && functionExists(variableName)) {
+			throw new FalseProgramException("Variable name is already a function");
 		}
-	}
-	
-	public void updateVariable(String variableName, Object assignedValue) throws FalseProgramException {
-		if (this.variables.containsKey(variableName)) {
-			this.variables.replace(variableName, assignedValue);
+		
+		if (variableExists(variableName)) {
+			getCurrentScope().replace(variableName, assignedValue);
 		} else {
-			throw new FalseProgramException("Variable doesn't exist");
+			getCurrentScope().put(variableName, assignedValue);
 		}
 	}
 	
@@ -91,10 +109,12 @@ public class Program<F,S> {
 	
 	public void enterFunction(String functionName) {
 		callStack.add(functionName);
+		functionScopes.put(functionName, new HashMap<String,Object>());
 	}
 	
 	public void exitFunction() {
 		if (callStack.size() > 0) {
+			functionScopes.remove(getCurrentFunction());
 			callStack.remove(callStack.size()-1);
 		}
 	}

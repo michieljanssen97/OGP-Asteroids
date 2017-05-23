@@ -1,6 +1,8 @@
 package asteroids.model.programs.statements;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 
 import asteroids.model.Entity;
 import asteroids.model.Program;
@@ -27,7 +29,7 @@ public class AssignmentStatement extends Statement {
 	public String getVariableName() {return this.variableName;}
 	public Expression<?> getExpression() {return this.value;}
 	
-	public void execute(Ship ship, World world, Program program, double deltaT) throws FalseProgramException, BreakException, NoMoreTimeException, FalseReturnException {
+	public void execute(Ship ship, World world, Program<?, ?> program, double deltaT) throws FalseProgramException, BreakException, NoMoreTimeException, FalseReturnException {
 		checkTimeLeft(ship, world, program, deltaT);
 		
 		if (getExpression() instanceof Expression){
@@ -35,12 +37,16 @@ public class AssignmentStatement extends Statement {
 			 
 			 if (Arrays.asList(Boolean.class, Double.class, Entity.class).contains(assignedValue.getClass())) {
 		
-				 if (program.getVariables().containsKey(getVariableName()) 
-						 && program.getVariables().get(getVariableName()).getClass() == assignedValue.getClass()) {
-					 program.getVariables().replace(getVariableName(), assignedValue);
-				 } else {
-					 program.addVariable(getVariableName(), assignedValue);
+				 if (!program.isInFunction() && (program.functionExists(getVariableName()))) {
+					 throw new FalseProgramException("Name is already taken by a function");
 				 }
+				 
+				 if (program.variableExists(getVariableName())
+						 && !(program.getVariable(getVariableName()).getClass() == assignedValue.getClass())) {
+					 throw new FalseProgramException("Not a correct assignment");
+				 } 
+				 
+				 program.addOrUpdateVariable(getVariableName(), assignedValue);
 			 } else {
 				 throw new FalseProgramException("Not a correct assignment");
 			 }
