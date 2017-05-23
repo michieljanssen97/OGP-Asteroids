@@ -32,6 +32,7 @@ public class FunctionCallExpression extends Expression {
 	
 	public Object read(Ship ship, World world, Program program, Double deltaT) throws FalseProgramException, NoMoreTimeException, BreakException, FalseReturnException {
 		FunctionStatement function = program.getFunction(functionName);
+		Object returnValue = null;
 		
 		List<Object> arguments = new ArrayList<>();
 		for (Expression arg: getArguments()) {
@@ -41,10 +42,12 @@ public class FunctionCallExpression extends Expression {
 		program.enterFunction(functionName, arguments);
 		try {
 			function.execute(ship, world, program, deltaT);
+			returnValue = function.getReturnValue();
 		} finally {
 			program.exitFunction();
 		}
-		return function.getResult();
+
+		return returnValue;
 		
 		
 	}

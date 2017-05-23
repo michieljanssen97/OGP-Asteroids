@@ -36,7 +36,7 @@ public class FunctionStatement extends Statement {
 		this.returnValue = returnValue;
 	}
 	
-	public Object getResult() {
+	public Object getReturnValue() {
 		return this.returnValue;
 	}
 	

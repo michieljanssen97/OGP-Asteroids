@@ -56,7 +56,12 @@ public class ExpressionStatement extends Statement {
 								 throw new FalseReturnException("Return outside function body");
 							} else {
 								Object returnValue = expression.read(ship, world, program, deltaT);
-								program.getFunction(program.getCurrentFunction()).setReturnValue(returnValue);
+								String functionName = program.getCurrentFunction();
+								if (functionName.charAt(functionName.length()-2) == '*') {
+									functionName = functionName.substring(0, functionName.length()-2);
+								}
+
+								program.getFunction(functionName).setReturnValue(returnValue);
 								break;
 							}
 		 }

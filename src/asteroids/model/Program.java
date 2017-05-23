@@ -19,9 +19,8 @@ public class Program<F,S> {
 	private SourceLocation endingSourceLocation;
 	private double extraTime = 0;
 	private double consumedTime = 0;
-	private boolean isInWhileLoop;
 	
-	private List<String> callStack = new ArrayList<>();
+	public List<String> callStack = new ArrayList<>();
 	
 	private HashMap<String,Object> globalVariables = new HashMap<>();
 	private HashMap<String,HashMap<String,Object>> functionScopes = new HashMap<>();
@@ -108,12 +107,19 @@ public class Program<F,S> {
 	}
 	
 	public void enterFunction(String functionName, List<Expression<?>> parameters) {
+		
+		final String funcName = functionName;
+		long recursiveDepth = callStack.stream().filter(func -> func.startsWith(funcName)).count();
+		functionName += "*" + recursiveDepth;
+
 		callStack.add(functionName);
 		functionScopes.put(functionName, new HashMap<String,Object>());
 		
 		for (int i=0; i < parameters.size(); i++) {
 			getCurrentScope().put("$"+(i+1), parameters.get(i));
 		}
+		System.out.println("Enter");
+
 	}
 	
 	public void exitFunction() {
@@ -121,13 +127,7 @@ public class Program<F,S> {
 			functionScopes.remove(getCurrentFunction());
 			callStack.remove(callStack.size()-1);
 		}
-	}
-
-	public boolean isInWhileLoop() {
-		return isInWhileLoop;
-	}
-	public void toggleIsInWhileLoop() {
-		isInWhileLoop = !isInWhileLoop;
+		System.out.println("Exit");
 	}
 	
 	public double getExtraTime() {
