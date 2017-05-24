@@ -10,7 +10,7 @@ import asteroids.part3.programs.SourceLocation;
 
 public class ActionStatement extends Statement {
 	
-	String statement;
+	private String statement;
 	
 	public ActionStatement(String statement, SourceLocation sourceLocation) {
 		super(sourceLocation);

@@ -322,7 +322,7 @@ public class World implements ICollidable {
 		if (collisionListener == null) {return;}
 		else if (collidables[0] instanceof Entity && collidables[1] instanceof Entity){
 			if (((Entity)collidables[0]).isDestroyed() == true && ((Entity)collidables[1]).isDestroyed() == true) {
-				double [] result = ((Entity)collidables[0]).explosionPosition((Entity)collidables[1]);
+				double [] result = ((Entity)collidables[0]).calculateCollisionPosition((Entity)collidables[1]);
 				collisionListener.objectCollision((Entity)collidables[0],(Entity)collidables[1],result[0], result[1]);
 			}
 		} else {
@@ -353,7 +353,7 @@ public class World implements ICollidable {
 						advanceEntities(duration);
 					} else {
 						if (firstCollisionTime >= 0) {advanceEntities(firstCollisionTime);}
-						double [] colPos = collidables[0].getCollisionPosition(collidables[1]);
+						double[] colPos = collidables[0].getCollisionPosition(collidables[1]);
 
 						collidables[0].collide(collidables[1]);
 						showCollision(collisionlistener, collidables, colPos);
@@ -376,13 +376,19 @@ public class World implements ICollidable {
 	 * 
 	 * @param duration
 	 * @post This function executes in such a manner that ensures that, at the end of the function:
-	 * 		 	* All entities have moved for the given duration
+	 * 		 	* All entities owned by this world have moved for the given duration
 	 */
 	public void advanceEntities(double duration) {
 		getEntities().forEach(entity -> entity.move(duration));
 		terminateEntities();
 	}
 	
+	/**
+	 * Terminates all entities in this world that have been destroyed
+	 * 
+	 * @post This function executes in such a manner that ensures that, at the end of the function:
+	 * 			* All destroyed entities owned by this world are terminated 
+	 */
 	public void terminateEntities() {
 		new HashSet<Entity>(getEntities()).stream()
 		.filter(entity -> entity.isDestroyed())
@@ -416,6 +422,13 @@ public class World implements ICollidable {
 				.isPresent();
 	}
 	
+	/**
+	 * Dispatch based on runtime information. 
+	 * This will call the function getCollisionPosition(World world) on the given ICollidable.
+	 */
+	public double[] getCollisionPosition(ICollidable collidable) {
+		return collidable.getCollisionPosition(this);
+	}
 
 	/**
 	 * A function that returns the position of a collision between this world and a collidable
@@ -431,9 +444,17 @@ public class World implements ICollidable {
 
 	@Override
 	public double[] getCollisionPosition(World world) {
-		return null;
+		throw new AssertionError("World cannot collide with world");
 	}
 
+	/**
+	 * Dispatch based on runtime information. 
+	 * This will call the function getTimeToCollision(World world) on the given ICollidable.
+	 */
+	public double getTimeToCollision(ICollidable collidable) {
+		return collidable.getTimeToCollision(this);
+	}
+	
 	/**
 	 * A function that returns the time to collision between this world and a collidable
 	 * 
@@ -443,12 +464,20 @@ public class World implements ICollidable {
 	 */
 	@Override
 	public double getTimeToCollision(World world) {
-		return 0.0;
+		throw new AssertionError("World cannot collide with world");
 	}
 	
 	@Override
 	public double getTimeToCollision(Entity entity) {
 		return entity.getTimeToCollision(this);
+	}
+	
+	/**
+	 * Dispatch based on runtime information. 
+	 * This will call the function collide(World world) on the given ICollidable.
+	 */
+	public void collide(ICollidable collidable) {
+		collidable.collide(this);
 	}
 	
 	/**
@@ -461,7 +490,6 @@ public class World implements ICollidable {
 	 *			* In the case that the entity is a bullet that has already collided with a boundary two times, the entity is
 	 *			  removed from the world
 	 */
-	
 	public void collide(Entity entity) {
 		if (entity instanceof Bullet) {entity.collide(this);} 
 		else {defaultCollide(entity);}
@@ -487,23 +515,10 @@ public class World implements ICollidable {
 	}
 
 	public void collide(World world) {
-		// Shouldn't happen
+		throw new AssertionError("World cannot collide with world");
 	}
 
 	public boolean isDestroyed() {
 		return false;
-	}
-
-	public double[] getCollisionPosition(ICollidable collidable) {
-		return collidable.getCollisionPosition(this);
-	}
-	
-	public void collide(ICollidable collidable) {
-		collidable.collide(this);
-	}
-
-	public double getTimeToCollision(ICollidable collidable) {
-		return collidable.getTimeToCollision(this);
-	}
-	
+	}	
 }

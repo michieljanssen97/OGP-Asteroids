@@ -1,12 +1,11 @@
 package asteroids.model;
 
 /**
- * A class that defines a bullet for the Asteroids game.
+ * A class that defines a MinorPlanet for the Asteroids game.
  * 
  * @author Michiel Janssen & Jelle Pelgrims
  *
  */
-
 public abstract class MinorPlanet extends Entity implements ICollidable {
 	
 	/**

@@ -2,7 +2,7 @@ package asteroids.model;
 
 /**
  * 
- * A class that defines the ICollidable interface for the Asteroids game.
+ * This interface defines an ICollidable for the Asteroids game.
  *
  * @author Michiel Janssen & Jelle Pelgrims
  *

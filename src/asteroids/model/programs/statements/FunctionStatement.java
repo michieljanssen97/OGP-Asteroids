@@ -14,13 +14,12 @@ import asteroids.part3.programs.SourceLocation;
 
 public class FunctionStatement extends Statement {
 	
-	String name;
-	Statement body;
-	SourceLocation sourceLocation;
-	List<Expression<?>> arguments;
-	Object returnValue;
+	private String name;
+	private Statement body;
+	private SourceLocation sourceLocation;
+	private List<Expression<?>> arguments;
+	private Object returnValue;
 	
-
 	public FunctionStatement(String functionName, Statement body, SourceLocation sourceLocation) {
 		super(sourceLocation);
 		this.name = functionName;

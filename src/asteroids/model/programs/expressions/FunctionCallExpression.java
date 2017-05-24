@@ -17,8 +17,8 @@ import asteroids.part3.programs.SourceLocation;
 
 public class FunctionCallExpression extends Expression {
 
-	String functionName;
-	List<Expression> actualArgs;
+	private String functionName;
+	private List<Expression> actualArgs;
 	
 	public FunctionCallExpression(String functionName, List<Expression>actualArgs, SourceLocation sourceLocation) {
 		super(sourceLocation);

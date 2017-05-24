@@ -1,5 +1,13 @@
 package asteroids.model;
 
+/**
+ * 
+ * This interface defines an IOwnable for the Asteroids game.
+ *
+ * @author Michiel Janssen & Jelle Pelgrims
+ *
+ */
+
 public interface IOwnable {
 
 	public Object getOwner();

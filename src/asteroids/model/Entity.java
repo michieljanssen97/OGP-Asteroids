@@ -647,6 +647,34 @@ public abstract class Entity implements ICollidable, IOwnable {
 		}
 	}
 	
+	public double[] calculateCollisionPosition(Entity other) {
+		double thisposX = this.getPositionX() + this.getTimeToCollision(other)*this.getVelocityX();
+		double thisposY = this.getPositionY() + this.getTimeToCollision(other)*this.getVelocityY();
+		double otherposX = other.getPositionX() + other.getTimeToCollision(this)*other.getVelocityX();
+		double otherposY = other.getPositionY() + other.getTimeToCollision(this)*other.getVelocityY();
+		
+		double posX =0;
+		double posY=0;
+		
+		double angle = Math.atan2(Math.abs(otherposY-thisposY),Math.abs(otherposX-thisposX));
+		
+		if (thisposX<=otherposX && thisposY<=otherposY){
+			posX = thisposX+this.getRadius()*Math.cos(angle);
+			posY = thisposY+this.getRadius()*Math.sin(angle);
+		} else if (thisposX>=otherposX && thisposY<=otherposY){
+			posX = thisposX-this.getRadius()*Math.cos(angle);
+			posY =thisposY+this.getRadius()*Math.sin(angle);
+		} else if (thisposX>=otherposX && thisposY>=otherposY){
+			posX= thisposX-this.getRadius()*Math.cos(angle);
+			posY = thisposY-this.getRadius()*Math.sin(angle);
+		} else if (thisposX<=otherposX && thisposY>=otherposY){
+			posX = thisposX+this.getRadius()*Math.cos(angle);
+			posY = thisposY-this.getRadius()*Math.sin(angle);
+		}
+		
+		return new double[]{posX, posY};
+	}
+	
 	/**
 	 * This method calculates where, if ever, two entities will collide.
 	 * 
@@ -676,71 +704,13 @@ public abstract class Entity implements ICollidable, IOwnable {
 			return null;
 		} 
 		else {
-			
 			if (getTimeToCollision(other) != Double.POSITIVE_INFINITY ){
-				
-				double thisposX = this.getPositionX() + this.getTimeToCollision(other)*this.getVelocityX();
-				double thisposY = this.getPositionY() + this.getTimeToCollision(other)*this.getVelocityY();
-				double otherposX = other.getPositionX() + other.getTimeToCollision(this)*other.getVelocityX();
-				double otherposY = other.getPositionY() + other.getTimeToCollision(this)*other.getVelocityY();
-				
-				double posX =0;
-				double posY=0;
-				
-				double angle = Math.atan2(Math.abs(otherposY-thisposY),Math.abs(otherposX-thisposX));
-				
-				if (thisposX<=otherposX && thisposY<=otherposY){
-					posX = thisposX+this.getRadius()*Math.cos(angle);
-					posY = thisposY+this.getRadius()*Math.sin(angle);
-				} else if (thisposX>=otherposX && thisposY<=otherposY){
-					posX = thisposX-this.getRadius()*Math.cos(angle);
-					posY =thisposY+this.getRadius()*Math.sin(angle);
-				} else if (thisposX>=otherposX && thisposY>=otherposY){
-					posX= thisposX-this.getRadius()*Math.cos(angle);
-					posY = thisposY-this.getRadius()*Math.sin(angle);
-				} else if (thisposX<=otherposX && thisposY>=otherposY){
-					posX = thisposX+this.getRadius()*Math.cos(angle);
-					posY = thisposY-this.getRadius()*Math.sin(angle);
-				}
-				
-				double[] pos = {posX,posY};
-				return pos;
+				return calculateCollisionPosition(other);
 				
 			} else {
 				return null;
 			}
 		}
-	}
-	
-	//TODO ?
-	public double[] explosionPosition(Entity other){
-		double thisposX = this.getPositionX(); 
-		double thisposY = this.getPositionY(); 
-		double otherposX = other.getPositionX();
-		double otherposY = other.getPositionY();
-		
-		double posX =0;
-		double posY=0;
-		
-		double angle = Math.atan2(Math.abs(otherposY-thisposY),Math.abs(otherposX-thisposX));
-		
-		if (thisposX<=otherposX && thisposY<=otherposY){
-			posX = thisposX+this.getRadius()*Math.cos(angle);
-			posY = thisposY+this.getRadius()*Math.sin(angle);
-		} else if (thisposX>=otherposX && thisposY<=otherposY){
-			posX = thisposX-this.getRadius()*Math.cos(angle);
-			posY =thisposY+this.getRadius()*Math.sin(angle);
-		} else if (thisposX>=otherposX && thisposY>=otherposY){
-			posX= thisposX-this.getRadius()*Math.cos(angle);
-			posY = thisposY-this.getRadius()*Math.sin(angle);
-		} else if (thisposX<=otherposX && thisposY>=otherposY){
-			posX = thisposX+this.getRadius()*Math.cos(angle);
-			posY = thisposY-this.getRadius()*Math.sin(angle);
-		}
-		
-		double[] pos = {posX,posY};
-		return pos;
-		
 	}
 	
 	/**
@@ -865,7 +835,8 @@ public abstract class Entity implements ICollidable, IOwnable {
 	}
 	
 	/**
-	 * Collide with the given ICollidable
+	 * Dispatch based on runtime information. 
+	 * This will call the function collide((subtype of entity) world) on the given ICollidable.
 	 */
 	public void collide(ICollidable collidable) {
 		collidable.collide(this);

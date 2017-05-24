@@ -25,7 +25,6 @@ import be.kuleuven.cs.som.annotate.*;
 public class Ship extends Entity {
 	
 	private Set<Bullet> bullets = new HashSet<Bullet>();
-	
 	private boolean thrusterActive = false;
 	
 	/**

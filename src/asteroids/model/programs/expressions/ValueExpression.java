@@ -4,11 +4,11 @@ import asteroids.model.*;
 import asteroids.model.programs.FalseProgramException;
 import asteroids.part3.programs.SourceLocation;
 
-public class ContainerExpression<T> extends Expression<T> {
+public class ValueExpression<T> extends Expression<T> {
 	
-	T value;
+	private T value;
 	
-	public ContainerExpression(T value, SourceLocation sourceLocation) {
+	public ValueExpression(T value, SourceLocation sourceLocation) {
 		super(sourceLocation);
 		this.value = value;
 	}

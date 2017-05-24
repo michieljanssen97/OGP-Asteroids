@@ -3,7 +3,7 @@ package asteroids.model.programs;
 import java.util.List;
 
 import asteroids.model.*;
-import asteroids.model.programs.expressions.ContainerExpression;
+import asteroids.model.programs.expressions.ValueExpression;
 import asteroids.model.programs.expressions.BinaryOperatorExpression;
 import asteroids.model.programs.expressions.Expression;
 import asteroids.model.programs.expressions.FunctionCallExpression;
@@ -26,7 +26,7 @@ public class ProgramFactory<E, S, F, P> implements IProgramFactory<Expression, S
 
 	@Override
 	public Program createProgram(List<FunctionStatement> functions, Statement main) {
-		return new Program<FunctionStatement, Statement>(functions,main);
+		return new Program(functions,main);
 	}
 
 	@Override
@@ -96,7 +96,7 @@ public class ProgramFactory<E, S, F, P> implements IProgramFactory<Expression, S
 
 	@Override
 	public Expression createDoubleLiteralExpression(double value, SourceLocation location) {
-		return new ContainerExpression<Double>(value,location);
+		return new ValueExpression<Double>(value,location);
 	}
 
 	@Override

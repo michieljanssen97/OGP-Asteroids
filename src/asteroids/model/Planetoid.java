@@ -3,19 +3,37 @@ package asteroids.model;
 import java.util.Random;
 import java.util.stream.Stream;
 
+/**
+ * A class that defines a Planetoid for the Asteroids game.
+ * 
+ * @author Michiel Janssen & Jelle Pelgrims
+ *
+ */
 public class Planetoid extends MinorPlanet {
 	
 	private double totalTraveledDistance = 0;
 	
+	/**
+	 * Initialize this new Planetoid with a given position, velocity, radius.
+	 * 
+	 * @see superclass constructor
+	 */
 	public Planetoid(double x, double y, double xVelocity, double yVelocity, double radius, double totalTraveledDistance) {
 		super(x, y, xVelocity, yVelocity, radius);
 		
 		increaseTotalTraveledDistance(totalTraveledDistance);
 	}
  	
+	/**
+	 * Returns the minimum density
+	 */
 	@Override
 	public double getMinDensity() {return 0.917E12;}
 	
+	/**
+	 * TODO
+	 * @param world
+	 */
  	public void spawnAsteroidsTerminate(World world) {
  			double magnitude = (1.5)*(Math.pow(this.getVelocityX(), 2)+Math.pow(this.getVelocityY(), 2));
  			double velX = Math.sqrt((Math.random()*magnitude));

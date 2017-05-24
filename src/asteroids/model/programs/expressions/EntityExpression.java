@@ -6,7 +6,7 @@ import asteroids.part3.programs.SourceLocation;
 
 public class EntityExpression<T> extends Expression<T> {
 	
-	String objectName;
+	private String objectName;
 	
 	public EntityExpression(String objectName, SourceLocation sourceLocation) {
 		super(sourceLocation);

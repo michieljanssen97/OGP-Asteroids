@@ -15,13 +15,13 @@ public class SequenceStatement extends Statement {
 
 	private List<Statement> statements;
 	
-	public List<Statement> getStatements() {
-		return this.statements;
-	}
-	
 	public SequenceStatement(List<Statement> statements, SourceLocation sourceLocation) { 
 		super(sourceLocation);
 		this.statements = statements;
+	}
+	
+	public List<Statement> getStatements() {
+		return this.statements;
 	}
 	
 	public void execute(Ship ship,World world, Program program, double deltaT) throws BreakException, NoMoreTimeException, FalseProgramException, FalseReturnException {

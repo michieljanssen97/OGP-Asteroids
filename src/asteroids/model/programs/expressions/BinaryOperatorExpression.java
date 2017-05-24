@@ -14,13 +14,16 @@ public class BinaryOperatorExpression<T> extends Expression<T> {
 	private Expression<T> left;
 	private Expression<T> right;
 	private String operator;
-	public String getOperator() {return this.operator;}
 	
 	public BinaryOperatorExpression(Expression<T> left, Expression<T> right, String operator, SourceLocation sourceLocation) {
 		super(sourceLocation);
 		this.left = left;
 		this.right = right;
 		this.operator = operator;
+	}
+	
+	public String getOperator() {
+		return this.operator;
 	}
 	
 	public Expression<T> getLeftValue(){
@@ -44,7 +47,7 @@ public class BinaryOperatorExpression<T> extends Expression<T> {
 							break;
 			case "==":		result = (x == y);
 							break;
-			default:		throw new FalseProgramException("Double expression is not correct declared");
+			default:		throw new FalseProgramException("Double expression is not correctly declared");
 		}
 		return (T) result;
 	}

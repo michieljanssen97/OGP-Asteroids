@@ -16,6 +16,7 @@ public class Asteroid extends MinorPlanet implements ICollidable {
 	 */
 	public double getMinDensity() {return 2.65E12;}
 	
+	//TODO
 	public void collide(Entity entity) {
 		if (entity instanceof Ship) {
 			entity.destroy();
