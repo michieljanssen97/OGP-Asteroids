@@ -12,22 +12,22 @@ import asteroids.part3.programs.SourceLocation;
 
 public class WhileStatement extends Statement {
 
-	private Expression<?> condition;
+	private Expression<Boolean> condition;
 	private Statement body;
 	
-	public WhileStatement(Expression<?> condition, Statement body, SourceLocation sourceLocation) {
+	public WhileStatement(Expression<Boolean> condition, Statement body, SourceLocation sourceLocation) {
 		super(sourceLocation);
 		this.condition = condition;
 		this.body = body;
 	}
 
 	public Statement getBody() {return this.body;}
-	public Expression<?> getCondition() {return this.condition;}
+	public Expression<Boolean> getCondition() {return this.condition;}
 	
 	public void execute(Ship ship, World world, Program program, double deltaT)
 			throws FalseProgramException, BreakException, NoMoreTimeException, FalseReturnException {
 		checkTimeLeft(ship, world, program, deltaT);
-		while ((Boolean) getCondition().read(ship, world, program, deltaT)){
+		while (getCondition().read(ship, world, program, deltaT)){
 			 try {
 				 body.execute(ship, world, program, deltaT);
 			 } catch (BreakException e) {

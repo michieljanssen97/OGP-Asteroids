@@ -12,24 +12,24 @@ import asteroids.part3.programs.SourceLocation;
 
 public class IfStatement extends Statement {
 
-	private Expression<?> condition;
+	private Expression<Boolean> condition;
 	private Statement ifBody;
 	private Statement elseBody;
 	
-	public IfStatement(Expression<?> condition, Statement ifBody, Statement elseBody, SourceLocation sourceLocation) {
+	public IfStatement(Expression<Boolean> condition, Statement ifBody, Statement elseBody, SourceLocation sourceLocation) {
 		super(sourceLocation);
 		this.condition = condition;
 		this.ifBody = ifBody;
 		this.elseBody = elseBody;	}
 	
-	public Expression<?> getCondition() { return this.condition;}	
+	public Expression<Boolean> getCondition() { return this.condition;}	
 	public Statement getIfBody() { return this.ifBody ;}
 	public Statement getElseBody() { return this.elseBody; }
 	
 	public void execute(Ship ship,World world, Program program, double deltaT) throws FalseProgramException, BreakException, NoMoreTimeException, FalseReturnException {
 		 checkTimeLeft(ship, world, program, deltaT);
 
-		 if ((boolean) getCondition().read(ship, world, program, deltaT)) {
+		 if (getCondition().read(ship, world, program, deltaT)) {
 			 getIfBody().execute(ship, world, program, deltaT);
 		 } else {
 			 if (getElseBody() != null) {

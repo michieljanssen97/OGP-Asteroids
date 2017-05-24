@@ -39,20 +39,18 @@ public class AssignmentStatement extends Statement {
 		
 				 if (!program.isInFunction() && (program.functionExists(getVariableName()))) {
 					 throw new FalseProgramException("Name is already taken by a function");
-				 }
-				 
-				 if (program.variableExists(getVariableName())
+				 } else if (program.variableExists(getVariableName())
 						 && !(program.getVariable(getVariableName()).getClass() == assignedValue.getClass())) {
-					 throw new FalseProgramException("Not a correct assignment");
+					 throw new FalseProgramException("Typing error");
 				 } 
 				 
 				 program.addOrUpdateVariable(getVariableName(), assignedValue);
 			 } else {
-				 throw new FalseProgramException("Not a correct assignment");
+				 throw new FalseProgramException("Cannot assign this particular type");
 			 }
 		 }
 		 else
-			 throw new FalseProgramException("Not a correct assignment");
+			 throw new FalseProgramException("Incorrect expression during assignment");
 
 	}	 
 }

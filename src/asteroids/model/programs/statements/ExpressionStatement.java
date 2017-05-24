@@ -38,7 +38,7 @@ public class ExpressionStatement extends Statement {
 								System.out.println(expressionResult);
 								break;
 			 				} else {
-			 					throw new FalseReturnException("Turn in function body");
+			 					throw new FalseReturnException("Cannot print in function body");
 			 				}
 			 case "turn":	if (!program.isInFunction()) {
 					 			program.setConsumedTime(program.getConsumedTime()+0.2);
@@ -50,10 +50,10 @@ public class ExpressionStatement extends Statement {
 								}
 								break;
 			 				} else {
-			 					throw new FalseReturnException("Turn in function body");
+			 					throw new FalseReturnException("Cannot turn in function body");
 							}
 			 case "return": if (!program.isInFunction()){
-								 throw new FalseReturnException("Return outside function body");
+								 throw new FalseReturnException("Return outside of function body");
 							} else {
 								Object returnValue = expression.read(ship, world, program, deltaT);
 								
