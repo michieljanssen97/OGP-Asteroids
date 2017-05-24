@@ -31,8 +31,21 @@ public class Planetoid extends MinorPlanet {
 	public double getMinDensity() {return 0.917E12;}
 	
 	/**
-	 * TODO
+	 * This method spawns asteroids when, if ever, an planetoid dies and satisfies 
+	 * the given specifications for spawning asteroids.
+	 * 
 	 * @param world
+	 *        The world within which the entity lies
+	 * @return This function returns two asteroids (childs), such that: 
+	 * 				* The speed of their velocities is 1.5 times greater then the parent planetoid.
+	 *  			* The direction of the velocity of the first child is determined at random. 
+	 *  			* The other child moves in the opposite direction.
+	 *  			* Their radius is equal to half of radius of their parent.
+	 *  			* Both children are placed at a distance r/2 from the center of the parent planetoid.
+	 *  			* The planetoid is removed from his world.
+	 * @throws NullPointerException
+	 *         The other entity does not exist.
+	 *         | other == null
 	 */
  	public void spawnAsteroidsTerminate(World world) {
  			double magnitude = (1.5)*(Math.pow(this.getVelocityX(), 2)+Math.pow(this.getVelocityY(), 2));
@@ -54,6 +67,15 @@ public class Planetoid extends MinorPlanet {
  				);
  	}
 
+ 	/**
+	 * This method terminates a planetoid.
+	 * 
+	 * @post Terminate a planetoid and occasionally spawn a asteroid.
+	 * 		 | if (this.getRadius()>= 30) 
+	 * 		 |    then spawnAsteroidTerminate(this.world)
+	 * 		 | else 
+	 * 		 |     super.terminate()
+	 */
  	@Override
  	public void terminate() {
  		if (isPartOfWorld() && getRadius() >= 30) {
@@ -61,11 +83,27 @@ public class Planetoid extends MinorPlanet {
 		}
 		super.terminate();
  	}
-	
+ 	/**
+	 * This method returns the total distance traveled by a planetoid.
+	 * 
+	 * @see implementation
+	 */
 	public double getTotalTraveledDistance() {
 		return this.totalTraveledDistance;
 	}
 	
+	/**
+	 * This method increases the total distance traveled by a planetoid.
+	 * 
+	 * @param distance
+	 * 		  The distance a planetoid has travelled in a given time frame.
+	 * 
+	 * @post Decrease the radius of a planetoid and when smaller then 5, terminate.
+	 *       | if (newRadius < 5)
+	 *       |    then this.terminate()
+	 *       | else 
+	 *       |    setRadius(newRadius)
+	 */
 	public void increaseTotalTraveledDistance(double distance) {
 		totalTraveledDistance += distance;
 		
@@ -77,7 +115,9 @@ public class Planetoid extends MinorPlanet {
 			setRadius(newRadius);
 		}
 	}
-	
+	/**
+	 * @see implementation Superclass.
+	 */
 	@Override
 	public void move(double duration) {
 		super.move(duration);
@@ -86,6 +126,14 @@ public class Planetoid extends MinorPlanet {
 		double distanceTraveled = Math.sqrt(Math.pow(distanceX, 2)+Math.pow(distanceY, 2));
 		increaseTotalTraveledDistance(distanceTraveled);
 	}
+	/**
+	 * A function that resolves a collision event between and planetoid and another entity.
+	 * @param this
+	 * @post This function executes in such a manner that ensures that, at the end of the function:
+	 * 			* In the case that the entity is a Ship: the ship's is teleported, if it doesn't overlap with other 
+	 * 			  entities, to a random location in the world.
+	 * 			* For other MinorPlanets we use the defaultCollide helper function.
+	 */
 	
 	public void collide(Entity entity) {
 		if (entity instanceof Ship) {

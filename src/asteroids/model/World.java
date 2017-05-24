@@ -317,6 +317,19 @@ public class World implements ICollidable {
 		}
 		
 	}
+	/**
+	 * A function that show a collision event between two entities.
+	 * 
+	 * @param collisionListener
+	 * @param collidables
+	 * @parm  colPos
+	 * @post This function executes in such a manner that ensures that, at the end of the function:
+	 * 			* In the case that the collisionListener is not null and the collidables are both entities:
+	 * 			   | if collidables[0].isDestroyed() == true && collidables[1].isDestroyed() 
+	 * 			   |    then execute a objectCollision.
+	 * 			   | else 
+	 * 			   |     then execute a boundaryCollision.
+	 */
 	
 	public void showCollision(CollisionListener collisionListener, ICollidable[] collidables, double[] colPos) {
 		if (collisionListener == null) {return;}
@@ -330,6 +343,16 @@ public class World implements ICollidable {
 		}
 	}
 	
+	/**
+	 * Check whether a given duration is valid evolving time.
+	 * 
+	 * @param duration
+	 *        The duration for evolving a world.
+	 * @invar The duration is greater then zero and not equal to NaN.
+	 * 		  | Double.isNaN(duration) != true
+	 * 		  | Double.isNaN(duration) > 0 == true
+	 * @return result == !(Double.isNaN(x) || Double.isNaN(y))
+	 */
 	protected static boolean isValidEvolveTime(double duration){
 		return (!(Double.isNaN(duration)) && duration >= 0);
 	}
@@ -466,7 +489,13 @@ public class World implements ICollidable {
 	public double getTimeToCollision(World world) {
 		throw new AssertionError("World cannot collide with world");
 	}
-	
+	/**
+	 * A function that returns the time to collision between two entities.
+	 * 
+	 * @post This function executes in such a manner that ensures that, at the end of the function:
+	 * 			* entity.getTimeToCollision(this) is returned
+
+	 */
 	@Override
 	public double getTimeToCollision(Entity entity) {
 		return entity.getTimeToCollision(this);
@@ -495,6 +524,14 @@ public class World implements ICollidable {
 		else {defaultCollide(entity);}
 	}
 	
+	/**
+	 * A helper function that resolves a default collision event between an entity and a world
+	 * 
+	 * @param entity
+	 * @param this
+	 * @post This function executes in such a manner that ensures that, at the end of the function:
+	 * 			* The velocity of the entity is changed in the x-direction, y-direction or both.
+	 */
 	public void defaultCollide(Entity entity) {
 		double distanceToLeftWall = entity.getPositionX()-entity.getRadius();
 		double distanceToRightWall = getWidth() - entity.getPositionX()- entity.getRadius();
@@ -518,6 +555,9 @@ public class World implements ICollidable {
 		throw new AssertionError("World cannot collide with world");
 	}
 
+	/**
+	 * A method indicating the status of the destroyed value.
+	 */
 	public boolean isDestroyed() {
 		return false;
 	}	

@@ -16,7 +16,15 @@ public class Asteroid extends MinorPlanet implements ICollidable {
 	 */
 	public double getMinDensity() {return 2.65E12;}
 	
-	//TODO
+	/**
+	 * A function that resolves a collision event between and asteroid and another entity.
+	 * 
+	 * @param entity
+	 * @param this
+	 * @post This function executes in such a manner that ensures that, at the end of the function:
+	 * 			* In the case that the entity is a Ship: the ship's is destoyed.
+	 * 			* For other MinorPlanets we use the defaultCollide helper function.
+	 */
 	public void collide(Entity entity) {
 		if (entity instanceof Ship) {
 			entity.destroy();

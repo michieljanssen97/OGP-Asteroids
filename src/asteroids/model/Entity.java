@@ -435,7 +435,21 @@ public abstract class Entity implements ICollidable, IOwnable {
 		}
 	}
 	
-	//TODO
+	/**
+	 * This method measures the distance between an entity and a world.
+	 * 
+	 * Implement defensively. 
+	 * 
+	 * @param  world
+	 * 		   The world. We use this world to measure the distance between the world and the given entity.
+	 * @invar world must be a valid world
+	 * 		  | !(world = null) == true
+	 * @return The distance between a world and an entity
+	 * 		   |  result = Math.min(distanceToVerticalWall, distanceToHorizontalWall)
+	 * @throws NullPointerException
+	 *         The world does not exist.
+	 *         | world == null
+	 */
 	public double getDistanceBetween(World world) throws NullPointerException {
 		if (world == null) {
 			throw new NullPointerException();
@@ -647,6 +661,14 @@ public abstract class Entity implements ICollidable, IOwnable {
 		}
 	}
 	
+	/**
+	 * This method calculates the explosion position when two entities collide. 
+	 * 
+	 * @param other
+	 *        The second (other) entity. We use this entity to determine the explosion position 
+	 * @return This function returns a position indicating the explosion position between two entities.
+	 */
+	
 	public double[] calculateCollisionPosition(Entity other) {
 		double thisposX = this.getPositionX() + this.getTimeToCollision(other)*this.getVelocityX();
 		double thisposY = this.getPositionY() + this.getTimeToCollision(other)*this.getVelocityY();
@@ -849,20 +871,15 @@ public abstract class Entity implements ICollidable, IOwnable {
 		world.defaultCollide(this);
 	}
 	
-	//TODO Fix comment
+	
 	/**
 	 * A helper function that resolves a default collision event between two entities
 	 * 
 	 * @param entity
 	 * @param this
 	 * @post This function executes in such a manner that ensures that, at the end of the function:
-	 * 			* In the case that both entities are Ships, both their velocities are changed according to the
-	 * 			  formula as found in the task specification
-	 * 			* In the case that one entity is a ship and another is a bullet:
-	 * 					* If the bullet originates from the ship it is loaded by the ship
-	 * 					* If the bullet does not originate from the ship both the ship and the bullet are removed
-	 * 					  from the world
-	 * 			* In the case that both entities are bullets, both bullets are removed form the world
+	 * 			* The velocities of both entities are changed according to the
+	 * 			  formula as found in the task specification and is used in subclasses as a default collision.
 	 */
 	public void defaultCollide(Entity entity) {
 		double deltaPosX = this.getPositionX()-entity.getPositionX();

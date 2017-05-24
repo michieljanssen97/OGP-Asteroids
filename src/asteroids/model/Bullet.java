@@ -149,7 +149,14 @@ public class Bullet extends Entity {
 	}
 	
 	/**
-	 * Collision between this bullet and an entity
+	 * A function that resolves a collision event between and planetoid and another entity.
+	 * 
+	 * @param entity
+	 * @param this
+	 * @post This function executes in such a manner that ensures that, at the end of the function:
+	 * 			* In the case that the entity is a Ship: if the bullet hits it's own ship the bullet is added to the collection
+	 *            of bullets. Otherwise the ship is destroyed.
+	 * 			* In all other cases, both the entity and the bullet are destroyed.
 	 */
 	public void collide(Entity entity) {
 		if (entity instanceof Ship) {
@@ -171,7 +178,12 @@ public class Bullet extends Entity {
 	}
 	
 	/**
-	 * Collision between this bullet and a world
+	 * A function that resolves a collision event between and bullet and a world.
+
+	 * @param world
+	 * @post This function executes in such a manner that ensures that, at the end of the function:
+	 * 			* Bounce a bullet when it hits a wall.
+	 * 			* Destroy a bullet when it hits a wall for the thirth time.
 	 */
 	public void collide(World world) {
 		world.defaultCollide(this);

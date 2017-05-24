@@ -338,7 +338,14 @@ public class Ship extends Entity {
 	public void loadProgram(Program<?,?> program) {
 		setProgram(program);
 	}
-	
+	/**
+	 * A function that resolves a collision event between and ship and another entity.
+	 * 
+	 * @param entity
+	 * @param this
+	 * @post This function executes in such a manner that ensures that, at the end of the function:
+	 * 			* In the case that the entity is a Ship: the two ships are resolved by the default collision.
+	 */
 	public void collide(Entity entity) {
 		if (entity instanceof Ship) {defaultCollide(entity);}
 		else {entity.collide(this);}
