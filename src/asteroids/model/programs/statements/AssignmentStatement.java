@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import asteroids.model.Asteroid;
 import asteroids.model.Entity;
 import asteroids.model.Program;
 import asteroids.model.Ship;
@@ -35,7 +36,8 @@ public class AssignmentStatement extends Statement {
 		if (getExpression() instanceof Expression){
 			 Object assignedValue = getExpression().read(ship, world, program, deltaT);
 			 
-			 if (Arrays.asList(Boolean.class, Double.class, Entity.class).contains(assignedValue.getClass())) {
+			 if (Arrays.asList(Boolean.class, Double.class).contains(assignedValue.getClass()) 
+					 || Entity.class.isAssignableFrom(assignedValue.getClass())) {
 		
 				 if (!program.isInFunction() && (program.functionExists(getVariableName()))) {
 					 throw new FalseProgramException("Name is already taken by a function");
@@ -46,11 +48,11 @@ public class AssignmentStatement extends Statement {
 				 
 				 program.addOrUpdateVariable(getVariableName(), assignedValue);
 			 } else {
+				 System.out.println(assignedValue.getClass());
 				 throw new FalseProgramException("Cannot assign this particular type");
 			 }
-		 }
-		 else
+		 } else {
 			 throw new FalseProgramException("Incorrect expression during assignment");
-
+		 }
 	}	 
 }
