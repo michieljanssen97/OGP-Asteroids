@@ -486,7 +486,7 @@ public class OwnTestsPart3 {
 	}
 	
 	@Test
-	public void testKillPlaentoidAndSpawnAsteroids() throws Exception {
+	public void testKillPlanetoidAndSpawnAsteroids() throws Exception {
 		world = new World(10000, 10000);
 		Planetoid planetoid = new Planetoid(4000, 1000, 0, 0, 200,0);
 		Bullet bullet1 = new Bullet(5000, 1000, -20, 0, 3);
