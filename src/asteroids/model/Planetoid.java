@@ -36,35 +36,34 @@ public class Planetoid extends MinorPlanet {
 	 * 
 	 * @param world
 	 *        The world within which the entity lies
-	 * @return This function returns two asteroids (childs), such that: 
+	 * @return This function returns two child asteroids, such that: 
 	 * 				* The speed of their velocities is 1.5 times greater then the parent planetoid.
 	 *  			* The direction of the velocity of the first child is determined at random. 
 	 *  			* The other child moves in the opposite direction.
 	 *  			* Their radius is equal to half of radius of their parent.
 	 *  			* Both children are placed at a distance r/2 from the center of the parent planetoid.
-	 *  			* The planetoid is removed from his world.
+	 *  			* This planetoid is removed from his world.
 	 * @throws NullPointerException
 	 *         The other entity does not exist.
 	 *         | other == null
 	 */
- 	public void spawnAsteroidsTerminate(World world) {
- 			double magnitude = (1.5)*(Math.pow(this.getVelocityX(), 2)+Math.pow(this.getVelocityY(), 2));
- 			double velX = Math.sqrt((Math.random()*magnitude));
- 			double velY = Math.sqrt(((1-Math.random())*magnitude));
- 			Asteroid asteroid1 = new Asteroid(this.getPositionX()-(this.getRadius()/2.0),this.getPositionY(),velX,velY,this.getRadius()/2.0);
- 			Asteroid asteroid2 = new Asteroid(this.getPositionX()+(this.getRadius()/2.0),this.getPositionY(),-velX,-velY,this.getRadius()/2.0);
- 			world.removeEntity(this);
- 			
- 			Stream.of(asteroid1, asteroid2)
- 				.forEach( 
- 					asteroid -> {
-	 					if (!world.significantOverlap(asteroid) && asteroid.withinBoundaries(world)) {
-	 						world.addEntity(asteroid);
-	 					} else {
-	 						asteroid.terminate();
-	 					}
- 					}
- 				);
+ 	public void spawnAsteroids(World world) {
+		double magnitude = (1.5)*(Math.pow(this.getVelocityX(), 2)+Math.pow(this.getVelocityY(), 2));
+		double velX = Math.sqrt((Math.random()*magnitude));
+		double velY = Math.sqrt(((1-Math.random())*magnitude));
+		Asteroid asteroid1 = new Asteroid(this.getPositionX()-(this.getRadius()/2.0),this.getPositionY(),velX,velY,this.getRadius()/2.0);
+		Asteroid asteroid2 = new Asteroid(this.getPositionX()+(this.getRadius()/2.0),this.getPositionY(),-velX,-velY,this.getRadius()/2.0);
+		world.removeEntity(this);
+		
+		Stream.of(asteroid1, asteroid2)
+			.forEach(asteroid -> {
+				if (!world.significantOverlap(asteroid) && asteroid.withinBoundaries(world)) {
+					world.addEntity(asteroid);
+				} else {
+					asteroid.terminate();
+				}
+			}
+		);
  	}
 
  	/**
@@ -79,7 +78,7 @@ public class Planetoid extends MinorPlanet {
  	@Override
  	public void terminate() {
  		if (isPartOfWorld() && getRadius() >= 30) {
- 			spawnAsteroidsTerminate(this.world);
+ 			spawnAsteroids(this.world);
 		}
 		super.terminate();
  	}
@@ -117,6 +116,7 @@ public class Planetoid extends MinorPlanet {
 	}
 	/**
 	 * @see implementation Superclass.
+	 * @post Total distance traveled increases by the traveled distance
 	 */
 	@Override
 	public void move(double duration) {
@@ -126,15 +126,15 @@ public class Planetoid extends MinorPlanet {
 		double distanceTraveled = Math.sqrt(Math.pow(distanceX, 2)+Math.pow(distanceY, 2));
 		increaseTotalTraveledDistance(distanceTraveled);
 	}
+	
 	/**
 	 * A function that resolves a collision event between and planetoid and another entity.
 	 * @param this
 	 * @post This function executes in such a manner that ensures that, at the end of the function:
-	 * 			* In the case that the entity is a Ship: the ship's is teleported, if it doesn't overlap with other 
+	 * 			* In the case that the entity is a Ship: the ship is teleported, if it doesn't overlap with other 
 	 * 			  entities, to a random location in the world.
 	 * 			* For other MinorPlanets we use the defaultCollide helper function.
 	 */
-	
 	public void collide(Entity entity) {
 		if (entity instanceof Ship) {
 			Random rand = new Random();

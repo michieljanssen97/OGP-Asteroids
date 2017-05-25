@@ -48,13 +48,21 @@ public class Ship extends Entity {
 			throw new IllegalArgumentException();
 		}
 		
-	};
+	}
 	
 	/**
 	 * Return the maximum exerted force on a ship.
 	 */
 	public double getThrusterForce() {return 1.1E18;}
+	
+	/**
+	 * Return the minimum radius for this ship
+	 */
 	public double getMinRadius() {return 10;}
+	
+	/**
+	 * Return the minimum density of this ship
+	 */
 	public double getMinDensity() {return 1.42E12;}
 	
 	/**
@@ -131,7 +139,6 @@ public class Ship extends Entity {
 		double newVelocityX = getVelocityX() + amount*Math.cos(getOrientation());
 		double newVelocityY = getVelocityY() + amount*Math.sin(getOrientation());
 		setVelocity(newVelocityX, newVelocityY);
-				
 	}
 	
 	/**
@@ -216,6 +223,9 @@ public class Ship extends Entity {
      * Removes a bullet from the set of bullets and removes the association with it's ship.
      * @param bullet
      * @see implementation
+     * @throws IllegalArgumentException
+     * 			The bullet couldn't be removed from the ship because it was not on the ship
+     * 			| !bullets.contains(bullet)
      */
 	public void removeBullet(Bullet bullet) throws IllegalArgumentException  {
 		try{
@@ -251,8 +261,12 @@ public class Ship extends Entity {
 			if (bullet != null) {
 
 				double distanceBetweenBulletAndShip = 1.0;
-				double posX = this.getPositionX()+(this.getRadius()+bullet.getRadius()+distanceBetweenBulletAndShip)*Math.cos(this.orientation);
-				double posY = this.getPositionY()+(this.getRadius()+bullet.getRadius()+distanceBetweenBulletAndShip)*Math.sin(this.orientation);
+				double posX = this.getPositionX()
+								+ (this.getRadius()+bullet.getRadius()+distanceBetweenBulletAndShip)
+								* Math.cos(this.orientation);
+				double posY = this.getPositionY()
+								+ (this.getRadius()+bullet.getRadius()+distanceBetweenBulletAndShip)
+								* Math.sin(this.orientation);
 				
 				bullet.setPosition(posX, posY);
 				bullet.setVelocity(250*Math.cos(this.orientation), 250*Math.sin(this.orientation));
@@ -273,8 +287,6 @@ public class Ship extends Entity {
 				} else {
 					bullet.terminate();
 				}
-				
-
 			}
 		}		
 	}
@@ -317,10 +329,39 @@ public class Ship extends Entity {
 		
 	}
 	
+	/**
+	 * A function that resolves a collision event between a ship and another entity.
+	 * 
+	 * @param entity
+	 * @param this
+	 * @post This function executes in such a manner that ensures that, at the end of the function:
+	 * 			* In the case that the entity is a Ship: the collision between the two ships is resolved by the default collision.
+	 * 			* Otherwise the other entities collision function is called
+	 */
+	public void collide(Entity entity) {
+		if (entity instanceof Ship) {
+			defaultCollide(entity);
+		} else {
+			entity.collide(this);
+		}
+	}
+	
+	/**
+	 * Return this ships program
+	 */
 	public Program getProgram() {
 		return this.program;
 	}
 
+	/**
+	 * A function that executes the ships program (if it exists) and returns any returned objects
+	 * @param dt
+	 * 		  | The duration during which the program will be executed
+	 * @return ...
+	 * 			| Either null or a list of objects returned by the program
+	 * @throws FalseProgramException || FalseReturnException
+	 * 			An error occurred during the execution of the program
+	 */
 	public List<Object> executeProgram(double dt) throws FalseProgramException, FalseReturnException {
 		if (this.program != null) {
 			return getProgram().execute(dt, this, getWorld());
@@ -329,20 +370,10 @@ public class Ship extends Entity {
 		}
 	}
 
+	/**
+	 * Loads the given program on the ship
+	 */
 	public void loadProgram(Program program) {
 		this.program = program;
 	}
-	/**
-	 * A function that resolves a collision event between and ship and another entity.
-	 * 
-	 * @param entity
-	 * @param this
-	 * @post This function executes in such a manner that ensures that, at the end of the function:
-	 * 			* In the case that the entity is a Ship: the two ships are resolved by the default collision.
-	 */
-	public void collide(Entity entity) {
-		if (entity instanceof Ship) {defaultCollide(entity);}
-		else {entity.collide(this);}
-	}
-	
 }

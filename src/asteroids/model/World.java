@@ -160,13 +160,17 @@ public class World implements ICollidable {
 	
 	/**
 	 * Returns the entities in this world
-	 * @return All ships and bullets in the world are returned
-	 *         | this.bullets + this.ships
+	 * @return All entities owned by the world are returned
+	 *         | this.entities
 	 */
 	public Set<Entity> getEntities() {
 		return new HashSet<Entity>(this.entities);
 	}
 	
+	/**
+	 * Returns the entities of the given class in this world
+	 * @return All entities of the given class owned by the world are returned
+	 */
 	public <T> Set<T> getEntities(Class<T> type) {
 		Set<T> class_entities = new HashSet<T>();
 		getEntities().stream()
@@ -306,8 +310,7 @@ public class World implements ICollidable {
 			// Calculate time of collision with world
 			collisionTime = entity1.getTimeToCollision(this);
 			ICollidable[] collisionArray = { entity1, this };
-	    	collisionMap.put(collisionArray, collisionTime);
-			
+	    	collisionMap.put(collisionArray, collisionTime);	
 		}
 		
 		if (collisionMap.isEmpty()) {
@@ -319,6 +322,7 @@ public class World implements ICollidable {
 		}
 		
 	}
+	
 	/**
 	 * A function that show a collision event between two entities.
 	 * 
@@ -332,7 +336,6 @@ public class World implements ICollidable {
 	 * 			   | else 
 	 * 			   |     then execute a boundaryCollision.
 	 */
-	
 	public void showCollision(CollisionListener collisionListener, ICollidable[] collidables, double[] colPos) {
 		if (collisionListener == null) {return;}
 		else if (collidables[0] instanceof Entity && collidables[1] instanceof Entity){
@@ -346,7 +349,7 @@ public class World implements ICollidable {
 	}
 	
 	/**
-	 * Check whether a given duration is valid evolving time.
+	 * Check whether a given duration is valid duration
 	 * 
 	 * @param duration
 	 *        The duration for evolving a world.
@@ -355,21 +358,16 @@ public class World implements ICollidable {
 	 * 		  | Double.isNaN(duration) > 0 == true
 	 * @return result == !(Double.isNaN(x) || Double.isNaN(y))
 	 */
-	protected static boolean isValidEvolveTime(double duration){
+	protected static boolean isValidDuration(double duration){
 		return (!(Double.isNaN(duration)) && duration >= 0);
 	}
 	
 	/**
 	 * A function for advancing the game. No specification should be worked out according to the task explanation.
-	 * @throws FalseReturnException 
-	 * @throws FalseProgramException
-	 * @throws IllegalArgumentException
 	 */
 	public void evolve(double duration, CollisionListener collisionlistener) throws IllegalArgumentException, FalseProgramException, FalseReturnException {
-		if (isValidEvolveTime(duration)){
+		if (isValidDuration(duration)){
 			while (duration > 0 && !entities.isEmpty()) {
-				// 1. Get first collision, if any
-				// Calculate all collisions, immediately continue if an apparent Collision is found
 
 				ICollidable[] collidables = getNextCollisionObjects();
 				Double firstCollisionTime = collidables[0].getTimeToCollision(collidables[1]);
@@ -392,7 +390,7 @@ public class World implements ICollidable {
 	   } else {
 		   throw new IllegalArgumentException("EvolvingTime must not be NaN or less than zero.");
 	   }
-	  }
+	}
 	
 	/**
 	 * Advances all entities in this world

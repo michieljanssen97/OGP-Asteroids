@@ -28,23 +28,46 @@ public class Program {
 
 	public Program(List<FunctionStatement> functions, Statement main){
 		this.main = main;
-		
-		functions.stream()
-				 .forEach(function -> this.functions.put(function.getName(), function));
+		functions.stream().forEach(function -> this.functions.put(function.getName(), function));
 	}
 	
 	public Statement getMain(){
 		return this.main;	
 	}
 	
-	public void addFunction(String functionName, FunctionStatement statement) {
-		if (functions.containsKey(functionName)) {
-			this.functions.put(functionName, statement);
-		}
+	public List<Object> getPrintedObjects() {
+		return this.printedObjects;
+	}
+
+	public double getExtraTime() {
+		return this.extraTime;
+	}
+	public void setExtraTime(double time) {
+		this.extraTime = time;
+	}
+	
+	public double getConsumedTime() {
+		return this.consumedTime; 
+	}
+	public void setConsumedTime(double time) {
+		this.consumedTime = time;
+	}
+	
+	public SourceLocation getEndingSourceLocation() { 
+		return this.endingSourceLocation; 
+	}
+	public void setEndingSourceLocation(SourceLocation sourceLocation) {
+		this.endingSourceLocation = sourceLocation;
 	}
 	
 	public FunctionStatement getFunction(String functionName) {
 		return this.functions.get(functionName);
+	}
+	
+	public void addFunction(String functionName, FunctionStatement statement) {
+		if (functions.containsKey(functionName)) {
+			this.functions.put(functionName, statement);
+		}
 	}
 	
 	public Boolean functionExists(String functionName) {
@@ -59,7 +82,7 @@ public class Program {
 	
 	public HashMap<String, Object> getCurrentScope() {
 		if (isInFunction()) {
-			return getFunctionScope(getCurrentFunction());
+			return getFunctionScope(getCurrentFunctionName());
 		} else {
 			return getGlobalVariables();
 		}
@@ -90,14 +113,12 @@ public class Program {
 			getCurrentScope().put(variableName, assignedValue);
 		}
 	}
-	
-	public List<Object> getPrintedObjects() {return this.printedObjects;}
-	
+		
 	public boolean isInFunction() {
 		return !callStack.isEmpty();
 	}
 	
-	public String getCurrentFunction() {
+	public String getCurrentFunctionName() {
 		if (callStack.size() > 0) {
 			return callStack.get(callStack.size()-1);
 		} else {
@@ -121,30 +142,9 @@ public class Program {
 	
 	public void exitFunction() {
 		if (callStack.size() > 0) {
-			functionScopes.remove(getCurrentFunction());
+			functionScopes.remove(getCurrentFunctionName());
 			callStack.remove(callStack.size()-1);
 		}
-	}
-	
-	public double getExtraTime() {
-		return this.extraTime;
-	}
-	public void setExtraTime(double time) {
-		this.extraTime = time;
-	}
-	
-	public double getConsumedTime() {
-		return this.consumedTime; 
-	}
-	public void setConsumedTime(double time) {
-		this.consumedTime = time;
-	}
-	
-	public SourceLocation getEndingSourceLocation() { 
-		return this.endingSourceLocation; 
-	}
-	public void setEndingSourceLocation(SourceLocation sourceLocation) {
-		this.endingSourceLocation = sourceLocation;
 	}
 	
 	public List<Object> execute(double deltaT, Ship ship, World world) throws FalseProgramException, FalseReturnException {

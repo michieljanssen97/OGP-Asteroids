@@ -57,7 +57,7 @@ public class ExpressionStatement extends Statement {
 							} else {
 								Object returnValue = expression.read(ship, world, program, deltaT);
 								
-								String functionName = program.getCurrentFunction();
+								String functionName = program.getCurrentFunctionName();
 								if (functionName.charAt(functionName.length()-2) == '*') {
 									functionName = functionName.substring(0, functionName.length()-2);
 								}

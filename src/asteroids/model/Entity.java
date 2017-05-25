@@ -608,7 +608,7 @@ public abstract class Entity implements ICollidable, IOwnable {
 	}
 	
 	/**
-	 * returns the position of a possible collision between this entity and the given ICollidableµ
+	 * Returns the position of a possible collision between this entity and the given ICollidableµ
 	 */
 	public double[] getCollisionPosition(ICollidable collidable) {
 		return collidable.getCollisionPosition(this);
@@ -662,13 +662,12 @@ public abstract class Entity implements ICollidable, IOwnable {
 	}
 	
 	/**
-	 * This method calculates the explosion position when two entities collide. 
+	 * This method calculates the position of a collision between two entities. 
 	 * 
 	 * @param other
-	 *        The second (other) entity. We use this entity to determine the explosion position 
-	 * @return This function returns a position indicating the explosion position between two entities.
+	 *        The second (other) entity.
+	 * @return This function returns an array containing two doubles indicating the position of a collision between two entities.
 	 */
-	
 	public double[] calculateCollisionPosition(Entity other) {
 		double thisposX = this.getPositionX() + this.getTimeToCollision(other)*this.getVelocityX();
 		double thisposY = this.getPositionY() + this.getTimeToCollision(other)*this.getVelocityY();
@@ -724,11 +723,9 @@ public abstract class Entity implements ICollidable, IOwnable {
 			throw new NullPointerException();
 		} else if (this.overlap(other)) {
 			return null;
-		} 
-		else {
+		} else {
 			if (getTimeToCollision(other) != Double.POSITIVE_INFINITY ){
 				return calculateCollisionPosition(other);
-				
 			} else {
 				return null;
 			}
@@ -772,8 +769,7 @@ public abstract class Entity implements ICollidable, IOwnable {
 	 * 		 | if (significant overlap)
 	 * 		 | 		result == true
 	 * 		 | else 
-	 * 		 | 		result == false
-	 * 		
+	 * 		 | 		result == false	
 	 */
 	public boolean significantOverlap(Entity entity) {
 		if (this.getDistanceBetween(entity) <= (0.99 * (this.getRadius() + entity.getRadius()))) {
@@ -798,7 +794,6 @@ public abstract class Entity implements ICollidable, IOwnable {
 	 * 		
 	 */
 	public boolean withinBoundaries(Entity other) {
-		// Check if this entity within other entity (user radius)
 		if ((this.getDistanceBetween(other) <= Math.abs(this.getRadius() - other.getRadius()))) {
 			return true;
 		}
@@ -820,14 +815,13 @@ public abstract class Entity implements ICollidable, IOwnable {
 	 * 		
 	 */
 	public boolean withinBoundaries(World world) {
-		// Check if this entity within borders of world (upper, lower, left, right)
-		if ((this.getPositionX() > (0.99*getRadius())) && (this.getPositionY() > (0.99*getRadius()))) {}
-		else {return false;}
-		
-		if (((this.getPositionX() + (0.99*getRadius()) < world.getWidth()) && ((this.getPositionX() + (0.99*getRadius()) < world.getWidth())))) {}
-		else {return false;}
-		
-		return true;
+		if ((this.getPositionX() > (0.99*getRadius())) && (this.getPositionY() > (0.99*getRadius())) 
+				&& ((this.getPositionX() + (0.99*getRadius()) < world.getWidth())
+						&& ((this.getPositionX() + (0.99*getRadius()) < world.getWidth())))) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 	/**
@@ -870,7 +864,6 @@ public abstract class Entity implements ICollidable, IOwnable {
 	public void collide(World world) {
 		world.defaultCollide(this);
 	}
-	
 	
 	/**
 	 * A helper function that resolves a default collision event between two entities

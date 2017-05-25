@@ -9,7 +9,7 @@ package asteroids.model;
 public abstract class MinorPlanet extends Entity implements ICollidable {
 	
 	/**
-	 * Initialize this new minorplanet with a given position, velocity, radius.
+	 * Initialize this new minorPlanet with a given position, velocity, radius.
 	 * 
 	 * @see superclass constructor
 	 */
@@ -18,7 +18,7 @@ public abstract class MinorPlanet extends Entity implements ICollidable {
 	}
 
 	/**
-	 * Return the minimum density of this minorplanet
+	 * Return the minimum density of this minorPlanet
 	 */
 	@Override
 	public double getMinDensity() {
@@ -26,7 +26,7 @@ public abstract class MinorPlanet extends Entity implements ICollidable {
 	}
 
 	/**
-	 * Return the mass of this minorplanet
+	 * Return the mass of this minorPlanet
 	 */
 	@Override
 	public double getMass() {
@@ -34,7 +34,7 @@ public abstract class MinorPlanet extends Entity implements ICollidable {
 	}
 
 	/**
-	 * Return the minimum radius of this minorplanet
+	 * Return the minimum radius of this minorPlanet
 	 */
 	@Override
 	public double getMinRadius() {

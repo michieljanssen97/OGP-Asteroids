@@ -37,7 +37,6 @@ public class Facade implements asteroids.part3.facade.IFacade {
 		}catch(Exception e){
 			throw new ModelException(e);
 		}
-		
 	}
 	
 	@Override
