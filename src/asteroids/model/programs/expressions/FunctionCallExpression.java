@@ -35,7 +35,7 @@ public class FunctionCallExpression extends Expression {
 		Object returnValue = null;
 		
 		List<Object> arguments = new ArrayList<>();
-		for (Expression arg: getArguments()) {
+		for (Expression<?> arg: getArguments()) {
 			arguments.add(arg.read(ship, world, program, deltaT));
 		}
 

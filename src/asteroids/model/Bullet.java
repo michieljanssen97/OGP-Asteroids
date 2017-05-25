@@ -102,7 +102,8 @@ public class Bullet extends Entity {
 	}
 	
 	/**
-	 * Returns the owner (a ship or a world) of this bullet, if none returns null 
+	 * Returns the owner (a ship or a world) of this bullet
+	 * @see implementation
 	 */
 	public Object getOwner() {
 		if (world != null) {
@@ -149,7 +150,7 @@ public class Bullet extends Entity {
 	}
 	
 	/**
-	 * A function that resolves a collision event between and planetoid and another entity.
+	 * A function that resolves a collision event between a bullet and another entity.
 	 * 
 	 * @param entity
 	 * @param this
@@ -182,8 +183,8 @@ public class Bullet extends Entity {
 
 	 * @param world
 	 * @post This function executes in such a manner that ensures that, at the end of the function:
-	 * 			* Bounce a bullet when it hits a wall.
-	 * 			* Destroy a bullet when it hits a wall for the thirth time.
+	 * 			* The bullet bounces when it hits a wall.
+	 * 			* The bullet is destroyed when it hits a wall for the third time.
 	 */
 	public void collide(World world) {
 		world.defaultCollide(this);

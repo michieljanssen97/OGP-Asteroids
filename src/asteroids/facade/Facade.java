@@ -35,21 +35,20 @@ public class Facade implements asteroids.part3.facade.IFacade {
 		try{
 			return new Ship(x, y, xVelocity, yVelocity, radius, direction, mass);
 		}catch(Exception e){
-			throw new ModelException("Either the position,velocity,radius,orientation or the mass is wrong.");
+			throw new ModelException(e);
 		}
 		
 	}
 	
 	@Override
 	public double[] getShipPosition(Ship ship) throws ModelException {
-		double[] position = {ship.getPositionX(), ship.getPositionY()};
-		return position;
+		return new double[]{ship.getPositionX(), ship.getPositionY()};
 	}
 
 	@Override
 	public double[] getShipVelocity(Ship ship) throws ModelException {
-		double[] velocity = {ship.getVelocityX(), ship.getVelocityY()};
-		return velocity;
+		return new double[]{ship.getVelocityX(), ship.getVelocityY()};
+
 	}
 
 	@Override
@@ -166,8 +165,7 @@ public class Facade implements asteroids.part3.facade.IFacade {
 
 	@Override
 	public double[] getBulletPosition(Bullet bullet) throws ModelException {
-		double[] position = {bullet.getPositionX(), bullet.getPositionY()};
-		return position;
+		return new double[]{bullet.getPositionX(), bullet.getPositionY()};
 	}
 
 	@Override
@@ -218,8 +216,7 @@ public class Facade implements asteroids.part3.facade.IFacade {
 
 	@Override
 	public double[] getWorldSize(World world) throws ModelException {
-		double[] size = {world.getWidth(), world.getHeight()};
-		return size;
+		return new double[]{world.getWidth(), world.getHeight()};
 	}
 
 	@Override
@@ -341,7 +338,7 @@ public class Facade implements asteroids.part3.facade.IFacade {
 		try {
 			world.evolve(dt, collisionListener);
 		} catch (Exception e) {
-			throw new ModelException("");
+			throw new ModelException(e);
 		}
 		
 	}
@@ -514,8 +511,7 @@ public class Facade implements asteroids.part3.facade.IFacade {
 
 	@Override
 	public IProgramFactory<?, ?, ?, ? extends Program> createProgramFactory() throws ModelException {
-		ProgramFactory<Expression, Statement, FunctionStatement, Program> factory = new ProgramFactory<>();
-		return factory;
+		return new ProgramFactory<Expression, Statement, FunctionStatement, Program>();
 	}
 
 

@@ -26,6 +26,7 @@ public class Ship extends Entity {
 	
 	private Set<Bullet> bullets = new HashSet<Bullet>();
 	private boolean thrusterActive = false;
+	private Program program;
 	
 	/**
 	 * Initialize this new ship with a given position, velocity, radius and orientation.
@@ -316,27 +317,20 @@ public class Ship extends Entity {
 		
 	}
 	
-	private Program<?,?> program;
-	private void setProgram(Program<?,?> newProgram){
-		this.program = newProgram;
-	}
-	
-	public Program<?,?> getProgram() {
+	public Program getProgram() {
 		return this.program;
 	}
 
 	public List<Object> executeProgram(double dt) throws FalseProgramException, FalseReturnException {
-		getProgram().execute(dt, this, getWorld());
-
-		if (getProgram().getEndingSourceLocation() != null){
+		if (this.program != null) {
+			return getProgram().execute(dt, this, getWorld());
+		} else {
 			return null;
-		} else{
-			return getProgram().getPrintedObjects();
 		}
 	}
 
-	public void loadProgram(Program<?,?> program) {
-		setProgram(program);
+	public void loadProgram(Program program) {
+		this.program = program;
 	}
 	/**
 	 * A function that resolves a collision event between and ship and another entity.

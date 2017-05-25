@@ -44,6 +44,6 @@ public abstract class Statement {
 		 }
 	 }
 
-	public abstract void execute(Ship ship, World world, Program<?,?> program, double deltaT)
+	public abstract void execute(Ship ship, World world, Program program, double deltaT)
 			throws FalseProgramException, BreakException, NoMoreTimeException, FalseReturnException;
 }

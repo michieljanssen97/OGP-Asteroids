@@ -13,7 +13,7 @@ import asteroids.model.programs.statements.FunctionStatement;
 import asteroids.model.programs.statements.Statement;
 import asteroids.part3.programs.SourceLocation;
 
-public class Program<F,S> {
+public class Program {
 	
 	private final Statement main;
 	private SourceLocation endingSourceLocation;
@@ -106,7 +106,7 @@ public class Program<F,S> {
 		}
 	}
 	
-	public void enterFunction(String functionName, List<Expression<?>> parameters) {
+	public void enterFunction(String functionName, List<Object> parameters) {
 		
 		final String funcName = functionName;
 		long recursiveDepth = callStack.stream().filter(func -> func.startsWith(funcName)).count();
@@ -148,13 +148,19 @@ public class Program<F,S> {
 		this.endingSourceLocation = sourceLocation;
 	}
 	
-	public void execute(double deltaT, Ship ship, World world) throws FalseProgramException, FalseReturnException {
+	public List<Object> execute(double deltaT, Ship ship, World world) throws FalseProgramException, FalseReturnException {
 		try {
 			getMain().execute(ship, world, this, deltaT);
+			if (getEndingSourceLocation() != null){
+				return null;
+			} else {
+				return getPrintedObjects();
+			}
 		} catch (NoMoreTimeException e) {
 		} catch (BreakException ex) { 
 			throw new FalseProgramException("Break is not in a while");
 		}
+		return null;
 	}
 }
 

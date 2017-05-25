@@ -6,6 +6,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import asteroids.model.programs.FalseProgramException;
+import asteroids.model.programs.FalseReturnException;
 import asteroids.part2.CollisionListener;
 
 /**
@@ -359,49 +361,52 @@ public class World implements ICollidable {
 	
 	/**
 	 * A function for advancing the game. No specification should be worked out according to the task explanation.
+	 * @throws FalseReturnException 
+	 * @throws FalseProgramException
+	 * @throws IllegalArgumentException
 	 */
-	public void evolve(double duration, CollisionListener collisionlistener) throws IllegalArgumentException {
-		try {
-			if (isValidEvolveTime(duration)){
-				while (duration > 0 && !entities.isEmpty()) {
-					// 1. Get first collision, if any
-					// Calculate all collisions, immediately continue if an apparent Collision is found
+	public void evolve(double duration, CollisionListener collisionlistener) throws IllegalArgumentException, FalseProgramException, FalseReturnException {
+		if (isValidEvolveTime(duration)){
+			while (duration > 0 && !entities.isEmpty()) {
+				// 1. Get first collision, if any
+				// Calculate all collisions, immediately continue if an apparent Collision is found
 
-					ICollidable[] collidables = getNextCollisionObjects();
-					Double firstCollisionTime = collidables[0].getTimeToCollision(collidables[1]);
+				ICollidable[] collidables = getNextCollisionObjects();
+				Double firstCollisionTime = collidables[0].getTimeToCollision(collidables[1]);
 
-					if (firstCollisionTime == 0) {
-						advanceEntities(duration);
-					} else if (firstCollisionTime == null || firstCollisionTime > duration) {
-						advanceEntities(duration);
-					} else {
-						if (firstCollisionTime >= 0) {advanceEntities(firstCollisionTime);}
-						double[] colPos = collidables[0].getCollisionPosition(collidables[1]);
+				if (firstCollisionTime == 0) {
+					advanceEntities(duration);
+				} else if (firstCollisionTime == null || firstCollisionTime > duration) {
+					advanceEntities(duration);
+				} else {
+					if (firstCollisionTime >= 0) {advanceEntities(firstCollisionTime);}
+					double[] colPos = collidables[0].getCollisionPosition(collidables[1]);
 
-						collidables[0].collide(collidables[1]);
-						showCollision(collisionlistener, collidables, colPos);
-					}
+					collidables[0].collide(collidables[1]);
+					showCollision(collisionlistener, collidables, colPos);
+				}
 
-					terminateEntities();
-					duration -= firstCollisionTime;
-				} 
-		   }
-			 else {
-				  throw new IllegalArgumentException("EvolvingTime must not be NaN or less than zero.");
-			  }
-		}catch (Exception e){
-			throw new IllegalArgumentException("EvolvingTime must not be NaN or less than zero.");
-		}
+				terminateEntities();
+				duration -= firstCollisionTime;
+			} 
+	   } else {
+		   throw new IllegalArgumentException("EvolvingTime must not be NaN or less than zero.");
+	   }
 	  }
 	
 	/**
 	 * Advances all entities in this world
 	 * 
 	 * @param duration
+	 * @throws FalseReturnException 
+	 * 		   | An error was encountered while executing a ships program
+	 * @throws FalseProgramException 
+	 * 		   | An error was encountered while executing a ships program
 	 * @post This function executes in such a manner that ensures that, at the end of the function:
 	 * 		 	* All entities owned by this world have moved for the given duration
 	 */
-	public void advanceEntities(double duration) {
+	public void advanceEntities(double duration) throws FalseProgramException, FalseReturnException {
+		for (Ship ship : getEntities(Ship.class)) {ship.executeProgram(duration);}
 		getEntities().forEach(entity -> entity.move(duration));
 		terminateEntities();
 	}

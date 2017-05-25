@@ -29,7 +29,7 @@ public class AssignmentStatement extends Statement {
 	public String getVariableName() {return this.variableName;}
 	public Expression<?> getExpression() {return this.value;}
 	
-	public void execute(Ship ship, World world, Program<?, ?> program, double deltaT) throws FalseProgramException, BreakException, NoMoreTimeException, FalseReturnException {
+	public void execute(Ship ship, World world, Program program, double deltaT) throws FalseProgramException, BreakException, NoMoreTimeException, FalseReturnException {
 		checkTimeLeft(ship, world, program, deltaT);
 		
 		if (getExpression() instanceof Expression){

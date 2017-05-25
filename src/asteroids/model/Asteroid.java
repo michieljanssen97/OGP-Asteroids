@@ -1,5 +1,12 @@
 package asteroids.model;
 
+/**
+ * A class that defines an asteroid for the Asteroids game.
+ * 
+ * @author Michiel Janssen & Jelle Pelgrims
+ *
+ */
+
 public class Asteroid extends MinorPlanet implements ICollidable {
 
 	/**
@@ -22,8 +29,9 @@ public class Asteroid extends MinorPlanet implements ICollidable {
 	 * @param entity
 	 * @param this
 	 * @post This function executes in such a manner that ensures that, at the end of the function:
-	 * 			* In the case that the entity is a Ship: the ship's is destoyed.
+	 * 			* In the case that the entity is a Ship: the ship's is destroyed.
 	 * 			* For other MinorPlanets we use the defaultCollide helper function.
+	 * 			* For other entities we call their collision function
 	 */
 	public void collide(Entity entity) {
 		if (entity instanceof Ship) {

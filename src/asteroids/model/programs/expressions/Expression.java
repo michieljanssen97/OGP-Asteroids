@@ -17,5 +17,5 @@ public abstract class Expression<T> {
 	
 	public SourceLocation getSourceLocation() { return this.sourceLocation; }
 	
-	public abstract T read(Ship ship, World world, Program<?,?> program, Double deltaT) throws FalseProgramException, NoMoreTimeException, BreakException, FalseReturnException;
+	public abstract T read(Ship ship, World world, Program program, Double deltaT) throws FalseProgramException, NoMoreTimeException, BreakException, FalseReturnException;
 }
