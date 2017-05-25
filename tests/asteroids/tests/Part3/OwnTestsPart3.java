@@ -11,8 +11,10 @@ import java.util.Arrays;
 import org.junit.Before;
 import org.junit.Test;
 
+import asteroids.model.Asteroid;
 import asteroids.model.Bullet;
 import asteroids.model.Entity;
+import asteroids.model.Planetoid;
 import asteroids.model.Ship;
 import asteroids.model.World;
 import asteroids.util.ModelException;
@@ -456,4 +458,46 @@ public class OwnTestsPart3 {
 		assertTrue(ship3.isTerminated());
 		assertTrue(bullet1.isTerminated());
 	}
+	
+	@Test
+	public void testKillAsteroid() throws Exception {
+		world = new World(1000, 1000);
+		Asteroid asteroid = new Asteroid(40, 100, 0, 0, 20);
+		Bullet bullet1 = new Bullet(100, 100, -2, 0, 3);
+		world.addEntity(bullet1);
+		world.addEntity(asteroid);
+		assertEquals(18.5,asteroid.getTimeToCollision(bullet1),EPSILON);
+		world.evolve(20, null);
+		assertFalse(world.getEntities().contains(bullet1));
+		assertFalse(world.getEntities().contains(asteroid));
+
+	}
+	@Test
+	public void testKillPlanetoid() throws Exception {
+		world = new World(1000, 1000);
+		Planetoid planetoid = new Planetoid(40, 100, 0, 0, 20,0);
+		Bullet bullet1 = new Bullet(100, 100, -2, 0, 3);
+		world.addEntity(bullet1);
+		world.addEntity(planetoid);
+		assertEquals(18.5,planetoid.getTimeToCollision(bullet1),EPSILON);
+		world.evolve(20, null);
+		assertFalse(world.getEntities().contains(bullet1));
+		assertFalse(world.getEntities().contains(planetoid));
+	}
+	
+	@Test
+	public void testKillPlaentoidAndSpawnAsteroids() throws Exception {
+		world = new World(10000, 10000);
+		Planetoid planetoid = new Planetoid(4000, 1000, 0, 0, 200,0);
+		Bullet bullet1 = new Bullet(5000, 1000, -20, 0, 3);
+		world.addEntity(bullet1);
+		world.addEntity(planetoid);
+		assertEquals(39.85,planetoid.getTimeToCollision(bullet1),EPSILON);
+		world.evolve(400, null);
+		assertFalse(world.getEntities().contains(bullet1));
+		assertFalse(world.getEntities().contains(planetoid));
+		assertEquals(2,world.getEntities().size());
+	}
+	
 }
+
