@@ -3,6 +3,7 @@ package asteroids.tests.Part3;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
@@ -24,14 +25,12 @@ public class OwnTestsPart3 {
 	private World world;
 	private Entity entity;
 	
-
 	@Before
 	public void setUp() {
 		ship = new Ship(100, 120, 10, 0, 50, Math.PI, 1.1E18);
 		bullet = new Bullet(10, 10, 4, 3, 2);
 		entity = new Bullet(10, 10, 4, 3, 2);
 		world = new World(100, 100);
-
 	}
 	
 	@Test(expected = IllegalArgumentException.class)
@@ -374,12 +373,11 @@ public class OwnTestsPart3 {
 		assertTrue(Arrays.asList(world.getNextCollisionObjects()).contains(bullet2));
 	}
 	
-	@SuppressWarnings("deprecation")
 	@Test
 	public void testNoNextCollisionNull() {
 		assertEquals(null, world.getNextCollisionTime());
 		assertEquals(null, world.getNextCollisionPosition());
-		assertEquals(null, world.getNextCollisionObjects());
+		assertNull(world.getNextCollisionObjects());
 	}
 	
 	@Test
@@ -457,9 +455,5 @@ public class OwnTestsPart3 {
 		world.evolve(18.5,null);
 		assertTrue(ship3.isTerminated());
 		assertTrue(bullet1.isTerminated());
-
 	}
-	
-	
-
 }
