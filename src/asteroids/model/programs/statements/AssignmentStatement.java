@@ -36,10 +36,12 @@ public class AssignmentStatement extends Statement {
 		if (getExpression() instanceof Expression){
 			 Object assignedValue = getExpression().read(ship, world, program, deltaT);
 			 
-			 if (Arrays.asList(Boolean.class, Double.class).contains(assignedValue.getClass()) 
+			 if (assignedValue == null || Arrays.asList(Boolean.class, Double.class).contains(assignedValue.getClass()) 
 					 || Entity.class.isAssignableFrom(assignedValue.getClass())) {
 		
-				 if (!program.isInFunction() && (program.functionExists(getVariableName()))) {
+				 if (assignedValue == null){
+					 //
+				 } else if (!program.isInFunction() && (program.functionExists(getVariableName()))) {
 					 throw new FalseProgramException("Name is already taken by a function");
 				 } else if (program.variableExists(getVariableName())
 						 && !(program.getVariable(getVariableName()).getClass() == assignedValue.getClass())) {
