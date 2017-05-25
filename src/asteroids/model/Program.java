@@ -8,7 +8,6 @@ import asteroids.model.programs.BreakException;
 import asteroids.model.programs.FalseProgramException;
 import asteroids.model.programs.FalseReturnException;
 import asteroids.model.programs.NoMoreTimeException;
-import asteroids.model.programs.expressions.Expression;
 import asteroids.model.programs.statements.FunctionStatement;
 import asteroids.model.programs.statements.Statement;
 import asteroids.part3.programs.SourceLocation;

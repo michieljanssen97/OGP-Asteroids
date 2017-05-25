@@ -1,10 +1,7 @@
 package asteroids.model.programs.statements;
 
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
 
-import asteroids.model.Asteroid;
 import asteroids.model.Entity;
 import asteroids.model.Program;
 import asteroids.model.Ship;
@@ -36,12 +33,12 @@ public class AssignmentStatement extends Statement {
 		if (getExpression() instanceof Expression){
 			 Object assignedValue = getExpression().read(ship, world, program, deltaT);
 			 
-			 if (assignedValue == null || Arrays.asList(Boolean.class, Double.class).contains(assignedValue.getClass()) 
+			 if (assignedValue == null) {
+				 program.addOrUpdateVariable(getVariableName(), null);
+			 } else if (Arrays.asList(Boolean.class, Double.class).contains(assignedValue.getClass()) 
 					 || Entity.class.isAssignableFrom(assignedValue.getClass())) {
 		
-				 if (assignedValue == null){
-					 //
-				 } else if (!program.isInFunction() && (program.functionExists(getVariableName()))) {
+				 if (!program.isInFunction() && (program.functionExists(getVariableName()))) {
 					 throw new FalseProgramException("Name is already taken by a function");
 				 } else if (program.variableExists(getVariableName())
 						 && !(program.getVariable(getVariableName()).getClass() == assignedValue.getClass())) {
@@ -50,7 +47,6 @@ public class AssignmentStatement extends Statement {
 				 
 				 program.addOrUpdateVariable(getVariableName(), assignedValue);
 			 } else {
-				 System.out.println(assignedValue.getClass());
 				 throw new FalseProgramException("Cannot assign this particular type");
 			 }
 		 } else {

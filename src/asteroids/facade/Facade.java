@@ -511,7 +511,7 @@ public class Facade implements asteroids.part3.facade.IFacade {
 
 	@Override
 	public IProgramFactory<?, ?, ?, ? extends Program> createProgramFactory() throws ModelException {
-		return new ProgramFactory<Expression, Statement, FunctionStatement, Program>();
+		return new ProgramFactory<Expression<?>, Statement, FunctionStatement, Program>();
 	}
 
 

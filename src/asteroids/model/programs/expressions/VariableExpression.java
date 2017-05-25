@@ -1,12 +1,10 @@
 package asteroids.model.programs.expressions;
 
-import java.util.Arrays;
-
 import asteroids.model.*;
 import asteroids.model.programs.FalseProgramException;
 import asteroids.part3.programs.SourceLocation;
 
-public class VariableExpression extends Expression {
+public class VariableExpression extends Expression<Object> {
 	
 	private String varName;
 	

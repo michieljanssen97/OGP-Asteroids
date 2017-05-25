@@ -1,7 +1,5 @@
 package asteroids.model.programs.statements;
 
-import java.util.List;
-
 import asteroids.model.Program;
 import asteroids.model.Ship;
 import asteroids.model.World;
@@ -9,22 +7,18 @@ import asteroids.model.programs.BreakException;
 import asteroids.model.programs.FalseProgramException;
 import asteroids.model.programs.FalseReturnException;
 import asteroids.model.programs.NoMoreTimeException;
-import asteroids.model.programs.expressions.Expression;
 import asteroids.part3.programs.SourceLocation;
 
 public class FunctionStatement extends Statement {
 	
 	private String name;
 	private Statement body;
-	private SourceLocation sourceLocation;
-	private List<Expression<?>> arguments;
 	private Object returnValue;
 	
 	public FunctionStatement(String functionName, Statement body, SourceLocation sourceLocation) {
 		super(sourceLocation);
 		this.name = functionName;
 		this.body = body;
-		this.sourceLocation = sourceLocation;
 	}
 	
 	public String getName() {
